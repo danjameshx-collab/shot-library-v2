@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All Shot Types - Reference Library</title>
+<link rel="icon" type="image/png" href="logo.png">
+<style id="app-styles">
+:root{
+  --paper:#FFFFFF; --paper-raised:#FFFFFF; --paper-tab:#FFFFFF;
+  --ink:#14181B; --ink-soft:#5B6560; --ink-faint:#757E78;
+  --stamp:#1E6B45; --stamp-ink:#FFFFFF;
+  --mimeo:#2F8F5B; --mimeo-ink:#E6F4EC;
+  --line:#E4E9E6; --line-strong:#CCD5D0;
+  --good:#2F8F5B; --warn:#B4691A;
+  --tier-mid-bg:#F1EBDC; --tier-mid-ink:#8A6D3B;
+  --bespoke:#1E6B45; --bespoke-dark:#123D28; --bespoke-bg:#E6F4EC;
+  --shadow: 0 1px 0 rgba(20,24,27,.03), 0 8px 20px -12px rgba(20,24,27,.14);
+  --shadow-hover: 0 1px 0 rgba(20,24,27,.03), 0 14px 30px -14px rgba(20,24,27,.22);
+  --shadow-lg: 0 2px 4px rgba(20,24,27,.04), 0 22px 44px -18px rgba(20,24,27,.24);
+  --radius: 8px;
+  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+  --ease: cubic-bezier(.2,.7,.3,1);
+  --dur-fast: .12s; --dur-base: .18s;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-body); font-size:14.5px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--mimeo); color:var(--mimeo-ink);}
+a{color:inherit;}
+button{font-family:inherit;}
+svg{display:block;}
+:focus-visible{outline:2px solid var(--stamp); outline-offset:2px; border-radius:4px;}
+
+@keyframes modalOverlayIn{ from{opacity:0;} to{opacity:1;} }
+@keyframes modalBoxIn{ from{opacity:0; transform:translateY(10px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);} }
+
+.modal-fullscreen-btn{
+  flex:0 0 auto; width:28px; height:28px; border-radius:50%; border:1px solid var(--line-strong);
+  background:var(--paper-raised); color:var(--ink-soft); cursor:pointer; padding:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.modal-fullscreen-btn:hover{background:var(--ink); color:#fff; border-color:var(--ink);}
+.modal-fullscreen-btn svg{width:14px; height:14px;}
+
+/* ---------- shot type preview modal ---------- */
+.shot-preview-overlay{
+  display:none; position:fixed; inset:0; background:rgba(15,18,20,.6); backdrop-filter:blur(2px); z-index:600;
+  align-items:center; justify-content:center; padding:32px;
+}
+.shot-preview-overlay.open{display:flex; animation:modalOverlayIn .18s var(--ease);}
+.shot-preview-overlay.open .shot-preview-box{animation:modalBoxIn .24s var(--ease);}
+@media (prefers-reduced-motion: reduce){
+  .shot-preview-overlay.open, .shot-preview-overlay.open .shot-preview-box{animation:none;}
+}
+.shot-preview-box{
+  position:relative; width:100%; max-width:560px; max-height:88vh;
+  background:var(--paper-raised); border-radius:16px; overflow:hidden;
+  display:flex; flex-direction:column;
+  box-shadow:0 30px 70px -22px rgba(0,0,0,.5);
+}
+.shot-preview-close{
+  position:absolute; top:12px; right:12px; z-index:2; width:30px; height:30px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.5); background:rgba(20,24,27,.45); backdrop-filter:blur(4px);
+  color:#fff; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s ease, transform .12s ease;
+}
+.shot-preview-close:hover{background:rgba(20,24,27,.8); transform:scale(1.06);}
+.shot-preview-close svg{width:14px; height:14px;}
+.shot-preview-media{
+  position:relative; width:100%; aspect-ratio:16/9; background:var(--ink); flex:0 0 auto; overflow:hidden;
+}
+.shot-preview-media img{width:100%; height:100%; object-fit:cover; display:block;}
+.shot-preview-info{padding:20px 24px 24px; flex:1 1 auto; min-height:0; overflow-y:auto;}
+.shot-preview-eyebrow{
+  font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  font-size:10.5px; color:var(--bespoke);
+}
+.shot-preview-title{
+  font-family:var(--font-display); font-weight:800; font-size:22px; margin:4px 0 10px; color:var(--ink);
+}
+.shot-preview-desc{margin:0; font-size:14px; line-height:1.6; color:var(--ink-soft);}
+@media (max-width:560px){
+  .shot-preview-overlay{padding:0;}
+  .shot-preview-box{max-width:none; max-height:none; height:100%; border-radius:0;}
+}
+
+/* ---------- all shot types page (same visuals as the in-app modal) ---------- */
+.all-shots-overlay{
+  display:flex; position:fixed; inset:0; background:var(--paper);
+  align-items:flex-start; justify-content:center; padding:32px; overflow-y:auto;
+}
+.all-shots-overlay.fullscreen{padding:0;}
+.all-shots-box{
+  width:100%; max-width:1180px; max-height:none;
+  background:var(--paper-raised); border-radius:16px; overflow:hidden;
+  display:flex; flex-direction:column;
+  box-shadow:0 30px 70px -22px rgba(0,0,0,.5);
+  transition:max-width .18s var(--ease), max-height .18s var(--ease), border-radius .18s var(--ease);
+}
+.all-shots-box.fullscreen{
+  width:100vw; min-height:100vh; max-width:100vw; border-radius:0;
+}
+.all-shots-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  padding:20px 24px 14px; border-bottom:1px solid var(--line); flex:0 0 auto;
+}
+.all-shots-head-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
+.all-shots-eyebrow{
+  font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  font-size:10.5px; color:var(--bespoke);
+}
+.all-shots-head h2{font-family:var(--font-display); font-weight:800; font-size:20px; margin:2px 0 0; color:var(--ink);}
+.all-shots-close{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:1px solid var(--line-strong);
+  background:var(--paper-raised); color:var(--ink-soft); cursor:pointer; padding:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.all-shots-close:hover{background:var(--ink); color:#fff; border-color:var(--ink);}
+.all-shots-close svg{width:14px; height:14px;}
+.all-shots-scroll{flex:1 1 auto; min-height:0; padding:6px 24px 24px;}
+.all-shots-group-label{
+  margin:18px 0 10px; padding-top:8px; border-top:1px solid var(--line);
+  font-family:var(--font-display); font-weight:800; text-transform:uppercase;
+  letter-spacing:.08em; font-size:11px; color:var(--bespoke);
+}
+.all-shots-scroll > .all-shots-group-label:first-child{margin-top:0; padding-top:0; border-top:none;}
+.all-shots-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:18px;}
+.all-shots-card{
+  display:flex; flex-direction:column; text-align:left; border:1px solid var(--line); border-radius:11px;
+  background:var(--paper); overflow:hidden; cursor:pointer; padding:0;
+  transition:border-color .15s ease, box-shadow .15s ease, transform .12s ease;
+}
+.all-shots-card:hover{border-color:var(--mimeo); box-shadow:var(--shadow); transform:translateY(-2px);}
+.all-shots-card-media{width:100%; aspect-ratio:4/3; background:var(--ink); overflow:hidden;}
+.all-shots-card-media img{width:100%; height:100%; object-fit:cover; display:block;}
+.all-shots-card-body{padding:10px 12px 12px;}
+.all-shots-card-title{font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--ink); margin:0 0 4px;}
+.all-shots-card-desc{margin:0; font-size:11.5px; line-height:1.5; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+@media (max-width:720px){
+  .all-shots-overlay{padding:0;}
+  .all-shots-box{max-width:none; max-height:none; border-radius:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
+  <div class="shot-preview-box">
+    <button type="button" class="shot-preview-close" id="shotPreviewCloseBtn" title="Close" aria-label="Close">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div class="shot-preview-media">
+      <img id="shotPreviewImg" src="" alt="">
+    </div>
+    <div class="shot-preview-info">
+      <div class="shot-preview-eyebrow" id="shotPreviewEyebrow">Shot Type</div>
+      <h3 class="shot-preview-title" id="shotPreviewTitle"></h3>
+      <p class="shot-preview-desc" id="shotPreviewDesc"></p>
+    </div>
+  </div>
+</div>
+
+<div class="all-shots-overlay" id="allShotsOverlay">
+  <div class="all-shots-box" id="allShotsBox">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="allShotsTitle">All Shot Types</h2></div>
+      <div class="all-shots-head-right">
+        <button type="button" class="modal-fullscreen-btn" id="allShotsFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
+            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
+          </svg>
+        </button>
+        <button type="button" class="all-shots-close" id="allShotsCloseBtn" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="all-shots-scroll" id="allShotsScroll"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- shot type reference data (mirrors super-loom.html) ---------- */
+const SHOT_TYPE_GROUPS = [
+  {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
+  {group:'Composition', items:['Environment','High Negative Space','Section']},
+  {group:'Effect', items:['Low Shutter','Slow Motion']},
+  {group:'Perspective', items:['Human (POV)','Object (POV)','Reverse (POV)']},
+  {group:'Unique', items:['Mirror','Reveal','Shadows']},
+  {group:'Close Up', items:['Close Up (Classic)','Close Up (Extreme)','Close Up (Foreground)']},
+  {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)','Head On (Medium)','Hero (Medium)','Medium (Classic)','Reveal (Medium)','Section (Medium)']},
+  {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)','Wide (Classic)']},
+  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','Top-Down','Speed Ramping','Slow Motion Sequence','Cross Cutting','Close Up Sequence','Drone Sequence']},
+];
+
+const SHOT_IMG_DIR = 'images for super-loom/';
+const SEQ_IMG_DIR = 'sequences/';
+const SHOT_TYPE_PREVIEWS = {
+  /* ---- Angle ---- */
+  'Ground': {
+    group: 'Angle', title: 'Ground', image: SHOT_IMG_DIR + 'ground.png',
+    desc: 'Camera sits right at ground level, looking up or across. Puts the viewer in the dirt with the subject - raw, immersive, unexpected.'
+  },
+  'High': {
+    group: 'Angle', title: 'High Angle', image: SHOT_IMG_DIR + 'high.png',
+    desc: "Camera sits above the subject, angled down. Shrinks the subject slightly and opens up the space around them - good for context or a beat of vulnerability."
+  },
+  'Low': {
+    group: 'Angle', title: 'Low Angle', image: SHOT_IMG_DIR + 'low-image.png',
+    desc: 'The camera sits below eye level, tilted up at the subject. It makes them look bigger, stronger and more in control - a classic power framing for a hero beat or a moment of authority.'
+  },
+  'Straight Up': {
+    group: 'Angle', title: 'Straight Up', image: SHOT_IMG_DIR + 'straight-up.png',
+    desc: 'Camera points straight up at the sky or something towering overhead. Builds scale and awe - use it to make something feel massive.'
+  },
+  'To The Side': {
+    group: 'Angle', title: 'To The Side', image: SHOT_IMG_DIR + 'to-the-side.png',
+    desc: "Camera holds level with the subject from the side, profile-on. Feels observational - like you're walking alongside them, not talking to them."
+  },
+  'Top Down': {
+    group: 'Angle', title: 'Top Down', image: SHOT_IMG_DIR + 'top-down.png',
+    desc: 'Camera looks straight down from directly overhead. Flattens the scene into a graphic, map-like frame - great for reveals and process shots.'
+  },
+  /* ---- Composition ---- */
+  'Environment': {
+    group: 'Composition', title: 'Environment', image: SHOT_IMG_DIR + 'environment.png',
+    desc: 'The frame gives as much weight to the location as to the subject. Establishes place and mood before (or instead of) focusing in.'
+  },
+  'High Negative Space': {
+    group: 'Composition', title: 'High Negative Space', image: SHOT_IMG_DIR + 'high-negative-space.png',
+    desc: 'The subject sits small inside a large, mostly empty frame. The empty space does the storytelling - isolation, scale, or room to think.'
+  },
+  /* ---- Effect ---- */
+  'Low Shutter': {
+    group: 'Effect', title: 'Low Shutter', image: SHOT_IMG_DIR + 'low-shutter.png',
+    desc: 'A slower shutter speed blurs motion inside the frame. Gives movement a dreamy, chaotic or hyper-kinetic feel depending on how far you push it.'
+  },
+  'Slow Motion': {
+    group: 'Effect', title: 'Slow Motion', image: SHOT_IMG_DIR + 'slow-motion.png',
+    desc: 'Footage captured at a high frame rate and played back slow. Stretches a small moment into something that feels significant.'
+  },
+  /* ---- Perspective ---- */
+  'Object (POV)': {
+    group: 'Perspective', title: 'Object (POV)', image: SHOT_IMG_DIR + 'object-pov.png',
+    desc: "The camera becomes an object in the scene - a phone, a mirror, a product. The viewer sees exactly what that object 'sees.'"
+  },
+  'Reverse (POV)': {
+    group: 'Perspective', title: 'Reverse (POV)', image: SHOT_IMG_DIR + 'reverse-pov.png',
+    desc: "The camera faces back at whoever is filming, hand-held selfie-style. Intimate and direct - like they're talking straight to camera on the move."
+  },
+  /* ---- Unique ---- */
+  'Mirror': {
+    group: 'Unique', title: 'Mirror', image: SHOT_IMG_DIR + 'mirror.png',
+    desc: "The camera becomes a person's own eyes, often via a mirror or reflection. Puts the viewer directly inside someone else's perspective."
+  },
+  'Reveal': {
+    group: 'Unique', title: 'Reveal', image: SHOT_IMG_DIR + 'reveal.png',
+    desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject. Built-in payoff inside a single shot.'
+  },
+  'Shadows': {
+    group: 'Unique', title: 'Shadows', image: SHOT_IMG_DIR + 'shadows.png',
+    desc: 'Shadows lead the eye or partially hide the subject. Adds mood and mystery without needing extra lighting gear.'
+  },
+  /* ---- Close Up ---- */
+  'Close Up (Classic)': {
+    group: 'Close Up', title: 'Close Up (Classic)', image: SHOT_IMG_DIR + 'close-up.png',
+    desc: 'Tight on the face or a key detail, filling most of the frame. Forces an emotional read - nowhere to hide.'
+  },
+  'Close Up (Extreme)': {
+    group: 'Close Up', title: 'Close Up (Extreme)', image: SHOT_IMG_DIR + 'extreme-close-up.png',
+    desc: 'Even tighter than classic - eyes, hands, texture. Almost abstract, used to punctuate a beat rather than sit in it.'
+  },
+  'Close Up (Foreground)': {
+    group: 'Close Up', title: 'Close Up (Foreground)', image: SHOT_IMG_DIR + 'foreground-close-up.png',
+    desc: "A close, out-of-focus element sits in the foreground while the subject holds focus behind it. Adds depth and a sense of being 'in' the scene."
+  },
+  /* ---- Medium ---- */
+  'Behind (Medium)': {
+    group: 'Medium', title: 'Behind (Medium)', image: SHOT_IMG_DIR + 'behind-medium.png',
+    desc: "Camera sits behind the subject at medium distance, showing what they're looking at. Builds anticipation for the reveal."
+  },
+  'Environment (Medium)': {
+    group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment-medium.png',
+    desc: 'A medium-distance frame that keeps enough of the location visible to set the scene. Balances subject and place evenly.'
+  },
+  'Foreground (Medium)': {
+    group: 'Medium', title: 'Foreground (Medium)', image: SHOT_IMG_DIR + 'foreground-medium.png',
+    desc: 'A medium shot with something purposely placed in the foreground. Adds layers and a sense of being tucked into the world.'
+  },
+  'Head On (Medium)': {
+    group: 'Medium', title: 'Head On (Medium)', image: SHOT_IMG_DIR + 'head-on-medium.png',
+    desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
+  },
+  'Reveal (Medium)': {
+    group: 'Medium', title: 'Reveal (Medium)', image: SHOT_IMG_DIR + 'reveal-medium.png',
+    desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance. Built-in payoff inside a single shot.'
+  },
+  /* ---- Wide ---- */
+  'AWTA (Wide)': {
+    group: 'Wide', title: 'AWTA (Wide)', image: SHOT_IMG_DIR + 'AWTA-wide.png',
+    desc: 'A Walk-Towards / Walk-Away shot at wide distance - the subject moves through a big environment, toward or away from camera. A classic scene-opener.'
+  },
+  'Behind (Wide)': {
+    group: 'Wide', title: 'Behind (Wide)', image: SHOT_IMG_DIR + 'behind-wide.png',
+    desc: 'A wide shot from behind the subject, showing the full environment they\'re heading into. Sets scale before the reveal.'
+  },
+  'Extreme (Wide)': {
+    group: 'Wide', title: 'Extreme (Wide)', image: SHOT_IMG_DIR + 'extreme-wide.png',
+    desc: 'The subject is small against a huge environment. Establishes location and stakes in a single frame.'
+  },
+  'Foreground (Wide)': {
+    group: 'Wide', title: 'Foreground (Wide)', image: SHOT_IMG_DIR + 'foreground-wide.png',
+    desc: 'A wide shot layered with a foreground element for depth. Feels cinematic and considered, not flat.'
+  },
+  'Head On (Wide)': {
+    group: 'Wide', title: 'Head On (Wide)', image: SHOT_IMG_DIR + 'head-on.png',
+    desc: 'Subject faces the camera directly from a wide distance, environment fully visible around them. Confident and grounded.'
+  },
+  'Low (Wide)': {
+    group: 'Wide', title: 'Low (Wide)', image: SHOT_IMG_DIR + 'low-wide.png',
+    desc: 'A wide shot taken from a low camera position, looking up across the scene. Adds power and scale to the whole environment, not just the subject.'
+  },
+  'Wide (Classic)': {
+    group: 'Wide', title: 'Wide (Classic)', image: SHOT_IMG_DIR + 'classic-wide.png',
+    desc: 'The standard wide establishing shot - full body, full environment, no tricks. Every scene needs at least one.'
+  },
+  /* ---- Sequences ---- */
+  '9 Shot Rule (Classic)': {
+    group: 'Sequences', title: '9 Shot Rule (Classic)', image: SEQ_IMG_DIR + '9 Shot Rule (Classic).png',
+    desc: '2 drone, 2 wide, 2 medium, 2 close-up, 1 unique - shot in that order for full, predictable coverage of a scene.'
+  },
+  '9 Shot Rule (Mixed)': {
+    group: 'Sequences', title: '9 Shot Rule (Mixed)', image: SEQ_IMG_DIR + '9 Shot Rule (Mixed).jpg',
+    desc: 'The same 9-shot coverage (drone, wide, medium, close-up, unique) captured out of order and intercut for a less predictable, more dynamic edit.'
+  },
+  '9-Shot Rule (Reverse)': {
+    group: 'Sequences', title: '9-Shot Rule (Reverse)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
+    desc: 'The 9-shot coverage run back to front - close-up and unique first, wide and drone last. Builds outward instead of establishing first.'
+  },
+  'Top-Down': {
+    group: 'Sequences', title: 'Top-Down', image: SEQ_IMG_DIR + 'Top-Down.png',
+    desc: 'A sequence built entirely from overhead, top-down angles. Flattens every beat into a graphic, process-driven feel.'
+  },
+  'Speed Ramping': {
+    group: 'Sequences', title: 'Speed Ramping', image: SEQ_IMG_DIR + 'Speed Ramping.png',
+    desc: 'A shot (or sequence of shots) that smoothly shifts between slow motion and normal/fast speed mid-clip for emphasis.'
+  },
+  'Slow Motion Sequence': {
+    group: 'Sequences', title: 'Slow Motion Sequence', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
+    desc: 'A run of shots all captured at a high frame rate and played back slow, stretching a string of small moments into something significant.'
+  },
+  'Cross Cutting': {
+    group: 'Sequences', title: 'Cross Cutting', image: SEQ_IMG_DIR + 'Cross Cutting.png',
+    desc: 'One scene shows an event, another scene shows a parallel event, then you cut between them - builds tension across two threads at once.'
+  },
+  'Close Up Sequence': {
+    group: 'Sequences', title: 'Close Up Sequence', image: SEQ_IMG_DIR + 'Close Up Sequence.png',
+    desc: 'A run of tight close-up shots cut together back to back. Stacks emotional beats without ever pulling back to breathe.'
+  },
+  'Drone Sequence': {
+    group: 'Sequences', title: 'Drone Sequence', image: SEQ_IMG_DIR + 'Drone Sequence.png',
+    desc: 'A run of aerial drone shots cut together to establish scale and location before dropping into ground-level coverage.'
+  },
+};
+
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
+
+/* ---------- grid render ---------- */
+function allShotsGridHtml(){
+  let html = '';
+  SHOT_TYPE_GROUPS.forEach(g=>{
+    const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
+    if(!items.length) return;
+    html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
+    html += '<div class="all-shots-grid">' + items.map(i=>{
+      const p = SHOT_TYPE_PREVIEWS[i];
+      return '<button type="button" class="all-shots-card" data-shot-preview="' + escAttr(i) + '">'
+        + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference shot" loading="lazy"></div>'
+        + '<div class="all-shots-card-body">'
+          + '<h4 class="all-shots-card-title">' + esc(p.title) + '</h4>'
+          + '<p class="all-shots-card-desc">' + esc(p.desc) + '</p>'
+        + '</div>'
+      + '</button>';
+    }).join('') + '</div>';
+  });
+  return html;
+}
+
+/* ---------- shot type preview modal ---------- */
+let shotPreviewLastFocus = null;
+function openShotPreview(value){
+  const p = SHOT_TYPE_PREVIEWS[value];
+  if(!p) return;
+  shotPreviewLastFocus = document.activeElement;
+  document.getElementById('shotPreviewEyebrow').textContent = p.group || 'Shot Type';
+  document.getElementById('shotPreviewTitle').textContent = p.title || value;
+  document.getElementById('shotPreviewDesc').textContent = p.desc || '';
+  const img = document.getElementById('shotPreviewImg');
+  img.src = p.image;
+  img.alt = (p.title || value) + ' - reference shot';
+  const overlay = document.getElementById('shotPreviewOverlay');
+  overlay.classList.add('open');
+  document.getElementById('shotPreviewCloseBtn').focus();
+  document.addEventListener('keydown', shotPreviewOnKeyDown, true);
+}
+function closeShotPreview(){
+  const overlay = document.getElementById('shotPreviewOverlay');
+  if(!overlay.classList.contains('open')) return;
+  overlay.classList.remove('open');
+  document.removeEventListener('keydown', shotPreviewOnKeyDown, true);
+  if(shotPreviewLastFocus && shotPreviewLastFocus.focus) shotPreviewLastFocus.focus();
+  shotPreviewLastFocus = null;
+}
+function shotPreviewOnKeyDown(e){
+  if(e.key === 'Escape'){ e.stopImmediatePropagation(); e.stopPropagation(); closeShotPreview(); }
+}
+
+/* ---------- page init (renders the same grid the in-app modal shows) ---------- */
+let allShotsFullscreen = false;
+function toggleAllShotsFullscreen(){
+  allShotsFullscreen = !allShotsFullscreen;
+  document.getElementById('allShotsBox').classList.toggle('fullscreen', allShotsFullscreen);
+  document.getElementById('allShotsOverlay').classList.toggle('fullscreen', allShotsFullscreen);
+}
+
+(function init(){
+  const scroll = document.getElementById('allShotsScroll');
+  scroll.innerHTML = allShotsGridHtml();
+  scroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      openShotPreview(card.dataset.shotPreview);
+    });
+  });
+  document.getElementById('allShotsFullscreenBtn').addEventListener('click', toggleAllShotsFullscreen);
+  document.getElementById('allShotsCloseBtn').addEventListener('click', ()=>{
+    if(document.referrer){ history.back(); } else { window.close(); }
+  });
+  document.getElementById('shotPreviewCloseBtn').addEventListener('click', closeShotPreview);
+  document.getElementById('shotPreviewOverlay').addEventListener('click', (e)=>{ if(e.target.id==='shotPreviewOverlay') closeShotPreview(); });
+})();
+</script>
+</body>
+</html>
