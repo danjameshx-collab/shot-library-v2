@@ -334,6 +334,39 @@ table.shot-table .col-del{width:34px; text-align:center; padding-top:10px;}
 .shot-del-btn{width:24px; height:24px; border-radius:50%; border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink-faint); cursor:pointer; font-size:14px; line-height:1; padding:0; transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;}
 .shot-del-btn:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
 
+/* ---------- shot table: mobile card layout ---------- */
+@media (max-width:760px){
+  .shot-table-wrap{overflow-x:visible; border:none; box-shadow:none; background:transparent; border-radius:0;}
+  table.shot-table{min-width:0; width:100%; table-layout:auto;}
+  table.shot-table thead{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+    clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  table.shot-table tbody{display:block;}
+  table.shot-table tr{
+    display:grid; grid-template-columns:1fr auto; align-items:start; column-gap:10px;
+    grid-template-areas: "num del" "scene scene" "type type" "location location" "desc desc";
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow); padding:14px 14px 16px; margin-bottom:12px;
+  }
+  table.shot-table tbody tr:nth-child(even){background:var(--paper-raised);}
+  table.shot-table tbody tr:hover{background:var(--paper-raised);}
+  table.shot-table tbody tr:last-child{margin-bottom:0;}
+  table.shot-table td{display:block; padding:0; border-bottom:none; width:auto;}
+  table.shot-table td.col-num{grid-area:num; padding-top:2px;}
+  table.shot-table td.col-del{grid-area:del; text-align:right;}
+  table.shot-table td.col-scene{grid-area:scene; margin-top:12px;}
+  table.shot-table td.col-type{grid-area:type; margin-top:12px;}
+  table.shot-table td.col-location{grid-area:location; margin-top:12px;}
+  table.shot-table td.col-desc{grid-area:desc; margin-top:12px;}
+  table.shot-table td[data-label]::before{
+    content:attr(data-label); display:block; font-family:var(--font-body); font-weight:700;
+    text-transform:uppercase; letter-spacing:.06em; font-size:10.5px; color:var(--bespoke); margin-bottom:5px;
+  }
+  table.shot-table input[type=text], table.shot-table textarea, table.shot-table select{font-size:16px;}
+  .shot-del-btn{width:30px; height:30px; font-size:16px;}
+}
+
 /* ---------- script outline (typed markdown-lite, explicit save, read-only display) ---------- */
 .outline-section{margin-bottom:22px;}
 .outline-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
@@ -1195,10 +1228,10 @@ function cvFmtDate(ts){ try{ return new Date(ts).toLocaleDateString(undefined, {
 function cvShotRowHtml(row, idx){
   return '<tr data-shot-id="' + escAttr(row.id) + '">'
     + '<td class="col-num"><span class="shot-num-badge">' + (idx+1) + '</span></td>'
-    + '<td class="col-scene"><input type="text" data-field="scene" placeholder="Select scene…" value="' + escAttr(row.scene||'') + '"></td>'
-    + '<td>' + lcSelectHtml('shotType', row.shotType, 'Select shot type…', row.shotType) + '</td>'
-    + '<td><input type="text" data-field="location" placeholder="Select location…" value="' + escAttr(row.location||'') + '"></td>'
-    + '<td><textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea></td>'
+    + '<td class="col-scene" data-label="Scene"><input type="text" data-field="scene" placeholder="Select scene…" value="' + escAttr(row.scene||'') + '"></td>'
+    + '<td class="col-type" data-label="Shot / Sequence">' + lcSelectHtml('shotType', row.shotType, 'Select shot type…', row.shotType) + '</td>'
+    + '<td class="col-location" data-label="Location"><input type="text" data-field="location" placeholder="Select location…" value="' + escAttr(row.location||'') + '"></td>'
+    + '<td class="col-desc" data-label="Description"><textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea></td>'
     + '<td class="col-del"><button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button></td>'
   + '</tr>';
 }
