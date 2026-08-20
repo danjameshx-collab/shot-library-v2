@@ -92,12 +92,69 @@ svg{display:block;}
   .shot-preview-box{max-width:none; max-height:none; height:100%; border-radius:0;}
 }
 
+/* ---------- generic dialog (replaces native browser prompt/confirm/alert) ---------- */
+.lc-dialog-overlay{
+  display:none; position:fixed; inset:0; background:rgba(15,18,20,.55); backdrop-filter:blur(3px); z-index:800;
+  align-items:center; justify-content:center; padding:24px;
+}
+.lc-dialog-overlay.open{display:flex; animation:modalOverlayIn .16s var(--ease);}
+.lc-dialog-overlay.open .lc-dialog-box{animation:modalBoxIn .22s var(--ease);}
+@media (prefers-reduced-motion: reduce){
+  .lc-dialog-overlay.open, .lc-dialog-overlay.open .lc-dialog-box{animation:none;}
+}
+.lc-dialog-box{
+  width:100%; max-width:380px; background:var(--paper-raised); border-radius:18px; padding:28px 26px 24px;
+  box-shadow:var(--shadow-lg); text-align:center;
+}
+.lc-dialog-icon{
+  width:48px; height:48px; border-radius:50%; margin:0 auto 16px; background:var(--bespoke-bg); color:var(--bespoke);
+  display:flex; align-items:center; justify-content:center;
+}
+.lc-dialog-icon svg{width:22px; height:22px;}
+.lc-dialog-icon.danger{background:#FBEEE0; color:var(--warn);}
+.lc-dialog-title{font-family:var(--font-display); font-weight:800; font-size:17px; margin:0 0 6px; color:var(--ink); letter-spacing:-.01em;}
+.lc-dialog-message{margin:0 0 16px; font-size:13.5px; line-height:1.55; color:var(--ink-soft);}
+.lc-dialog-input{
+  display:block; width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:9px; background:var(--paper);
+  font-family:var(--font-body); font-size:14.5px; padding:10px 12px; color:var(--ink); margin:2px 0 18px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.lc-dialog-input:focus{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+.lc-dialog-actions{display:flex; gap:10px; justify-content:center;}
+.lc-dialog-actions .btn{flex:1 1 0;}
+.lc-dialog-confirm{background:var(--bespoke); border-color:var(--bespoke); color:#fff; box-shadow:0 1px 0 rgba(20,24,27,.03), 0 10px 20px -12px rgba(30,107,69,.45);}
+.lc-dialog-confirm:hover{background:var(--bespoke-dark); border-color:var(--bespoke-dark); color:#fff;}
+.lc-dialog-confirm.danger{background:var(--warn); border-color:var(--warn); box-shadow:0 1px 0 rgba(20,24,27,.03), 0 10px 20px -12px rgba(180,105,26,.45);}
+.lc-dialog-confirm.danger:hover{background:#8F4F12; border-color:#8F4F12;}
+@media (max-width:420px){
+  .lc-dialog-box{max-width:none;}
+}
+
+/* ---------- top tab bar ---------- */
+.top-tabs{
+  position:fixed; top:0; left:0; right:0; z-index:500; height:52px; display:flex; align-items:center; gap:6px;
+  padding:0 20px; background:var(--paper-raised); border-bottom:1px solid var(--line); box-shadow:0 1px 0 rgba(20,24,27,.03);
+}
+.top-tab-btn{
+  font-family:var(--font-display); font-weight:700; font-size:12.5px; letter-spacing:.02em;
+  padding:8px 16px; border-radius:999px; border:1px solid transparent; background:transparent; color:var(--ink-soft);
+  cursor:pointer; transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.top-tab-btn:hover{color:var(--ink); background:var(--mimeo-ink);}
+.top-tab-btn.active{background:var(--bespoke); color:#fff; border-color:var(--bespoke);}
+body.tabs-hidden .top-tabs{display:none;}
+body.tabs-hidden .all-shots-overlay{top:0;}
+
+/* ---------- generic tab page (all-shots / cine vlogs library / cine vlog detail) ---------- */
+.tab-page{display:none;}
+.tab-page.active{display:flex;}
+
 /* ---------- all shot types page (same visuals as the in-app modal) ---------- */
 .all-shots-overlay{
-  display:flex; position:fixed; inset:0; background:var(--paper);
+  position:fixed; top:52px; left:0; right:0; bottom:0; background:var(--paper);
   align-items:flex-start; justify-content:center; padding:32px; overflow-y:auto;
 }
-.all-shots-overlay.fullscreen{padding:0;}
+.all-shots-overlay.fullscreen{padding:0; top:0;}
 .all-shots-box{
   width:100%; max-width:1180px; max-height:none;
   background:var(--paper-raised); border-radius:16px; overflow:hidden;
@@ -149,9 +206,256 @@ svg{display:block;}
   .all-shots-overlay{padding:0;}
   .all-shots-box{max-width:none; max-height:none; border-radius:0;}
 }
+
+/* ================= CINE VLOGS ================= */
+
+/* ---------- generic btn (Add Shot Row / All Shots / Sequences) ---------- */
+.btn{
+  font-family:var(--font-body); font-weight:700; letter-spacing:.01em;
+  font-size:12.5px; padding:9px 16px; border-radius:999px; cursor:pointer; border:1px solid var(--line);
+  background:var(--paper-raised); color:var(--ink); box-shadow:var(--shadow);
+  transition:background-color .15s ease, border-color .15s ease, color .15s ease, filter .15s ease, transform .12s ease, box-shadow .15s ease;
+}
+.btn:hover{border-color:var(--line-strong); background:#F7F8F7; box-shadow:var(--shadow-hover); transform:translateY(-1px);}
+.btn:active{transform:translateY(0); filter:brightness(.97);}
+.btn.small{padding:5px 10px; font-size:11px;}
+.btn.primary{background:var(--bespoke); border-color:var(--bespoke); color:#fff;}
+.btn.primary:hover{background:var(--bespoke-dark); border-color:var(--bespoke-dark); color:#fff;}
+
+/* ---------- cine vlogs launcher (list of saved vlogs) ---------- */
+.cv-launcher-overlay{
+  position:fixed; top:52px; left:0; right:0; bottom:0; background:var(--paper);
+  align-items:flex-start; justify-content:center; padding:56px 24px 80px; overflow-y:auto;
+}
+.launcher-inner{width:100%; max-width:980px;}
+.launcher-header{text-align:center; margin-bottom:40px;}
+.launcher-header .back-link{
+  display:inline-flex; align-items:center; gap:6px; color:var(--ink-soft); font-size:13px; font-weight:600;
+  text-decoration:none; margin-bottom:22px; transition:color .15s ease; cursor:pointer; background:none; border:none; font-family:inherit; padding:0;
+}
+.launcher-header .back-link:hover{color:var(--bespoke);}
+.launcher-title{
+  font-family:var(--font-display); font-weight:700; font-size:32px; letter-spacing:-.01em;
+  margin:0 0 10px; color:var(--ink); display:flex; align-items:center; justify-content:center; gap:12px;
+}
+.launcher-title .logo-mark{
+  display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px;
+  background:linear-gradient(150deg, var(--bespoke), var(--bespoke-dark)); color:#fff;
+  box-shadow:0 4px 10px -3px rgba(30,107,69,.45); font-family:var(--font-display); font-weight:700; font-size:14px;
+}
+.launcher-subhead{font-size:15px; color:var(--ink-soft); margin:0 0 32px; text-align:center;}
+.launcher-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;}
+.launcher-card{
+  position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:20px 18px; cursor:pointer; text-align:left;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+  display:flex; flex-direction:column; min-height:110px;
+}
+.launcher-card:hover{border-color:var(--bespoke); box-shadow:var(--shadow-hover); transform:translateY(-2px);}
+.launcher-card.new{
+  align-items:center; justify-content:center; text-align:center; border-style:dashed; border-color:var(--line-strong);
+  background:var(--mimeo-ink); gap:10px;
+}
+.launcher-card.new:hover{border-color:var(--bespoke); background:var(--bespoke-bg);}
+.launcher-card.new .plus{
+  width:38px; height:38px; border-radius:50%; background:var(--bespoke); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; line-height:1;
+}
+.launcher-card.new .label{font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--ink);}
+.launcher-card .lc-name{
+  font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--ink); margin:0 0 4px;
+  padding-right:20px; overflow-wrap:break-word;
+}
+.launcher-card .lc-meta{font-size:12px; color:var(--ink-faint); margin:0;}
+.launcher-card .lc-actions{position:absolute; top:10px; right:10px; display:flex; gap:4px;}
+.launcher-card .lc-icon-btn{
+  width:24px; height:24px; border-radius:6px; border:none;
+  background:transparent; color:var(--ink-faint); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s ease, color .15s ease; padding:0;
+}
+.launcher-card .lc-icon-btn:hover{background:var(--mimeo-ink); color:var(--bespoke);}
+.launcher-card .lc-delete:hover{background:#FBEEE0; color:var(--warn);}
+.launcher-card .lc-icon-btn svg{width:14px; height:14px;}
+.launcher-empty{grid-column:1/-1; text-align:center; padding:32px 16px; color:var(--ink-faint); font-size:13px;}
+
+/* ---------- cine vlog detail (shot table page) ---------- */
+.cv-detail-overlay{
+  position:fixed; top:52px; left:0; right:0; bottom:0; background:var(--paper);
+  align-items:stretch; justify-content:center; padding:0; overflow-y:auto;
+}
+.cv-detail-box{
+  width:100%; max-width:none; height:100%; background:var(--paper-raised); border-radius:0; overflow:visible;
+  box-shadow:none; display:flex; flex-direction:column;
+}
+.cv-detail-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex:0 0 auto;
+  padding:20px 24px 14px; border-bottom:1px solid var(--line);
+}
+.cv-detail-head .all-shots-eyebrow{
+  background:none; border:none; padding:0; cursor:pointer; font-family:var(--font-display);
+}
+.cv-detail-scroll{flex:1 1 auto; min-height:0; overflow-y:auto; padding:20px 24px 28px;}
+.shot-table-actions{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+.shot-table-actions-left{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.shot-table-wrap{overflow-x:auto; overflow-y:hidden; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); background:var(--paper-raised);}
+table.shot-table{width:100%; min-width:1220px; border-collapse:collapse; font-size:14px; table-layout:fixed;}
+table.shot-table th{
+  text-align:left; font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:11.5px; color:var(--bespoke);
+  background:var(--bespoke-bg); padding:12px 12px; border-bottom:1.5px solid var(--line-strong); white-space:nowrap;
+}
+table.shot-table th:first-child{border-top-left-radius:13px;}
+table.shot-table th:last-child{border-top-right-radius:13px;}
+table.shot-table td{padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; transition:background-color .12s ease; position:relative;}
+table.shot-table tr:last-child td{border-bottom:none;}
+table.shot-table tbody tr:nth-child(even){background:rgba(30,107,69,.02);}
+table.shot-table tbody tr:hover{background:var(--mimeo-ink);}
+table.shot-table input[type=text], table.shot-table textarea, table.shot-table select{
+  width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:7px; background:var(--paper);
+  font-family:var(--font-body); font-size:14px; padding:7px 9px; color:var(--ink); line-height:1.4;
+  transition:border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+table.shot-table textarea{min-height:42px; resize:none; overflow:hidden;}
+table.shot-table select{
+  appearance:none; -webkit-appearance:none; cursor:pointer; padding-right:26px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235B6560' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 9px center; background-size:10px 6px;
+}
+table.shot-table input[type=text]:hover, table.shot-table textarea:hover, table.shot-table select:hover{border-color:var(--line-strong);}
+table.shot-table input[type=text]:focus, table.shot-table textarea:focus, table.shot-table select:focus{
+  outline:none; border-color:var(--mimeo); background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);
+}
+table.shot-table .col-num{width:36px; text-align:center; padding-top:12px;}
+table.shot-table .col-scene{width:180px;}
+table.shot-table .col-del{width:34px; text-align:center; padding-top:10px;}
+.shot-num-badge{
+  display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
+  background:var(--bespoke-bg); color:var(--bespoke); font-family:var(--font-body); font-weight:700; font-size:11px;
+}
+.shot-del-btn{width:24px; height:24px; border-radius:50%; border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink-faint); cursor:pointer; font-size:14px; line-height:1; padding:0; transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;}
+.shot-del-btn:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
+
+/* ---------- script outline (typed markdown-lite, explicit save, read-only display) ---------- */
+.outline-section{margin-bottom:22px;}
+.outline-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
+.outline-title{font-family:var(--font-display); font-weight:800; font-size:15px; letter-spacing:-.01em; color:var(--ink); margin:0;}
+.outline-head-actions{display:flex; align-items:center; gap:8px;}
+.outline-view{
+  width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:14px; background:var(--paper-raised);
+  padding:18px 22px; box-shadow:var(--shadow); font-size:14px; line-height:1.65; color:var(--ink); cursor:default;
+}
+.outline-empty{margin:0; color:var(--ink-faint); font-style:italic; font-size:13.5px;}
+.outline-block-h1, .outline-block-h2, .outline-block-h3{
+  font-family:var(--font-display); color:var(--bespoke); letter-spacing:-.01em; margin:0;
+}
+.outline-block-h1{font-size:21px; font-weight:800; margin:22px 0 8px;}
+.outline-block-h2{font-size:17px; font-weight:800; margin:18px 0 7px;}
+.outline-block-h3{font-size:14.5px; font-weight:800; margin:14px 0 6px;}
+.outline-view > .outline-block-h1:first-child,
+.outline-view > .outline-block-h2:first-child,
+.outline-view > .outline-block-h3:first-child{margin-top:0;}
+.outline-block-bullet{position:relative; padding-left:18px; margin:3px 0;}
+.outline-block-bullet:before{
+  content:''; position:absolute; left:3px; top:.82em; width:5px; height:5px; border-radius:50%;
+  background:var(--mimeo); transform:translateY(-50%);
+}
+.outline-edit-toolbar{display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap;}
+.outline-edit-toolbar button{
+  font-family:var(--font-body); font-weight:700; font-size:11.5px; padding:5px 12px; border-radius:999px;
+  border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft); cursor:pointer;
+  transition:background-color .13s ease, color .13s ease, border-color .13s ease;
+}
+.outline-edit-toolbar button:hover{background:var(--mimeo-ink); color:var(--ink); border-color:var(--line-strong);}
+.outline-textarea{
+  display:block; width:100%; box-sizing:border-box; min-height:130px; resize:none; overflow:hidden;
+  border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); padding:16px 20px; box-shadow:var(--shadow);
+  font-family:var(--font-body); font-size:14px; line-height:1.65; color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.outline-textarea:focus{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15), var(--shadow);}
+.outline-hint{margin:8px 2px 0; font-size:11.5px; color:var(--ink-faint);}
+.outline-hint kbd{
+  font-family:var(--font-mono); font-size:10px; background:var(--paper); border:1px solid var(--line);
+  border-radius:4px; padding:1px 5px; color:var(--ink-soft);
+}
+
+/* ---------- custom select (styled dropdown w/ search + per-option preview) ---------- */
+.lc-select{position:relative; width:100%;}
+.lc-select-trigger{
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:6px;
+  box-sizing:border-box; border:1px solid var(--line); border-radius:7px; background:var(--paper);
+  font-family:var(--font-body); font-size:14px; padding:7px 9px; color:var(--ink); line-height:1.4;
+  cursor:pointer; text-align:left; transition:border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.lc-select-trigger .lc-select-value{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 auto;}
+.lc-select-trigger.is-placeholder .lc-select-value{color:var(--ink-faint);}
+.lc-select-trigger .lc-select-chevron{flex:0 0 auto; width:10px; height:6px; color:var(--ink-faint); transition:transform .15s var(--ease);}
+.lc-select-trigger:hover{border-color:var(--line-strong);}
+.lc-select-trigger:focus-visible{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+.lc-select-trigger.open{border-color:var(--mimeo); background:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+.lc-select-trigger.open .lc-select-chevron{transform:rotate(180deg); color:var(--bespoke);}
+.lc-select-trigger.has-preview{padding-right:32px;}
+.lc-select-preview-btn{
+  position:absolute; top:50%; right:5px; transform:translateY(-50%); z-index:1;
+  width:22px; height:22px; border-radius:5px; border:none; background:transparent;
+  color:var(--ink-faint); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  transition:background-color .12s ease, color .12s ease, transform .12s ease;
+}
+.lc-select-preview-btn svg{width:13px; height:13px;}
+.lc-select-preview-btn:hover{background:var(--bespoke); color:#fff; transform:translateY(-50%) scale(1.08);}
+
+.lc-select-panel{
+  position:fixed; z-index:700; min-width:200px; max-width:320px;
+  background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:11px;
+  box-shadow:var(--shadow-lg); overflow:hidden; display:flex; flex-direction:column;
+  animation:lcPanelIn .13s var(--ease);
+}
+@keyframes lcPanelIn{ from{opacity:0; transform:scale(.97) translateY(-4px);} to{opacity:1; transform:scale(1) translateY(0);} }
+.lc-select-search-wrap{padding:8px 8px 6px; border-bottom:1px solid var(--line); flex:0 0 auto;}
+.lc-select-search{
+  width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:6px; background:var(--paper);
+  font-family:var(--font-body); font-size:14px; padding:6px 8px; color:var(--ink);
+}
+.lc-select-search:focus{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+.lc-opt-list{list-style:none; margin:0; padding:0 0 6px; max-height:288px; overflow-y:auto; flex:1 1 auto;}
+.lc-opt-group-label{
+  position:sticky; top:0; z-index:1; margin-top:10px;
+  padding:8px 14px 6px; background:var(--paper-raised);
+  font-family:var(--font-display); font-weight:800; text-transform:uppercase;
+  letter-spacing:.08em; font-size:10px; color:var(--bespoke);
+  box-shadow:0 1px 0 0 var(--line);
+}
+.lc-opt-list > .lc-opt-group-label:first-child{margin-top:6px;}
+.lc-opt{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin:1px 6px; padding:7px 8px; border-radius:6px; font-size:14px; color:var(--ink); cursor:pointer;
+  transition:background-color .1s ease;
+}
+.lc-opt-group-label + .lc-opt{margin-top:3px;}
+.lc-opt.is-active, .lc-opt:hover{background:var(--mimeo-ink);}
+.lc-opt.is-selected{color:var(--bespoke); font-weight:600;}
+.lc-opt svg{flex:0 0 auto; width:13px; height:13px; color:var(--bespoke);}
+.lc-opt.is-hidden, .lc-opt-group-label.is-hidden{display:none;}
+.lc-opt-empty{padding:10px 8px; color:var(--ink-faint); font-size:12.5px; font-style:italic;}
+.lc-opt-right{display:flex; align-items:center; gap:4px; flex:0 0 auto;}
+.lc-opt-preview-btn{
+  flex:0 0 auto; width:22px; height:22px; border-radius:5px; border:none; background:transparent;
+  color:var(--ink-faint); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  opacity:.5; transition:opacity .12s ease, background-color .12s ease, color .12s ease, transform .12s ease;
+}
+.lc-opt:hover .lc-opt-preview-btn, .lc-opt.is-active .lc-opt-preview-btn{opacity:1;}
+.lc-opt-preview-btn:hover{background:var(--bespoke); color:#fff; transform:scale(1.08);}
+.lc-opt-preview-btn svg{width:14px; height:14px; color:inherit;}
+@media (max-width:720px){
+  .cv-launcher-overlay{padding:0;}
+}
 </style>
 </head>
 <body>
+
+<div class="top-tabs" id="topTabs">
+  <button type="button" class="top-tab-btn active" data-tab="library">Shot Type Library</button>
+  <button type="button" class="top-tab-btn" data-tab="cine">Cine Vlogs</button>
+</div>
 
 <div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
   <div class="shot-preview-box">
@@ -169,7 +473,20 @@ svg{display:block;}
   </div>
 </div>
 
-<div class="all-shots-overlay" id="allShotsOverlay">
+<div class="lc-dialog-overlay" id="lcDialogOverlay" role="alertdialog" aria-modal="true" aria-labelledby="lcDialogTitle">
+  <div class="lc-dialog-box">
+    <div class="lc-dialog-icon" id="lcDialogIcon"></div>
+    <h3 class="lc-dialog-title" id="lcDialogTitle"></h3>
+    <p class="lc-dialog-message" id="lcDialogMessage"></p>
+    <input type="text" class="lc-dialog-input" id="lcDialogInput" autocomplete="off">
+    <div class="lc-dialog-actions">
+      <button type="button" class="btn" id="lcDialogCancelBtn">Cancel</button>
+      <button type="button" class="btn lc-dialog-confirm" id="lcDialogConfirmBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="all-shots-overlay tab-page active" id="allShotsOverlay">
   <div class="all-shots-box" id="allShotsBox">
     <div class="all-shots-head">
       <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="allShotsTitle">All Shot Types</h2></div>
@@ -191,7 +508,90 @@ svg{display:block;}
   </div>
 </div>
 
-<script>
+<div class="cv-launcher-overlay tab-page" id="cvLauncherOverlay">
+  <div class="launcher-inner">
+    <div class="launcher-header">
+      <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shot Type Library</button>
+      <h1 class="launcher-title"><span class="logo-mark">CV</span>Cine Vlogs</h1>
+      <p class="launcher-subhead">Create A New Cine Vlog or Browse Previous Cine Vlogs</p>
+    </div>
+    <div class="launcher-grid" id="cvLauncherGrid"></div>
+  </div>
+</div>
+
+<div class="cv-detail-overlay tab-page" id="cvDetailOverlay">
+  <div class="cv-detail-box">
+    <div class="cv-detail-head">
+      <div>
+        <button type="button" class="all-shots-eyebrow" id="cvBackToLauncherLink">&larr; Cine Vlogs</button>
+        <h2 id="cvDetailTitle">Untitled Cine Vlog</h2>
+      </div>
+      <button type="button" class="modal-fullscreen-btn" id="cvRenameBtn" title="Rename" aria-label="Rename">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+      </button>
+    </div>
+    <div class="cv-detail-scroll">
+      <div class="shot-table-actions">
+        <div class="shot-table-actions-left">
+          <button type="button" class="btn small" id="cvAddShotRowBtn">+ Add Shot Row</button>
+          <button type="button" class="btn small" id="cvAllShotsBtn">All Shots / Sequences</button>
+        </div>
+      </div>
+      <div class="outline-section">
+        <div class="outline-head">
+          <h2 class="outline-title">Script Outline</h2>
+          <div class="outline-head-actions">
+            <button type="button" class="btn small" id="outlineEditBtn">Edit</button>
+            <button type="button" class="btn small" id="outlineCancelBtn" style="display:none;">Cancel</button>
+            <button type="button" class="btn small primary" id="outlineSaveBtn" style="display:none;">Save</button>
+          </div>
+        </div>
+        <div class="outline-view" id="outlineView"></div>
+        <div class="outline-edit-toolbar" id="outlineEditToolbar" style="display:none;">
+          <button type="button" data-outline-prefix="">Bullet</button>
+          <button type="button" data-outline-prefix="#">Heading 1</button>
+          <button type="button" data-outline-prefix="##">Heading 2</button>
+          <button type="button" data-outline-prefix="###">Heading 3</button>
+        </div>
+        <textarea class="outline-textarea" id="outlineTextarea" style="display:none;" placeholder="Start typing your outline…" spellcheck="false"></textarea>
+        <p class="outline-hint" id="outlineHint" style="display:none;">Click a button above to style the line your cursor is on &middot; everything else is a bullet &middot; don't forget to hit <kbd>Save</kbd></p>
+      </div>
+      <div class="shot-table-wrap">
+        <table class="shot-table">
+          <thead><tr>
+            <th>#</th><th>Scene</th><th>Shot / Sequence</th><th>Location</th><th>Description</th><th></th>
+          </tr></thead>
+          <tbody id="cvShotTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ---------- firebase (Cine Vlogs are stored in Firestore, not localStorage) ---------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+import {
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAhtqAa9uC7hTiAv4-G56VxvUfKTX9OiAo",
+  authDomain: "script-database-655e8.firebaseapp.com",
+  projectId: "script-database-655e8",
+  storageBucket: "script-database-655e8.firebasestorage.app",
+  messagingSenderId: "628911233172",
+  appId: "1:628911233172:web:a83a1b726cb296a4efbc81",
+  measurementId: "G-K5P84EH7PH"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+analyticsIsSupported().then(ok=>{
+  if(ok){ try{ getAnalytics(firebaseApp); }catch(e){ console.warn('Firebase Analytics unavailable:', e); } }
+}).catch(()=>{});
+
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
   {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
@@ -404,6 +804,7 @@ let shotPreviewLastFocus = null;
 function openShotPreview(value){
   const p = SHOT_TYPE_PREVIEWS[value];
   if(!p) return;
+  if(typeof closeCustomSelect==='function') closeCustomSelect();
   shotPreviewLastFocus = document.activeElement;
   document.getElementById('shotPreviewEyebrow').textContent = p.group || 'Shot Type';
   document.getElementById('shotPreviewTitle').textContent = p.title || value;
@@ -428,15 +829,572 @@ function shotPreviewOnKeyDown(e){
   if(e.key === 'Escape'){ e.stopImmediatePropagation(); e.stopPropagation(); closeShotPreview(); }
 }
 
+/* ---------- generic dialog engine (replaces native prompt/confirm/alert) ---------- */
+const LC_DIALOG_EDIT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+const LC_DIALOG_WARN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+const LC_DIALOG_INFO_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+
+function lcDialogOpen(opts){
+  return new Promise(resolve=>{
+    const overlay = document.getElementById('lcDialogOverlay');
+    const isPrompt = opts.type==='prompt';
+    const isAlert = opts.type==='alert';
+    const isDanger = !!opts.danger;
+
+    document.getElementById('lcDialogTitle').textContent = opts.title || '';
+    const msgEl = document.getElementById('lcDialogMessage');
+    msgEl.textContent = opts.message || '';
+    msgEl.style.display = opts.message ? 'block' : 'none';
+
+    const input = document.getElementById('lcDialogInput');
+    input.style.display = isPrompt ? 'block' : 'none';
+    input.value = isPrompt ? (opts.defaultValue || '') : '';
+
+    const confirmBtn = document.getElementById('lcDialogConfirmBtn');
+    const cancelBtn = document.getElementById('lcDialogCancelBtn');
+    confirmBtn.textContent = opts.confirmText || (isPrompt ? 'Save' : (isAlert ? 'OK' : 'Confirm'));
+    cancelBtn.textContent = opts.cancelText || 'Cancel';
+    cancelBtn.style.display = isAlert ? 'none' : 'inline-block';
+    confirmBtn.classList.toggle('danger', isDanger);
+
+    const iconEl = document.getElementById('lcDialogIcon');
+    iconEl.classList.toggle('danger', isDanger);
+    iconEl.innerHTML = isDanger ? LC_DIALOG_WARN_SVG : (isAlert ? LC_DIALOG_INFO_SVG : LC_DIALOG_EDIT_SVG);
+
+    let lastFocus = document.activeElement;
+    overlay.classList.add('open');
+    requestAnimationFrame(()=>{
+      if(isPrompt){ input.focus(); input.select(); } else { confirmBtn.focus(); }
+    });
+
+    function cleanup(){
+      overlay.classList.remove('open');
+      confirmBtn.removeEventListener('click', onConfirm);
+      cancelBtn.removeEventListener('click', onCancel);
+      overlay.removeEventListener('mousedown', onOverlayMouseDown);
+      input.removeEventListener('keydown', onInputKeyDown);
+      document.removeEventListener('keydown', onKeyDown, true);
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function onConfirm(){ cleanup(); resolve(isPrompt ? input.value.trim() : true); }
+    function onCancel(){ cleanup(); resolve(isPrompt ? null : false); }
+    function onOverlayMouseDown(e){ if(e.target===overlay) onCancel(); }
+    function onInputKeyDown(e){ if(e.key==='Enter'){ e.preventDefault(); onConfirm(); } }
+    function onKeyDown(e){ if(e.key==='Escape'){ e.stopPropagation(); onCancel(); } }
+
+    confirmBtn.addEventListener('click', onConfirm);
+    cancelBtn.addEventListener('click', onCancel);
+    overlay.addEventListener('mousedown', onOverlayMouseDown);
+    input.addEventListener('keydown', onInputKeyDown);
+    document.addEventListener('keydown', onKeyDown, true);
+  });
+}
+function lcPrompt(title, defaultValue, opts){ return lcDialogOpen(Object.assign({type:'prompt', title, defaultValue}, opts||{})); }
+function lcConfirm(title, message, opts){ return lcDialogOpen(Object.assign({type:'confirm', title, message}, opts||{})); }
+function lcAlert(title, message){ return lcDialogOpen({type:'alert', title, message}); }
+
 /* ---------- page init (renders the same grid the in-app modal shows) ---------- */
 let allShotsFullscreen = false;
 function toggleAllShotsFullscreen(){
   allShotsFullscreen = !allShotsFullscreen;
   document.getElementById('allShotsBox').classList.toggle('fullscreen', allShotsFullscreen);
   document.getElementById('allShotsOverlay').classList.toggle('fullscreen', allShotsFullscreen);
+  document.body.classList.toggle('tabs-hidden', allShotsFullscreen);
 }
 
-(function init(){
+/* ================= CINE VLOGS ================= */
+const CV_COLLECTION = 'cineVlogs';
+const CV_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>';
+const CV_PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+const LC_CHEVRON_SVG = '<svg class="lc-select-chevron" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LC_CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LC_EYE_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.1" stroke="currentColor" stroke-width="1.4"/></svg>';
+
+/* ---------- custom select engine (search + grouped options + per-option preview) ---------- */
+let lcSelectOpen = null;
+function lcSelectHtml(field, displayValue, placeholder, previewValue){
+  const hasValue = !!displayValue;
+  const hasPreview = !!(previewValue && SHOT_TYPE_PREVIEWS[previewValue]);
+  return '<div class="lc-select' + (hasPreview?' has-preview':'') + '" data-field="' + escAttr(field) + '">'
+    + '<button type="button" class="lc-select-trigger' + (hasValue?'':' is-placeholder') + (hasPreview?' has-preview':'') + '" aria-haspopup="listbox" aria-expanded="false">'
+      + '<span class="lc-select-value">' + esc(hasValue ? displayValue : placeholder) + '</span>'
+      + LC_CHEVRON_SVG
+    + '</button>'
+    + (hasPreview
+        ? '<button type="button" class="lc-select-preview-btn" data-shot-preview="' + escAttr(previewValue) + '" title="Preview ' + escAttr(displayValue) + '" aria-label="Preview ' + escAttr(displayValue) + '">' + LC_EYE_SVG + '</button>'
+        : '')
+  + '</div>';
+}
+function lcOptionRow(value, label, selected, previewValue){
+  const hasPreview = !!(previewValue && SHOT_TYPE_PREVIEWS[previewValue]);
+  const rightHtml = hasPreview
+    ? '<span class="lc-opt-right">'
+        + (selected ? LC_CHECK_SVG : '')
+        + '<button type="button" class="lc-opt-preview-btn" data-shot-preview="' + escAttr(previewValue) + '" title="Preview ' + escAttr(label) + '" aria-label="Preview ' + escAttr(label) + '">' + LC_EYE_SVG + '</button>'
+      + '</span>'
+    : (selected ? LC_CHECK_SVG : '');
+  return '<li class="lc-opt' + (selected?' is-selected':'') + '" data-value="' + escAttr(value) + '" role="option" aria-selected="' + (selected?'true':'false') + '">'
+    + '<span class="lc-opt-label">' + esc(label) + '</span>'
+    + rightHtml
+  + '</li>';
+}
+function lcGroupLabel(label){
+  return '<li class="lc-opt-group-label" role="presentation">' + esc(label) + '</li>';
+}
+function shotTypePanelHtml(current){
+  let list = '';
+  SHOT_TYPE_GROUPS.forEach(g=>{
+    const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
+    if(!items.length) return;
+    list += lcGroupLabel(g.group);
+    list += items.map(i=> lcOptionRow(i, i, i===current, i)).join('');
+  });
+  return '<div class="lc-select-search-wrap"><input type="text" class="lc-select-search" placeholder="Search shot types…" autocomplete="off"></div>'
+    + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
+}
+function closeCustomSelect(){
+  if(!lcSelectOpen) return;
+  lcSelectOpen.trigger.classList.remove('open');
+  lcSelectOpen.trigger.setAttribute('aria-expanded','false');
+  lcSelectOpen.panel.remove();
+  document.removeEventListener('mousedown', lcOnDocMouseDown, true);
+  document.removeEventListener('keydown', lcOnDocKeyDown, true);
+  window.removeEventListener('resize', lcRepositionOpenPanel);
+  window.removeEventListener('scroll', lcRepositionOpenPanel, true);
+  lcSelectOpen = null;
+}
+function lcOnDocMouseDown(e){
+  if(!lcSelectOpen) return;
+  if(lcSelectOpen.panel.contains(e.target) || lcSelectOpen.trigger.contains(e.target)) return;
+  closeCustomSelect();
+}
+function lcSetActive(opts, idx){
+  opts.forEach(o=> o.classList.remove('is-active'));
+  if(opts[idx]){ opts[idx].classList.add('is-active'); opts[idx].scrollIntoView({block:'nearest'}); }
+}
+function lcOnDocKeyDown(e){
+  if(!lcSelectOpen) return;
+  if(e.key === 'Escape'){ e.stopPropagation(); const t = lcSelectOpen.trigger; closeCustomSelect(); t.focus(); return; }
+  const opts = Array.from(lcSelectOpen.panel.querySelectorAll('.lc-opt[data-value]:not(.is-hidden)'));
+  if(!opts.length) return;
+  let idx = opts.findIndex(o=> o.classList.contains('is-active'));
+  if(e.key === 'ArrowDown'){ e.preventDefault(); idx = Math.min(opts.length-1, idx+1); lcSetActive(opts, idx); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); idx = Math.max(0, idx-1); lcSetActive(opts, idx); }
+  else if(e.key === 'Enter'){ e.preventDefault(); if(idx>=0) opts[idx].dispatchEvent(new MouseEvent('click', {bubbles:true})); }
+}
+function lcPositionPanel(trigger, panel){
+  const r = trigger.getBoundingClientRect();
+  const panelH = panel.offsetHeight;
+  const spaceBelow = window.innerHeight - r.bottom;
+  const top = (spaceBelow < panelH + 12 && r.top > panelH + 12) ? Math.max(8, r.top - panelH - 6) : r.bottom + 6;
+  let left = r.left;
+  const panelW = panel.offsetWidth;
+  if(left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
+  panel.style.top = top + 'px';
+  panel.style.left = left + 'px';
+  panel.style.minWidth = r.width + 'px';
+}
+function lcRepositionOpenPanel(){ if(lcSelectOpen) lcPositionPanel(lcSelectOpen.trigger, lcSelectOpen.panel); }
+function lcFilterPanel(panel, query){
+  const q = query.trim().toLowerCase();
+  let currentGroupLabel = null, groupHasVisible = false;
+  Array.from(panel.querySelectorAll('.lc-opt-list > *')).forEach(el=>{
+    if(el.classList.contains('lc-opt-group-label')){
+      if(currentGroupLabel) currentGroupLabel.classList.toggle('is-hidden', !groupHasVisible);
+      currentGroupLabel = el; groupHasVisible = false;
+    } else if(el.classList.contains('lc-opt')){
+      const label = (el.querySelector('.lc-opt-label')||el).textContent.toLowerCase();
+      const match = !q || label.includes(q);
+      el.classList.toggle('is-hidden', !match);
+      if(match) groupHasVisible = true;
+    }
+  });
+  if(currentGroupLabel) currentGroupLabel.classList.toggle('is-hidden', !groupHasVisible);
+}
+function openCustomSelect(trigger, opts){
+  if(lcSelectOpen && lcSelectOpen.trigger===trigger){ closeCustomSelect(); return; }
+  closeCustomSelect();
+  const panel = document.createElement('div');
+  panel.className = 'lc-select-panel';
+  panel.innerHTML = opts.panelHtml;
+  document.body.appendChild(panel);
+  trigger.classList.add('open');
+  trigger.setAttribute('aria-expanded','true');
+  lcPositionPanel(trigger, panel);
+  lcSelectOpen = {trigger, panel};
+
+  const searchInput = panel.querySelector('.lc-select-search');
+  if(searchInput){
+    searchInput.addEventListener('input', ()=> lcFilterPanel(panel, searchInput.value));
+    searchInput.addEventListener('click', e=> e.stopPropagation());
+    requestAnimationFrame(()=> searchInput.focus());
+  }
+
+  panel.querySelectorAll('.lc-opt[data-value]').forEach(li=>{
+    li.addEventListener('click', ()=>{ opts.onSelect(li.dataset.value); closeCustomSelect(); });
+    li.addEventListener('mouseenter', ()=>{
+      panel.querySelectorAll('.lc-opt').forEach(o=> o.classList.remove('is-active'));
+      li.classList.add('is-active');
+    });
+  });
+
+  panel.querySelectorAll('[data-shot-preview]').forEach(previewBtn=>{
+    previewBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      openShotPreview(previewBtn.dataset.shotPreview);
+    });
+    previewBtn.addEventListener('mousedown', e=> e.stopPropagation());
+  });
+
+  const selectedLi = panel.querySelector('.lc-opt.is-selected');
+  if(selectedLi) selectedLi.classList.add('is-active');
+
+  document.addEventListener('mousedown', lcOnDocMouseDown, true);
+  document.addEventListener('keydown', lcOnDocKeyDown, true);
+  window.addEventListener('resize', lcRepositionOpenPanel);
+  window.addEventListener('scroll', lcRepositionOpenPanel, true);
+}
+
+/* ---------- script outline (typed markdown-lite, explicit save, read-only display) ---------- */
+let outlineMode = 'view';
+let outlineDirty = false;
+
+function outlineGetText(rec){
+  if(typeof rec.outlineText === 'string') return rec.outlineText;
+  if(Array.isArray(rec.outline) && rec.outline.length){
+    return rec.outline.map(b=>{
+      if(b.type==='h1') return '# ' + b.text;
+      if(b.type==='h3') return '### ' + b.text;
+      if(b.type==='h2' || b.type==='heading') return '## ' + b.text;
+      return b.text;
+    }).join('\n');
+  }
+  return '';
+}
+function outlineParseLine(line){
+  const trimmed = line.trim();
+  if(trimmed.startsWith('### ')) return {type:'h3', text: trimmed.slice(4).trim()};
+  if(trimmed.startsWith('## ')) return {type:'h2', text: trimmed.slice(3).trim()};
+  if(trimmed.startsWith('# ')) return {type:'h1', text: trimmed.slice(2).trim()};
+  return {type:'bullet', text: trimmed};
+}
+function outlineRenderView(text){
+  const view = document.getElementById('outlineView');
+  const raw = (text || '').trim();
+  const empty = '<p class="outline-empty">No outline yet — click Edit to add one.</p>';
+  if(!raw){ view.innerHTML = empty; return; }
+  const html = raw.split(/\r?\n/).map(outlineParseLine).filter(b=> b.text).map(b=>{
+    if(b.type==='bullet') return '<div class="outline-block-bullet">' + esc(b.text) + '</div>';
+    return '<' + b.type + ' class="outline-block-' + b.type + '">' + esc(b.text) + '</' + b.type + '>';
+  }).join('');
+  view.innerHTML = html || empty;
+}
+function outlineAutoGrow(ta){
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
+}
+function outlineSetMode(mode){
+  outlineMode = mode;
+  const isEdit = mode==='edit';
+  document.getElementById('outlineView').style.display = isEdit ? 'none' : 'block';
+  document.getElementById('outlineTextarea').style.display = isEdit ? 'block' : 'none';
+  document.getElementById('outlineEditToolbar').style.display = isEdit ? 'flex' : 'none';
+  document.getElementById('outlineHint').style.display = isEdit ? 'block' : 'none';
+  document.getElementById('outlineEditBtn').style.display = isEdit ? 'none' : 'inline-block';
+  document.getElementById('outlineSaveBtn').style.display = isEdit ? 'inline-block' : 'none';
+  document.getElementById('outlineCancelBtn').style.display = isEdit ? 'inline-block' : 'none';
+  if(!isEdit){
+    const rec = cvLibrary.find(r=> r.id===cvActiveId);
+    outlineRenderView(rec ? outlineGetText(rec) : '');
+  }
+}
+function outlineEnterEdit(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const ta = document.getElementById('outlineTextarea');
+  ta.value = outlineGetText(rec);
+  outlineDirty = false;
+  outlineSetMode('edit');
+  requestAnimationFrame(()=>{ outlineAutoGrow(ta); ta.focus(); });
+}
+async function outlineSave(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const ta = document.getElementById('outlineTextarea');
+  rec.outlineText = ta.value;
+  rec.updatedAt = Date.now();
+  outlineDirty = false;
+  outlineSetMode('view');
+  await cvSaveRecord(rec);
+}
+function outlineCancelEdit(){
+  outlineDirty = false;
+  outlineSetMode('view');
+}
+async function outlineAutoSaveIfDirty(){
+  if(outlineMode==='edit' && outlineDirty) await outlineSave();
+}
+function outlineCurrentLineRange(ta){
+  const val = ta.value;
+  const pos = ta.selectionStart;
+  const lineStart = val.lastIndexOf('\n', pos-1) + 1;
+  let lineEnd = val.indexOf('\n', pos);
+  if(lineEnd===-1) lineEnd = val.length;
+  return {lineStart, lineEnd};
+}
+function outlineApplyPrefix(prefix){
+  const ta = document.getElementById('outlineTextarea');
+  const {lineStart, lineEnd} = outlineCurrentLineRange(ta);
+  const line = ta.value.slice(lineStart, lineEnd);
+  const stripped = line.replace(/^(#{1,3})\s+/, '');
+  const newLine = prefix ? prefix + ' ' + stripped : stripped;
+  ta.focus();
+  ta.setRangeText(newLine, lineStart, lineEnd, 'end');
+  outlineAutoGrow(ta);
+  outlineDirty = true;
+}
+function outlineInit(){
+  const ta = document.getElementById('outlineTextarea');
+  ta.addEventListener('input', ()=>{ outlineAutoGrow(ta); outlineDirty = true; });
+  document.getElementById('outlineEditBtn').addEventListener('click', outlineEnterEdit);
+  document.getElementById('outlineSaveBtn').addEventListener('click', outlineSave);
+  document.getElementById('outlineCancelBtn').addEventListener('click', outlineCancelEdit);
+  document.getElementById('outlineEditToolbar').querySelectorAll('button[data-outline-prefix]').forEach(btn=>{
+    btn.addEventListener('mousedown', e=> e.preventDefault());
+    btn.addEventListener('click', ()=> outlineApplyPrefix(btn.dataset.outlinePrefix));
+  });
+  window.addEventListener('beforeunload', (e)=>{
+    if(outlineMode==='edit' && outlineDirty){ e.preventDefault(); e.returnValue = ''; }
+  });
+}
+
+async function cvFetchLibrary(){
+  try{
+    const snap = await getDocs(collection(db, CV_COLLECTION));
+    return snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+  }catch(e){
+    console.error('Failed to load Cine Vlogs from Firebase:', e);
+    await lcAlert('Connection error', 'Could not load Cine Vlogs from the database. Check your connection and try again.');
+    return [];
+  }
+}
+async function cvSaveRecord(rec){
+  try{
+    await updateDoc(doc(db, CV_COLLECTION, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, outlineText: rec.outlineText || '' });
+  }catch(e){
+    console.error('Failed to save Cine Vlog to Firebase:', e);
+    await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
+  }
+}
+let cvLibrary = [];
+let cvActiveId = null;
+
+function cvUid(){ return 'shot_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function cvFmtDate(ts){ try{ return new Date(ts).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}); }catch(e){ return ''; } }
+
+function cvShotRowHtml(row, idx){
+  return '<tr data-shot-id="' + escAttr(row.id) + '">'
+    + '<td class="col-num"><span class="shot-num-badge">' + (idx+1) + '</span></td>'
+    + '<td class="col-scene"><input type="text" data-field="scene" placeholder="Select scene…" value="' + escAttr(row.scene||'') + '"></td>'
+    + '<td>' + lcSelectHtml('shotType', row.shotType, 'Select shot type…', row.shotType) + '</td>'
+    + '<td><input type="text" data-field="location" placeholder="Select location…" value="' + escAttr(row.location||'') + '"></td>'
+    + '<td><textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea></td>'
+    + '<td class="col-del"><button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button></td>'
+  + '</tr>';
+}
+
+function cvRenderLauncher(){
+  const grid = document.getElementById('cvLauncherGrid');
+  let html = '<button type="button" class="launcher-card new" id="cvCreateBtn"><span class="plus">+</span><span class="label">Create New Cine Vlog</span></button>';
+  const sorted = cvLibrary.slice().sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
+  if(!sorted.length){
+    html += '<div class="launcher-empty">No Cine Vlogs saved yet - create your first one to get started.</div>';
+  }
+  sorted.forEach(rec=>{
+    const count = (rec.shots||[]).length;
+    html += '<div class="launcher-card" data-cv-id="' + escAttr(rec.id) + '">'
+      + '<div class="lc-actions">'
+        + '<button type="button" class="lc-icon-btn lc-rename" data-rename-id="' + escAttr(rec.id) + '" title="Rename this Cine Vlog" aria-label="Rename">' + CV_PENCIL_SVG + '</button>'
+        + '<button type="button" class="lc-icon-btn lc-delete" data-delete-id="' + escAttr(rec.id) + '" title="Delete this Cine Vlog" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
+      + '</div>'
+      + '<h3 class="lc-name">' + esc(rec.name || 'Untitled Cine Vlog') + '</h3>'
+      + '<p class="lc-meta">Updated ' + cvFmtDate(rec.updatedAt) + ' · ' + count + ' shot' + (count===1?'':'s') + '</p>'
+    + '</div>';
+  });
+  grid.innerHTML = html;
+
+  grid.querySelectorAll('.launcher-card[data-cv-id]').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.lc-icon-btn')) return;
+      cvOpen(card.dataset.cvId);
+    });
+  });
+  grid.querySelectorAll('.lc-rename').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); cvRename(btn.dataset.renameId); }));
+  grid.querySelectorAll('.lc-delete').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); cvDelete(btn.dataset.deleteId); }));
+  const createBtn = document.getElementById('cvCreateBtn');
+  if(createBtn) createBtn.addEventListener('click', cvCreate);
+}
+
+async function cvCreate(){
+  const name = await lcPrompt('Create Cine Vlog', 'Untitled Cine Vlog', {
+    message: 'Give this Cine Vlog a name.', confirmText: 'Create'
+  });
+  if(name === null) return;
+  const rec = { name: name || 'Untitled Cine Vlog', updatedAt: Date.now(), shots: [], outlineText: '' };
+  try{
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    rec.id = ref.id;
+    cvLibrary.push(rec);
+    cvOpen(rec.id);
+  }catch(e){
+    console.error('Failed to create Cine Vlog:', e);
+    await lcAlert('Connection error', 'Could not create this Cine Vlog. Check your connection and try again.');
+  }
+}
+async function cvRename(id){
+  const rec = cvLibrary.find(r=> r.id===id);
+  if(!rec) return;
+  const name = await lcPrompt('Rename Cine Vlog', rec.name || '', {
+    message: 'Choose a new name for this Cine Vlog.', confirmText: 'Save'
+  });
+  if(name === null) return;
+  rec.name = name || rec.name;
+  rec.updatedAt = Date.now();
+  cvRenderLauncher();
+  if(cvActiveId===id) document.getElementById('cvDetailTitle').textContent = rec.name;
+  await cvSaveRecord(rec);
+}
+async function cvDelete(id){
+  const rec = cvLibrary.find(r=> r.id===id);
+  if(!rec) return;
+  const ok = await lcConfirm('Delete this Cine Vlog?', 'Delete "' + (rec.name||'Untitled Cine Vlog') + '"? This cannot be undone.', {
+    confirmText: 'Delete', danger: true
+  });
+  if(!ok) return;
+  try{
+    await deleteDoc(doc(db, CV_COLLECTION, id));
+  }catch(e){
+    console.error('Failed to delete Cine Vlog:', e);
+    await lcAlert('Connection error', 'Could not delete this Cine Vlog. Check your connection and try again.');
+    return;
+  }
+  cvLibrary = cvLibrary.filter(r=> r.id!==id);
+  if(cvActiveId===id){ cvActiveId=null; cvBackToLauncher(); }
+  cvRenderLauncher();
+}
+
+function cvOpen(id){
+  const rec = cvLibrary.find(r=> r.id===id);
+  if(!rec) return;
+  cvActiveId = id;
+  cvRenderDetail();
+  document.getElementById('cvLauncherOverlay').classList.remove('active');
+  document.getElementById('cvDetailOverlay').classList.add('active');
+}
+function cvBackToLauncher(){
+  outlineAutoSaveIfDirty();
+  cvActiveId = null;
+  document.getElementById('cvDetailOverlay').classList.remove('active');
+  document.getElementById('cvLauncherOverlay').classList.add('active');
+  cvRenderLauncher();
+}
+
+function cvRenderDetail(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  document.getElementById('cvDetailTitle').textContent = rec.name || 'Untitled Cine Vlog';
+  const outlineTa = document.getElementById('outlineTextarea');
+  outlineTa.value = outlineGetText(rec);
+  outlineDirty = false;
+  outlineSetMode(outlineTa.value.trim() ? 'view' : 'edit');
+  requestAnimationFrame(()=> outlineAutoGrow(outlineTa));
+  const body = document.getElementById('cvShotTableBody');
+  body.innerHTML = rec.shots.length
+    ? rec.shots.map(cvShotRowHtml).join('')
+    : '<tr><td colspan="6" style="padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;">No shots yet - add a row to get started.</td></tr>';
+  cvWireRows();
+}
+
+function cvWireRows(){
+  const body = document.getElementById('cvShotTableBody');
+  body.querySelectorAll('tr[data-shot-id]').forEach(tr=>{
+    const id = tr.dataset.shotId;
+    tr.querySelectorAll('input[data-field], textarea[data-field]').forEach(el=>{
+      el.addEventListener('input', ()=>{
+        cvUpdateShotField(id, el.dataset.field, el.value);
+        if(el.tagName==='TEXTAREA'){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+      });
+      if(el.tagName==='TEXTAREA'){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+    });
+
+    const shotTypeWrap = tr.querySelector('.lc-select[data-field="shotType"]');
+    if(shotTypeWrap){
+      const trigger = shotTypeWrap.querySelector('.lc-select-trigger');
+      trigger.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const rec = cvLibrary.find(r=> r.id===cvActiveId);
+        const row = rec && rec.shots.find(s=> s.id===id);
+        if(!row) return;
+        openCustomSelect(trigger, {
+          panelHtml: shotTypePanelHtml(row.shotType),
+          onSelect: (val)=>{
+            cvUpdateShotField(id, 'shotType', val);
+            cvRenderDetail();
+          }
+        });
+      });
+      const trigPreviewBtn = shotTypeWrap.querySelector('.lc-select-preview-btn[data-shot-preview]');
+      if(trigPreviewBtn) trigPreviewBtn.addEventListener('click', (e)=>{ e.stopPropagation(); openShotPreview(trigPreviewBtn.dataset.shotPreview); });
+    }
+
+    const rm = tr.querySelector('[data-shot-remove]');
+    if(rm) rm.addEventListener('click', ()=> cvRemoveRow(id));
+  });
+}
+
+async function cvUpdateShotField(shotId, field, value){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const row = rec.shots.find(s=> s.id===shotId);
+  if(!row) return;
+  row[field] = value;
+  rec.updatedAt = Date.now();
+  await cvSaveRecord(rec);
+}
+
+async function cvAddRow(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  rec.shots.push({ id: cvUid(), scene:'', shotType:'', location:'', description:'' });
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+async function cvRemoveRow(shotId){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const ok = await lcConfirm('Remove this shot?', "This can't be undone.", { confirmText: 'Remove', danger: true });
+  if(!ok) return;
+  rec.shots = rec.shots.filter(s=> s.id!==shotId);
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+
+/* ---------- tab switching ---------- */
+function switchTab(tab){
+  if(cvActiveId && tab!=='cine') outlineAutoSaveIfDirty();
+  document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
+  document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
+  const showLauncher = tab==='cine' && !cvActiveId;
+  const showDetail = tab==='cine' && !!cvActiveId;
+  document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
+  document.getElementById('cvDetailOverlay').classList.toggle('active', showDetail);
+  if(showLauncher) cvRenderLauncher();
+  if(showDetail) cvRenderDetail();
+}
+
+(async function init(){
   const scroll = document.getElementById('allShotsScroll');
   scroll.innerHTML = allShotsGridHtml();
   scroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
@@ -450,6 +1408,19 @@ function toggleAllShotsFullscreen(){
   });
   document.getElementById('shotPreviewCloseBtn').addEventListener('click', closeShotPreview);
   document.getElementById('shotPreviewOverlay').addEventListener('click', (e)=>{ if(e.target.id==='shotPreviewOverlay') closeShotPreview(); });
+
+  document.querySelectorAll('.top-tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
+  });
+  document.getElementById('cvBackToLibraryLink').addEventListener('click', ()=> switchTab('library'));
+  document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
+  document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
+  document.getElementById('cvAddShotRowBtn').addEventListener('click', cvAddRow);
+  document.getElementById('cvAllShotsBtn').addEventListener('click', ()=> switchTab('library'));
+  outlineInit();
+
+  cvLibrary = await cvFetchLibrary();
+  cvRenderLauncher();
 })();
 </script>
 </body>
