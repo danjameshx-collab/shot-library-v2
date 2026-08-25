@@ -639,14 +639,14 @@ analyticsIsSupported().then(ok=>{
 
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
-  {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
-  {group:'Composition', items:['Environment','High Negative Space','Section']},
-  {group:'Effect', items:['Low Shutter','Slow Motion']},
-  {group:'Perspective', items:['Human (POV)','Object (POV)','Reverse (POV)']},
-  {group:'Unique', items:['Mirror','Reveal','Shadows']},
+  {group:'Composition', items:['Frame In A Frame','High Negative Space','Leading Lines','Rule Of Thirds','Section','Symmetry']},
   {group:'Close Up', items:['Close Up (Classic)','Close Up (Extreme)','Close Up (Foreground)']},
   {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)','Head On (Medium)','Hero (Medium)','Medium (Classic)','Reveal (Medium)','Section (Medium)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)','Wide (Classic)']},
+  {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
+  {group:'Perspective', items:['Human (POV)','Object (POV)','Reverse (POV)']},
+  {group:'Unique', items:['Mirror','Reveal','Shadows']},
+  {group:'Effect', items:['Low Shutter','Slow Motion']},
   {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','Top-Down','Speed Ramping','Slow Motion Sequence','Cross Cutting','Close Up Sequence','Drone Sequence']},
 ];
 
@@ -679,13 +679,25 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'Camera looks straight down from directly overhead. Flattens the scene into a graphic, map-like frame - great for reveals and process shots.'
   },
   /* ---- Composition ---- */
-  'Environment': {
-    group: 'Composition', title: 'Environment', image: SHOT_IMG_DIR + 'environment.png',
-    desc: 'The frame gives as much weight to the location as to the subject. Establishes place and mood before (or instead of) focusing in.'
+  'Frame In A Frame': {
+    group: 'Composition', title: 'Frame In A Frame', image: SHOT_IMG_DIR + 'Frame In A Frame.png',
+    desc: 'The subject is framed by something inside the scene - a doorway, window, or gap between objects. Adds depth and draws the eye straight to the subject.'
   },
   'High Negative Space': {
     group: 'Composition', title: 'High Negative Space', image: SHOT_IMG_DIR + 'high-negative-space.png',
     desc: 'The subject sits small inside a large, mostly empty frame. The empty space does the storytelling - isolation, scale, or room to think.'
+  },
+  'Leading Lines': {
+    group: 'Composition', title: 'Leading Lines', image: SHOT_IMG_DIR + 'Leading Lines.png',
+    desc: 'Lines in the scene - a road, railing, or shadow - pull the eye through the frame toward the subject. Gives a static shot direction and depth.'
+  },
+  'Rule Of Thirds': {
+    group: 'Composition', title: 'Rule Of Thirds', image: SHOT_IMG_DIR + 'Rule Of Thirds.png',
+    desc: 'The subject sits off-center, on one of the grid intersections instead of dead center. Feels more natural and balanced than a centered frame.'
+  },
+  'Symmetry': {
+    group: 'Composition', title: 'Symmetry', image: SHOT_IMG_DIR + 'Symmetry.png',
+    desc: 'The frame is built around a mirrored balance - matching elements on either side of center. Feels ordered, deliberate, and calm.'
   },
   /* ---- Effect ---- */
   'Low Shutter': {
@@ -737,7 +749,7 @@ const SHOT_TYPE_PREVIEWS = {
     desc: "Camera sits behind the subject at medium distance, showing what they're looking at. Builds anticipation for the reveal."
   },
   'Environment (Medium)': {
-    group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment-medium.png',
+    group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment v2.png',
     desc: 'A medium-distance frame that keeps enough of the location visible to set the scene. Balances subject and place evenly.'
   },
   'Foreground (Medium)': {
