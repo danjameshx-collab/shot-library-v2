@@ -571,6 +571,18 @@ table.shot-table .col-del{width:34px; text-align:center; padding-top:10px;}
       </div>
       <div class="outline-section">
         <div class="outline-head">
+          <h2 class="outline-title">Ideas</h2>
+          <div class="outline-head-actions">
+            <button type="button" class="btn small" id="ideasEditBtn">Edit</button>
+            <button type="button" class="btn small" id="ideasCancelBtn" style="display:none;">Cancel</button>
+            <button type="button" class="btn small primary" id="ideasSaveBtn" style="display:none;">Save</button>
+          </div>
+        </div>
+        <div class="outline-view" id="ideasView"></div>
+        <textarea class="outline-textarea" id="ideasTextarea" style="display:none;" placeholder="Start typing your ideas…" spellcheck="false"></textarea>
+      </div>
+      <div class="outline-section">
+        <div class="outline-head">
           <h2 class="outline-title">Script Outline</h2>
           <div class="outline-head-actions">
             <button type="button" class="btn small" id="outlineEditBtn">Edit</button>
@@ -1167,6 +1179,69 @@ function outlineCancelEdit(){
 async function outlineAutoSaveIfDirty(){
   if(outlineMode==='edit' && outlineDirty) await outlineSave();
 }
+
+/* ---------- ideas (same typed markdown-lite pattern as script outline) ---------- */
+let ideasMode = 'view';
+let ideasDirty = false;
+
+function ideasGetText(rec){
+  return typeof rec.ideasText === 'string' ? rec.ideasText : '';
+}
+function ideasRenderView(text){
+  const view = document.getElementById('ideasView');
+  const raw = (text || '').trim();
+  const empty = '<p class="outline-empty">No ideas yet — click Edit to add some.</p>';
+  view.innerHTML = raw ? '<div style="white-space:pre-wrap;">' + esc(raw) + '</div>' : empty;
+}
+function ideasSetMode(mode){
+  ideasMode = mode;
+  const isEdit = mode==='edit';
+  document.getElementById('ideasView').style.display = isEdit ? 'none' : 'block';
+  document.getElementById('ideasTextarea').style.display = isEdit ? 'block' : 'none';
+  document.getElementById('ideasEditBtn').style.display = isEdit ? 'none' : 'inline-block';
+  document.getElementById('ideasSaveBtn').style.display = isEdit ? 'inline-block' : 'none';
+  document.getElementById('ideasCancelBtn').style.display = isEdit ? 'inline-block' : 'none';
+  if(!isEdit){
+    const rec = cvLibrary.find(r=> r.id===cvActiveId);
+    ideasRenderView(rec ? ideasGetText(rec) : '');
+  }
+}
+function ideasEnterEdit(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const ta = document.getElementById('ideasTextarea');
+  ta.value = ideasGetText(rec);
+  ideasDirty = false;
+  ideasSetMode('edit');
+  requestAnimationFrame(()=>{ outlineAutoGrow(ta); ta.focus(); });
+}
+async function ideasSave(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const ta = document.getElementById('ideasTextarea');
+  rec.ideasText = ta.value;
+  rec.updatedAt = Date.now();
+  ideasDirty = false;
+  ideasSetMode('view');
+  await cvSaveRecord(rec);
+}
+function ideasCancelEdit(){
+  ideasDirty = false;
+  ideasSetMode('view');
+}
+async function ideasAutoSaveIfDirty(){
+  if(ideasMode==='edit' && ideasDirty) await ideasSave();
+}
+function ideasInit(){
+  const ta = document.getElementById('ideasTextarea');
+  ta.addEventListener('input', ()=>{ outlineAutoGrow(ta); ideasDirty = true; });
+  document.getElementById('ideasEditBtn').addEventListener('click', ideasEnterEdit);
+  document.getElementById('ideasSaveBtn').addEventListener('click', ideasSave);
+  document.getElementById('ideasCancelBtn').addEventListener('click', ideasCancelEdit);
+  window.addEventListener('beforeunload', (e)=>{
+    if(ideasMode==='edit' && ideasDirty){ e.preventDefault(); e.returnValue = ''; }
+  });
+}
 function outlineCurrentLineRange(ta){
   const val = ta.value;
   const pos = ta.selectionStart;
@@ -1213,7 +1288,7 @@ async function cvFetchLibrary(){
 }
 async function cvSaveRecord(rec){
   try{
-    await updateDoc(doc(db, CV_COLLECTION, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, outlineText: rec.outlineText || '' });
+    await updateDoc(doc(db, CV_COLLECTION, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, outlineText: rec.outlineText || '', ideasText: rec.ideasText || '' });
   }catch(e){
     console.error('Failed to save Cine Vlog to Firebase:', e);
     await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
@@ -1273,7 +1348,7 @@ async function cvCreate(){
     message: 'Give this Cine Vlog a name.', confirmText: 'Create'
   });
   if(name === null) return;
-  const rec = { name: name || 'Untitled Cine Vlog', updatedAt: Date.now(), shots: [], outlineText: '' };
+  const rec = { name: name || 'Untitled Cine Vlog', updatedAt: Date.now(), shots: [], outlineText: '', ideasText: '' };
   try{
     const ref = await addDoc(collection(db, CV_COLLECTION), rec);
     rec.id = ref.id;
@@ -1326,6 +1401,7 @@ function cvOpen(id){
 }
 function cvBackToLauncher(){
   outlineAutoSaveIfDirty();
+  ideasAutoSaveIfDirty();
   cvActiveId = null;
   document.getElementById('cvDetailOverlay').classList.remove('active');
   document.getElementById('cvLauncherOverlay').classList.add('active');
@@ -1336,6 +1412,11 @@ function cvRenderDetail(){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
   document.getElementById('cvDetailTitle').textContent = rec.name || 'Untitled Cine Vlog';
+  const ideasTa = document.getElementById('ideasTextarea');
+  ideasTa.value = ideasGetText(rec);
+  ideasDirty = false;
+  ideasSetMode(ideasTa.value.trim() ? 'view' : 'edit');
+  requestAnimationFrame(()=> outlineAutoGrow(ideasTa));
   const outlineTa = document.getElementById('outlineTextarea');
   outlineTa.value = outlineGetText(rec);
   outlineDirty = false;
@@ -1416,7 +1497,7 @@ async function cvRemoveRow(shotId){
 
 /* ---------- tab switching ---------- */
 function switchTab(tab){
-  if(cvActiveId && tab!=='cine') outlineAutoSaveIfDirty();
+  if(cvActiveId && tab!=='cine'){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
   const showLauncher = tab==='cine' && !cvActiveId;
@@ -1451,6 +1532,7 @@ function switchTab(tab){
   document.getElementById('cvAddShotRowBtn').addEventListener('click', cvAddRow);
   document.getElementById('cvAllShotsBtn').addEventListener('click', ()=> switchTab('library'));
   outlineInit();
+  ideasInit();
 
   cvLibrary = await cvFetchLibrary();
   cvRenderLauncher();
