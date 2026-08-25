@@ -647,7 +647,7 @@ const SHOT_TYPE_GROUPS = [
   {group:'Perspective', items:['Human (POV)','Object (POV)','Reverse (POV)']},
   {group:'Unique', items:['Mirror','Reveal','Shadows']},
   {group:'Effect', items:['Low Shutter','Slow Motion']},
-  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','Top-Down','Speed Ramping','Slow Motion Sequence','Cross Cutting','Close Up Sequence','Drone Sequence']},
+  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Many People','Match Cuts','POV','Slow Motion Sequence','Speed Ramping','Top-Down']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -829,6 +829,26 @@ const SHOT_TYPE_PREVIEWS = {
   'Drone Sequence': {
     group: 'Sequences', title: 'Drone Sequence', image: SEQ_IMG_DIR + 'Drone Sequence.png',
     desc: 'A run of aerial drone shots cut together to establish scale and location before dropping into ground-level coverage.'
+  },
+  'APS-C': {
+    group: 'Sequences', title: 'APS-C', image: SEQ_IMG_DIR + 'APS-C.png',
+    desc: 'A moody, tightly-cropped talking-head clip shot on an APS-C sensor for extra reach and a punchier, more compressed look. Good for hook or testimonial beats.'
+  },
+  'Cut Sequence Zoom': {
+    group: 'Sequences', title: 'Cut Sequence Zoom', image: SEQ_IMG_DIR + 'Cut Sequence Zoom.png',
+    desc: 'A run of cutaway inserts that punch progressively closer on the same action, building anticipation shot by shot before the payoff.'
+  },
+  'Many People': {
+    group: 'Sequences', title: 'Many People', image: SEQ_IMG_DIR + 'Many People.png',
+    desc: 'The same subject appears multiple times within one frame, cloned across the scene doing different things at once. Turns a single actor into a busy, populated shot.'
+  },
+  'Match Cuts': {
+    group: 'Sequences', title: 'Match Cuts', image: SEQ_IMG_DIR + 'Match Cuts.png',
+    desc: 'Shots linked by matching action, shape or motion across the cut, so one scene flows straight into the next without a visible seam.'
+  },
+  'POV': {
+    group: 'Sequences', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
+    desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
   },
 };
 
