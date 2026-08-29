@@ -432,8 +432,8 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
 
 /* ---------- shot table: mobile card layout ---------- */
 @media (max-width:760px){
-  .shot-table-wrap{overflow-x:visible; border:none; box-shadow:none; background:transparent; border-radius:0;}
-  table.shot-table{min-width:0; width:100%; table-layout:auto;}
+  .shot-table-wrap{overflow-x:visible; overflow-y:visible; border:none; box-shadow:none; background:transparent; border-radius:0;}
+  table.shot-table{display:block; min-width:0; width:100%; table-layout:auto;}
   table.shot-table thead{
     position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
     clip:rect(0,0,0,0); white-space:nowrap; border:0;
@@ -1798,7 +1798,30 @@ function cvRenderDetail(){
 }
 
 let cvDragState = null;
+
+// Returns {start, end} indices (end exclusive) of a section header + all shots
+// belonging to it (everything up to the next section header or end of list).
+function cvSectionBlockRange(rec, sectionId){
+  const idx = rec.shots.findIndex(s=> s.id===sectionId);
+  if(idx===-1 || !rec.shots[idx].isSection) return null;
+  let end = idx+1;
+  while(end < rec.shots.length && !rec.shots[end].isSection) end++;
+  return { start: idx, end };
+}
+
+// Returns the list of shot ids that will move together with draggedId
+// (just itself for a normal row, or the whole section block for a section header).
+function cvDraggedBlockIds(rec, draggedId){
+  const row = rec.shots.find(s=> s.id===draggedId);
+  if(!row || !row.isSection) return [draggedId];
+  const range = cvSectionBlockRange(rec, draggedId);
+  if(!range) return [draggedId];
+  return rec.shots.slice(range.start, range.end).map(s=> s.id);
+}
+
 function cvWireDragAndDrop(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
   const body = document.getElementById('cvShotTableBody');
   const rows = Array.from(body.querySelectorAll('tr[data-shot-id]'));
   rows.forEach(tr=>{
@@ -1806,7 +1829,8 @@ function cvWireDragAndDrop(){
     if(handle){
       handle.addEventListener('dragstart', (e)=>{
         cvDragState = tr.dataset.shotId;
-        tr.classList.add('is-dragging');
+        const blockIds = cvDraggedBlockIds(rec, cvDragState);
+        rows.forEach(r=>{ if(blockIds.includes(r.dataset.shotId)) r.classList.add('is-dragging'); });
         e.dataTransfer.effectAllowed = 'move';
         try{
           e.dataTransfer.setData('text/plain', tr.dataset.shotId);
@@ -1814,13 +1838,13 @@ function cvWireDragAndDrop(){
         }catch(err){}
       });
       handle.addEventListener('dragend', ()=>{
-        tr.classList.remove('is-dragging');
-        rows.forEach(r=> r.classList.remove('drag-over-top','drag-over-bottom'));
+        rows.forEach(r=> r.classList.remove('is-dragging','drag-over-top','drag-over-bottom'));
         cvDragState = null;
       });
     }
     tr.addEventListener('dragover', (e)=>{
       if(!cvDragState || cvDragState === tr.dataset.shotId) return;
+      if(cvDraggedBlockIds(rec, cvDragState).includes(tr.dataset.shotId)) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2;
@@ -1834,6 +1858,7 @@ function cvWireDragAndDrop(){
       e.preventDefault();
       tr.classList.remove('drag-over-top','drag-over-bottom');
       if(!cvDragState || cvDragState === tr.dataset.shotId) return;
+      if(cvDraggedBlockIds(rec, cvDragState).includes(tr.dataset.shotId)){ cvDragState = null; return; }
       const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2;
       cvMoveShot(cvDragState, tr.dataset.shotId, before);
       cvDragState = null;
@@ -1844,12 +1869,35 @@ function cvWireDragAndDrop(){
 async function cvMoveShot(draggedId, targetId, before){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
+  const draggedRow = rec.shots.find(s=> s.id===draggedId);
+  if(!draggedRow) return;
+  if(draggedRow.isSection){
+    await cvMoveSection(rec, draggedId, targetId, before);
+    return;
+  }
   const fromIdx = rec.shots.findIndex(s=> s.id===draggedId);
   if(fromIdx === -1) return;
   const [moved] = rec.shots.splice(fromIdx, 1);
   const toIdx = rec.shots.findIndex(s=> s.id===targetId);
   if(toIdx === -1){ rec.shots.push(moved); }
   else{ rec.shots.splice(before ? toIdx : toIdx + 1, 0, moved); }
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+
+// Moves an entire section (its header row + all shots under it) as one block.
+async function cvMoveSection(rec, sectionId, targetId, before){
+  const range = cvSectionBlockRange(rec, sectionId);
+  if(!range) return;
+  if(targetId){
+    const targetIdx = rec.shots.findIndex(s=> s.id===targetId);
+    if(targetIdx >= range.start && targetIdx < range.end) return; // dropped inside itself
+  }
+  const block = rec.shots.splice(range.start, range.end - range.start);
+  const toIdx = rec.shots.findIndex(s=> s.id===targetId);
+  if(toIdx === -1){ rec.shots.push(...block); }
+  else{ rec.shots.splice(before ? toIdx : toIdx + 1, 0, ...block); }
   rec.updatedAt = Date.now();
   cvRenderDetail();
   await cvSaveRecord(rec);
