@@ -638,6 +638,49 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
   transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;
 }
 .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
+
+/* ---------- shot table: section dividers (visually group a run of rows) ---------- */
+table.shot-table tbody tr.shot-section-row td{padding:0; border-bottom:none;}
+table.shot-table tbody tr.shot-section-row:nth-child(even){background:transparent;}
+table.shot-table tbody tr.shot-section-row:hover{background:transparent;}
+.shot-section-inner{
+  display:flex; align-items:center; gap:9px; padding:11px 12px 11px 8px;
+  background:var(--paper); border-top:1px solid var(--line); border-bottom:2px solid var(--sec-color);
+}
+table.shot-table tbody tr:first-child.shot-section-row .shot-section-inner{border-top:none;}
+.shot-section-dot{flex:0 0 auto; width:9px; height:9px; border-radius:50%; background:var(--sec-color);}
+.shot-section-title-input{
+  flex:1 1 auto; min-width:60px; border:none; background:transparent;
+  font-family:var(--font-display); font-weight:800; text-transform:uppercase; letter-spacing:.07em;
+  font-size:11.5px; color:var(--ink); padding:5px 2px;
+}
+.shot-section-title-input::placeholder{color:var(--ink-faint); text-transform:none; font-weight:600; letter-spacing:normal;}
+.shot-section-title-input:focus{outline:none;}
+.shot-section-swatches{display:flex; align-items:center; gap:5px; flex:0 0 auto;}
+.shot-section-swatch{
+  width:15px; height:15px; border-radius:50%; border:2px solid transparent; background:var(--sw-color);
+  cursor:pointer; padding:0; box-shadow:0 0 0 1px rgba(20,24,27,.08) inset; transition:transform .12s ease, border-color .12s ease;
+}
+.shot-section-swatch:hover{transform:scale(1.18);}
+.shot-section-swatch.is-active{border-color:var(--ink);}
+.shot-section-remove{
+  flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:none; background:transparent;
+  color:var(--ink-faint); cursor:pointer; font-size:15px; line-height:1; padding:0; display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s ease, color .15s ease;
+}
+.shot-section-remove:hover{background:var(--warn); color:#fff;}
+
+/* ---------- shot table: rows grouped under a section get a colored spine ---------- */
+table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px 0 0 0 var(--sec-color);}
+@media (max-width:760px){
+  table.shot-table tr.shot-section-row{padding:10px 10px;}
+  .shot-section-inner{padding:0; border-top:none; border-bottom:none; flex-wrap:wrap;}
+  .shot-section-title-input{flex-basis:100%; order:1; font-size:12px;}
+  .shot-section-swatches{order:2;}
+  table.shot-table tbody tr.shot-row-sectioned{border-left:4px solid var(--sec-color); padding-left:12px;}
+  table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:none;}
+}
+
 @media (max-width:720px){
   .cv-launcher-overlay{padding:0;}
 }
@@ -758,6 +801,7 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
       <div class="shot-table-actions">
         <div class="shot-table-actions-left">
           <button type="button" class="btn small" data-cv-shot-action="add-row">+ Add Shot Row</button>
+          <button type="button" class="btn small" data-cv-shot-action="add-section">+ Add Section</button>
           <button type="button" class="btn small" data-cv-shot-action="all-shots">All Shots / Sequences</button>
         </div>
       </div>
@@ -775,6 +819,7 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
       <div class="shot-table-actions">
         <div class="shot-table-actions-left">
           <button type="button" class="btn small" data-cv-shot-action="add-row">+ Add Shot Row</button>
+          <button type="button" class="btn small" data-cv-shot-action="add-section">+ Add Section</button>
           <button type="button" class="btn small" data-cv-shot-action="all-shots">All Shots / Sequences</button>
         </div>
       </div>
@@ -809,8 +854,8 @@ analyticsIsSupported().then(ok=>{
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
   {group:'Composition', items:['Frame In A Frame','High Negative Space','Leading Lines','Rule Of Thirds','Symmetry']},
-  {group:'Close Up', items:['Close Up (Classic)','Close Up (Extreme)','Close Up (Foreground)']},
-  {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)','Head On (Medium)','Reveal (Medium)']},
+  {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
+  {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)','Wide (Classic)']},
   {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
   {group:'Perspective', items:['Object (POV)','Reverse (POV)']},
@@ -900,22 +945,26 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'Shadows lead the eye or partially hide the subject. Adds mood and mystery without needing extra lighting gear.'
   },
   /* ---- Close Up ---- */
-  'Close Up (Classic)': {
-    group: 'Close Up', title: 'Close Up (Classic)', image: SHOT_IMG_DIR + 'close-up.png',
+  'Classic (Close Up)': {
+    group: 'Close Up', title: 'Classic (Close Up)', image: SHOT_IMG_DIR + 'close-up.png',
     desc: 'Tight on the face or a key detail, filling most of the frame. Forces an emotional read - nowhere to hide.'
   },
-  'Close Up (Extreme)': {
-    group: 'Close Up', title: 'Close Up (Extreme)', image: SHOT_IMG_DIR + 'extreme-close-up.png',
+  'Extreme (Close Up)': {
+    group: 'Close Up', title: 'Extreme (Close Up)', image: SHOT_IMG_DIR + 'extreme-close-up.png',
     desc: 'Even tighter than classic - eyes, hands, texture. Almost abstract, used to punctuate a beat rather than sit in it.'
   },
-  'Close Up (Foreground)': {
-    group: 'Close Up', title: 'Close Up (Foreground)', image: SHOT_IMG_DIR + 'foreground-close-up.png',
+  'Foreground (Close Up)': {
+    group: 'Close Up', title: 'Foreground (Close Up)', image: SHOT_IMG_DIR + 'foreground-close-up.png',
     desc: "A close, out-of-focus element sits in the foreground while the subject holds focus behind it. Adds depth and a sense of being 'in' the scene."
   },
   /* ---- Medium ---- */
   'Behind (Medium)': {
     group: 'Medium', title: 'Behind (Medium)', image: SHOT_IMG_DIR + 'behind-medium.png',
     desc: "Camera sits behind the subject at medium distance, showing what they're looking at. Builds anticipation for the reveal."
+  },
+  'Classic (Medium)': {
+    group: 'Medium', title: 'Classic (Medium)', image: SHOT_IMG_DIR + 'head-on-medium.png',
+    desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
   },
   'Environment (Medium)': {
     group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment v2.png',
@@ -924,10 +973,6 @@ const SHOT_TYPE_PREVIEWS = {
   'Foreground (Medium)': {
     group: 'Medium', title: 'Foreground (Medium)', image: SHOT_IMG_DIR + 'foreground-medium.png',
     desc: 'A medium shot with something purposely placed in the foreground. Adds layers and a sense of being tucked into the world.'
-  },
-  'Head On (Medium)': {
-    group: 'Medium', title: 'Head On (Medium)', image: SHOT_IMG_DIR + 'head-on-medium.png',
-    desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
   },
   'Reveal (Medium)': {
     group: 'Medium', title: 'Reveal (Medium)', image: SHOT_IMG_DIR + 'reveal-medium.png',
@@ -1154,6 +1199,15 @@ const CV_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 const CV_PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 const CV_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline class="shot-done-check-path" points="4 12.5 9.5 18 20 5"></polyline></svg>';
 const CV_GRIP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>';
+const SECTION_COLORS = [
+  {name:'Green', hex:'#2F8F5B'},
+  {name:'Teal', hex:'#1D8A99'},
+  {name:'Blue', hex:'#2B6CB0'},
+  {name:'Purple', hex:'#7C5CBF'},
+  {name:'Amber', hex:'#B4691A'},
+  {name:'Rose', hex:'#C1476B'},
+  {name:'Slate', hex:'#5B6560'},
+];
 const LC_CHEVRON_SVG = '<svg class="lc-select-chevron" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LC_PLUS_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>';
 const LC_CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -1576,11 +1630,14 @@ let cvActiveId = null;
 function cvUid(){ return 'shot_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function cvFmtDate(ts){ try{ return new Date(ts).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}); }catch(e){ return ''; } }
 
-function cvShotRowHtml(row, idx){
+function cvShotRowHtml(row, num, sectionColor){
   const done = !!row.completed;
-  return '<tr data-shot-id="' + escAttr(row.id) + '"' + (done ? ' class="shot-row-done"' : '') + '>'
+  const sectioned = !done && !!sectionColor;
+  const cls = done ? ' class="shot-row-done"' : (sectioned ? ' class="shot-row-sectioned"' : '');
+  const style = sectioned ? ' style="--sec-color:' + escAttr(sectionColor) + '"' : '';
+  return '<tr data-shot-id="' + escAttr(row.id) + '"' + cls + style + '>'
     + '<td class="col-num"><div class="shot-num-cell">'
-        + '<button type="button" class="shot-num-badge" data-shot-duplicate title="Duplicate this shot">' + (idx+1) + '</button>'
+        + '<button type="button" class="shot-num-badge" data-shot-duplicate title="Duplicate this shot">' + num + '</button>'
         + '<button type="button" class="shot-drag-handle" data-shot-drag-handle draggable="true" title="Drag to reorder" aria-label="Drag to reorder">' + CV_GRIP_SVG + '</button>'
       + '</div></td>'
     + '<td class="col-content" data-label="Content Type">' + lcSelectHtml('contentType', row.contentType, 'Select content type…') + '</td>'
@@ -1590,6 +1647,22 @@ function cvShotRowHtml(row, idx){
     + '<td class="col-del"><div class="shot-row-actions">'
         + '<button type="button" class="shot-done-btn' + (done ? ' is-done' : '') + '" data-shot-done title="' + (done ? 'Mark as not done' : 'Mark as done') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
         + '<button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button>'
+      + '</div></td>'
+  + '</tr>';
+}
+
+function cvSectionRowHtml(row){
+  const color = row.color || SECTION_COLORS[0].hex;
+  const swatches = SECTION_COLORS.map(c=>
+    '<button type="button" class="shot-section-swatch' + (c.hex===color ? ' is-active' : '') + '" data-section-color="' + escAttr(c.hex) + '" style="--sw-color:' + escAttr(c.hex) + '" title="' + escAttr(c.name) + '" aria-label="Set section color to ' + escAttr(c.name) + '"></button>'
+  ).join('');
+  return '<tr class="shot-section-row" data-shot-id="' + escAttr(row.id) + '" style="--sec-color:' + escAttr(color) + '">'
+    + '<td colspan="6"><div class="shot-section-inner">'
+        + '<button type="button" class="shot-drag-handle" data-shot-drag-handle draggable="true" title="Drag to move this section" aria-label="Drag to move this section">' + CV_GRIP_SVG + '</button>'
+        + '<span class="shot-section-dot" aria-hidden="true"></span>'
+        + '<input type="text" class="shot-section-title-input" data-field="title" value="' + escAttr(row.title || '') + '" placeholder="Section name…" spellcheck="false">'
+        + '<div class="shot-section-swatches">' + swatches + '</div>'
+        + '<button type="button" class="shot-section-remove" data-section-remove title="Remove this section divider" aria-label="Remove this section divider">&times;</button>'
       + '</div></td>'
   + '</tr>';
 }
@@ -1706,9 +1779,20 @@ function cvRenderDetail(){
   outlineSetMode(outlineTa.value.trim() ? 'view' : 'edit');
   requestAnimationFrame(()=> outlineAutoGrow(outlineTa));
   const body = document.getElementById('cvShotTableBody');
-  body.innerHTML = rec.shots.length
-    ? rec.shots.map(cvShotRowHtml).join('')
-    : '<tr><td colspan="6" style="padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;">No shots yet - add a row to get started.</td></tr>';
+  if(!rec.shots.length){
+    body.innerHTML = '<tr><td colspan="6" style="padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;">No shots yet - add a row to get started.</td></tr>';
+  } else {
+    let shotNum = 0;
+    let activeColor = '';
+    body.innerHTML = rec.shots.map(row=>{
+      if(row.isSection){
+        activeColor = row.color || SECTION_COLORS[0].hex;
+        return cvSectionRowHtml(row);
+      }
+      shotNum++;
+      return cvShotRowHtml(row, shotNum, activeColor);
+    }).join('');
+  }
   cvWireRows();
   cvWireDragAndDrop();
 }
@@ -1948,6 +2032,12 @@ function cvWireRows(){
 
     const doneBtn = tr.querySelector('[data-shot-done]');
     if(doneBtn) doneBtn.addEventListener('click', ()=> cvToggleDone(id));
+
+    tr.querySelectorAll('[data-section-color]').forEach(sw=>{
+      sw.addEventListener('click', ()=> cvSetSectionColor(id, sw.dataset.sectionColor));
+    });
+    const secRemove = tr.querySelector('[data-section-remove]');
+    if(secRemove) secRemove.addEventListener('click', ()=> cvRemoveSection(id));
   });
 }
 
@@ -1975,6 +2065,34 @@ async function cvRemoveRow(shotId){
   const ok = await lcConfirm('Remove this shot?', "This can't be undone.", { confirmText: 'Remove', danger: true });
   if(!ok) return;
   rec.shots = rec.shots.filter(s=> s.id!==shotId);
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+async function cvAddSection(){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const usedCount = rec.shots.filter(s=> s.isSection).length;
+  const color = SECTION_COLORS[usedCount % SECTION_COLORS.length].hex;
+  rec.shots.push({ id: cvUid(), isSection:true, title:'', color });
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+async function cvRemoveSection(sectionId){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  rec.shots = rec.shots.filter(s=> s.id!==sectionId);
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
+async function cvSetSectionColor(sectionId, color){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const row = rec.shots.find(s=> s.id===sectionId);
+  if(!row) return;
+  row.color = color;
   rec.updatedAt = Date.now();
   cvRenderDetail();
   await cvSaveRecord(rec);
@@ -2061,6 +2179,7 @@ function switchTab(tab){
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
+  document.querySelectorAll('[data-cv-shot-action="add-section"]').forEach(btn=> btn.addEventListener('click', cvAddSection));
   document.querySelectorAll('[data-cv-shot-action="all-shots"]').forEach(btn=> btn.addEventListener('click', ()=> switchTab('library')));
   outlineInit();
   ideasInit();
