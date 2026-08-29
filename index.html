@@ -406,20 +406,18 @@ table.shot-table tbody tr.drag-over-bottom{box-shadow:inset 0 -3px 0 0 var(--mim
 }
 .shot-done-btn{
   width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line-strong); background:var(--paper-raised);
-  color:transparent; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  color:var(--bespoke); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
   transition:background-color .18s ease, border-color .18s ease, color .18s ease, transform .12s ease, box-shadow .18s ease;
 }
 .shot-done-btn svg{width:13px; height:13px; overflow:visible;}
 .shot-done-btn .shot-done-check-path{
-  stroke-dasharray:24; stroke-dashoffset:24; transition:stroke-dashoffset .28s ease .04s;
+  stroke-dasharray:24; stroke-dashoffset:0;
 }
-.shot-done-btn:hover{border-color:var(--mimeo); color:var(--bespoke); background:var(--mimeo-ink); transform:scale(1.1);}
-.shot-done-btn:hover .shot-done-check-path{stroke-dashoffset:12;}
+.shot-done-btn:hover{border-color:var(--bespoke-dark); color:#fff; background:var(--bespoke-dark); transform:scale(1.1);}
 .shot-done-btn.is-done{
-  background:var(--bespoke); border-color:var(--bespoke); color:#fff;
+  background:var(--bespoke-dark); border-color:var(--bespoke-dark); color:#fff;
   animation:shotDonePop .45s var(--ease);
 }
-.shot-done-btn.is-done .shot-done-check-path{stroke-dashoffset:0;}
 .shot-done-btn.is-done:hover{background:var(--bespoke-dark); border-color:var(--bespoke-dark); color:#fff; transform:scale(1.08);}
 
 /* ---------- shot table: completed row treatment ---------- */
@@ -1590,8 +1588,8 @@ function cvShotRowHtml(row, idx){
     + '<td class="col-location" data-label="Location">' + lcSelectHtml('location', row.location, 'Select location…') + '</td>'
     + '<td class="col-desc" data-label="Description"><textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea></td>'
     + '<td class="col-del"><div class="shot-row-actions">'
-        + '<button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button>'
         + '<button type="button" class="shot-done-btn' + (done ? ' is-done' : '') + '" data-shot-done title="' + (done ? 'Mark as not done' : 'Mark as done') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
+        + '<button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button>'
       + '</div></td>'
   + '</tr>';
 }
@@ -1680,9 +1678,9 @@ function cvOpen(id){
   const rec = cvLibrary.find(r=> r.id===id);
   if(!rec) return;
   cvActiveId = id;
-  cvRenderDetail();
   document.getElementById('cvLauncherOverlay').classList.remove('active');
   document.getElementById('cvDetailOverlay').classList.add('active');
+  cvRenderDetail();
 }
 function cvBackToLauncher(){
   outlineAutoSaveIfDirty();
@@ -1817,6 +1815,36 @@ function cvWireRows(){
             const p = el.value.length;
             el.setSelectionRange(p, p);
           }
+        });
+        el.addEventListener('keydown', (e)=>{
+          if(e.key !== 'Backspace' || el.selectionStart !== el.selectionEnd) return;
+          const pos = el.selectionStart;
+          const lines = el.value.split('\n');
+          let idx = 0, acc = 0;
+          for(; idx < lines.length; idx++){
+            const lineLen = lines[idx].length;
+            if(acc + lineLen >= pos) break;
+            acc += lineLen + 1;
+          }
+          const offsetInLine = pos - acc;
+          const prefixMatch = lines[idx].match(/^(\s*[•\-\*]\s?)/);
+          const prefixLen = prefixMatch ? prefixMatch[1].length : 0;
+          if(offsetInLine <= 0 || offsetInLine > prefixLen) return;
+          e.preventDefault();
+          if(idx === 0){
+            if(lines[idx].slice(prefixLen) === '' && lines.length === 1){ el.value = ''; }
+            else { return; }
+          } else {
+            const remainder = lines[idx].slice(prefixLen);
+            const prevLine = lines[idx-1];
+            const newLines = lines.slice(0, idx-1).concat([prevLine + remainder]).concat(lines.slice(idx+1));
+            el.value = newLines.join('\n');
+            const newPos = acc - 1;
+            el.setSelectionRange(newPos, newPos);
+          }
+          formatBulletInput(el);
+          cvUpdateShotField(id, el.dataset.field, el.value);
+          el.style.height='auto'; el.style.height=el.scrollHeight+'px';
         });
       }
       if(el.tagName==='TEXTAREA'){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
