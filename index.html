@@ -455,7 +455,9 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
 
 /* ---------- shot table: tablet column tweak ---------- */
 @media (min-width:761px) and (max-width:1024px){
-  table.shot-table .col-content{width:46px;}
+  table.shot-table .col-num{width:34px;}
+  table.shot-table .col-content{width:58px;}
+  table.shot-table .col-type{width:92px;}
 }
 
 /* ---------- shot table: mobile card layout ---------- */
@@ -717,8 +719,8 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <body>
 
 <div class="top-tabs" id="topTabs">
-  <button type="button" class="top-tab-btn active" data-tab="library">Shot Type Library</button>
-  <button type="button" class="top-tab-btn" data-tab="cine">Cine Vlogs</button>
+  <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
+  <button type="button" class="top-tab-btn" data-tab="library">Shot Type Library</button>
 </div>
 
 <div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
@@ -750,7 +752,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   </div>
 </div>
 
-<div class="all-shots-overlay tab-page active" id="allShotsOverlay">
+<div class="all-shots-overlay tab-page" id="allShotsOverlay">
   <div class="all-shots-box" id="allShotsBox">
     <div class="all-shots-head">
       <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="allShotsTitle">All Shot Types</h2></div>
@@ -772,7 +774,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   </div>
 </div>
 
-<div class="cv-launcher-overlay tab-page" id="cvLauncherOverlay">
+<div class="cv-launcher-overlay tab-page active" id="cvLauncherOverlay">
   <div class="launcher-inner">
     <div class="launcher-header">
       <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shot Type Library</button>
@@ -1786,6 +1788,7 @@ function cvOpen(id){
   const rec = cvLibrary.find(r=> r.id===id);
   if(!rec) return;
   cvActiveId = id;
+  try{ localStorage.setItem('lcActiveCvId', id); }catch(e){}
   document.getElementById('cvLauncherOverlay').classList.remove('active');
   document.getElementById('cvDetailOverlay').classList.add('active');
   cvRenderDetail();
@@ -1794,6 +1797,7 @@ function cvBackToLauncher(){
   outlineAutoSaveIfDirty();
   ideasAutoSaveIfDirty();
   cvActiveId = null;
+  try{ localStorage.removeItem('lcActiveCvId'); }catch(e){}
   document.getElementById('cvDetailOverlay').classList.remove('active');
   document.getElementById('cvLauncherOverlay').classList.add('active');
   cvRenderLauncher();
@@ -2250,6 +2254,7 @@ async function cvToggleMusicBox(shotId){
 /* ---------- tab switching ---------- */
 function switchTab(tab){
   if(cvActiveId && tab!=='cine'){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
+  try{ localStorage.setItem('lcActiveTab', tab); }catch(e){}
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
   const showLauncher = tab==='cine' && !cvActiveId;
@@ -2287,8 +2292,16 @@ function switchTab(tab){
   outlineInit();
   ideasInit();
 
+  let savedTab = null, savedCvId = null;
+  try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
+  if(savedTab === 'library') switchTab('library');
+
   cvLibrary = await cvFetchLibrary();
-  cvRenderLauncher();
+  if(savedTab !== 'library' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
+    cvOpen(savedCvId);
+  }else{
+    cvRenderLauncher();
+  }
 })();
 </script>
 </body>
