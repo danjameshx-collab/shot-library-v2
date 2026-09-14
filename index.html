@@ -420,6 +420,29 @@ table.shot-table tbody tr.drag-over-bottom{box-shadow:inset 0 -3px 0 0 var(--mim
 }
 .shot-done-btn.is-done:hover{background:var(--bespoke-dark); border-color:var(--bespoke-dark); color:#fff; transform:scale(1.08);}
 
+/* ---------- shot table: song / music button ---------- */
+.shot-music-btn{
+  width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line-strong); background:var(--paper-raised);
+  color:var(--ink-faint); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  transition:background-color .18s ease, border-color .18s ease, color .18s ease, transform .12s ease;
+}
+.shot-music-btn svg{width:13px; height:13px;}
+.shot-music-btn:hover{border-color:var(--mimeo); color:#fff; background:var(--mimeo); transform:scale(1.1);}
+.shot-music-btn.is-open{border-color:var(--mimeo); color:#fff; background:var(--mimeo);}
+.shot-music-btn.has-music:not(.is-open){border-color:var(--mimeo); color:var(--mimeo); background:var(--paper-raised);}
+
+.shot-music-heading{
+  margin:10px 0 6px; font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--bespoke);
+}
+.shot-music-box{
+  margin-top:0; width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:9px;
+  background:var(--mimeo-ink); font-size:12.5px; line-height:1.5; padding:7px 10px; color:var(--ink);
+}
+.shot-music-box::placeholder{color:var(--ink-faint);}
+.shot-music-box:hover{border-color:var(--line-strong);}
+.shot-music-box:focus{outline:none; border-color:var(--mimeo); background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+
 /* ---------- shot table: completed row treatment ---------- */
 table.shot-table tbody tr.shot-row-done,
 table.shot-table tbody tr.shot-row-done:nth-child(even){
@@ -429,6 +452,11 @@ table.shot-table tbody tr.shot-row-done:hover{background:#DCF0E5;}
 table.shot-table tbody tr.shot-row-done td{transition:background-color .2s ease;}
 table.shot-table tbody tr.shot-row-done td:first-child{box-shadow:inset 4px 0 0 0 var(--bespoke);}
 table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke); color:#fff;}
+
+/* ---------- shot table: tablet column tweak ---------- */
+@media (min-width:761px) and (max-width:1024px){
+  table.shot-table .col-content{width:46px;}
+}
 
 /* ---------- shot table: mobile card layout ---------- */
 @media (max-width:760px){
@@ -853,6 +881,7 @@ analyticsIsSupported().then(ok=>{
 
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
+  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Many People','Match Cuts','POV','Slow Motion Sequence','Speed Ramping','Top-Down']},
   {group:'Composition', items:['Frame In A Frame','High Negative Space','Leading Lines','Rule Of Thirds','Symmetry']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
   {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
@@ -861,7 +890,6 @@ const SHOT_TYPE_GROUPS = [
   {group:'Perspective', items:['Object (POV)','Reverse (POV)']},
   {group:'Unique', items:['Mirror','Reveal','Shadows']},
   {group:'Effect', items:['Low Shutter','Slow Motion']},
-  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Many People','Match Cuts','POV','Slow Motion Sequence','Speed Ramping','Top-Down']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1198,6 +1226,7 @@ const CV_COLLECTION = 'cineVlogs';
 const CV_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>';
 const CV_PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 const CV_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline class="shot-done-check-path" points="4 12.5 9.5 18 20 5"></polyline></svg>';
+const CV_MUSIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
 const CV_GRIP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>';
 const SECTION_COLORS = [
   {name:'Green', hex:'#2F8F5B'},
@@ -1635,6 +1664,8 @@ function cvShotRowHtml(row, num, sectionColor){
   const sectioned = !done && !!sectionColor;
   const cls = done ? ' class="shot-row-done"' : (sectioned ? ' class="shot-row-sectioned"' : '');
   const style = sectioned ? ' style="--sec-color:' + escAttr(sectionColor) + '"' : '';
+  const hasMusic = !!(row.music && row.music.trim());
+  const musicVisible = (row.musicOpen !== undefined) ? !!row.musicOpen : hasMusic;
   return '<tr data-shot-id="' + escAttr(row.id) + '"' + cls + style + '>'
     + '<td class="col-num"><div class="shot-num-cell">'
         + '<button type="button" class="shot-num-badge" data-shot-duplicate title="Duplicate this shot">' + num + '</button>'
@@ -1643,10 +1674,14 @@ function cvShotRowHtml(row, num, sectionColor){
     + '<td class="col-content" data-label="Content Type">' + lcSelectHtml('contentType', row.contentType, 'Select content type…') + '</td>'
     + '<td class="col-type" data-label="Shot / Sequence">' + shotTypeStackHtml(row) + '</td>'
     + '<td class="col-location" data-label="Location">' + lcSelectHtml('location', row.location, 'Select location…') + '</td>'
-    + '<td class="col-desc" data-label="Description"><textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea></td>'
+    + '<td class="col-desc" data-label="Description">'
+        + '<textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea>'
+        + (musicVisible ? '<h3 class="shot-music-heading">Songs</h3><textarea class="shot-music-box" data-field="music" placeholder="Add a song…" spellcheck="false">' + esc(row.music || '• ') + '</textarea>' : '')
+      + '</td>'
     + '<td class="col-del"><div class="shot-row-actions">'
         + '<button type="button" class="shot-done-btn' + (done ? ' is-done' : '') + '" data-shot-done title="' + (done ? 'Mark as not done' : 'Mark as done') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
         + '<button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button>'
+        + '<button type="button" class="shot-music-btn' + (hasMusic ? ' has-music' : '') + (musicVisible ? ' is-open' : '') + '" data-shot-music title="' + (musicVisible ? 'Hide song' : 'Add a song') + '" aria-pressed="' + (musicVisible ? 'true' : 'false') + '">' + CV_MUSIC_SVG + '</button>'
       + '</div></td>'
   + '</tr>';
 }
@@ -1932,7 +1967,7 @@ function cvWireRows(){
   body.querySelectorAll('tr[data-shot-id]').forEach(tr=>{
     const id = tr.dataset.shotId;
     tr.querySelectorAll('input[data-field], textarea[data-field]').forEach(el=>{
-      const isBulletField = el.tagName==='TEXTAREA' && el.dataset.field==='description';
+      const isBulletField = el.tagName==='TEXTAREA' && (el.dataset.field==='description' || el.dataset.field==='music');
       el.addEventListener('input', ()=>{
         if(isBulletField) formatBulletInput(el);
         cvUpdateShotField(id, el.dataset.field, el.value);
@@ -2081,6 +2116,9 @@ function cvWireRows(){
     const doneBtn = tr.querySelector('[data-shot-done]');
     if(doneBtn) doneBtn.addEventListener('click', ()=> cvToggleDone(id));
 
+    const musicBtn = tr.querySelector('[data-shot-music]');
+    if(musicBtn) musicBtn.addEventListener('click', ()=> cvToggleMusicBox(id));
+
     tr.querySelectorAll('[data-section-color]').forEach(sw=>{
       sw.addEventListener('click', ()=> cvSetSectionColor(id, sw.dataset.sectionColor));
     });
@@ -2190,6 +2228,23 @@ async function cvToggleDone(shotId){
   rec.updatedAt = Date.now();
   cvRenderDetail();
   await cvSaveRecord(rec);
+}
+async function cvToggleMusicBox(shotId){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const row = rec.shots.find(s=> s.id===shotId);
+  if(!row) return;
+  const hasMusic = !!(row.music && row.music.trim());
+  const currentlyVisible = (row.musicOpen !== undefined) ? !!row.musicOpen : hasMusic;
+  row.musicOpen = !currentlyVisible;
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+  if(row.musicOpen){
+    const tr = document.querySelector('tr[data-shot-id="' + CSS.escape(shotId) + '"]');
+    const box = tr && tr.querySelector('.shot-music-box');
+    if(box) box.focus();
+  }
 }
 
 /* ---------- tab switching ---------- */
