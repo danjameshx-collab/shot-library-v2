@@ -904,75 +904,79 @@ analyticsIsSupported().then(ok=>{
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
   {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Many People','Match Cuts','POV','Slow Motion Sequence','Speed Ramping','Top-Down']},
-  {group:'Composition', items:['Frame In A Frame','High Negative Space','Leading Lines','Rule Of Thirds','Symmetry']},
+  {group:'Composition', items:['Frame In A Frame (Composition)','High Negative Space (Composition)','Leading Lines (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
   {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
-  {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)','Wide (Classic)']},
-  {group:'Angle', items:['Ground','High','Low','Straight Up','To The Side','Top Down']},
-  {group:'Perspective', items:['Object (POV)','Reverse (POV)']},
-  {group:'Unique', items:['Mirror','Reveal','Shadows']},
-  {group:'Effect', items:['Low Shutter','Slow Motion']},
+  {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
+  {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
+  {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
+  {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
+  {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
 const SEQ_IMG_DIR = 'sequences/';
 const SHOT_TYPE_PREVIEWS = {
   /* ---- Angle ---- */
-  'Ground': {
-    group: 'Angle', title: 'Ground', image: SHOT_IMG_DIR + 'ground.png',
+  'Ground (Angle)': {
+    group: 'Angle', title: 'Ground (Angle)', image: SHOT_IMG_DIR + 'ground.png',
     desc: 'Camera sits right at ground level, looking up or across. Puts the viewer in the dirt with the subject - raw, immersive, unexpected.'
   },
-  'High': {
-    group: 'Angle', title: 'High Angle', image: SHOT_IMG_DIR + 'high.png',
+  'High (Angle)': {
+    group: 'Angle', title: 'High (Angle)', image: SHOT_IMG_DIR + 'high.png',
     desc: "Camera sits above the subject, angled down. Shrinks the subject slightly and opens up the space around them - good for context or a beat of vulnerability."
   },
-  'Low': {
-    group: 'Angle', title: 'Low Angle', image: SHOT_IMG_DIR + 'low-image.png',
+  'Low (Angle)': {
+    group: 'Angle', title: 'Low (Angle)', image: SHOT_IMG_DIR + 'low-image.png',
     desc: 'The camera sits below eye level, tilted up at the subject. It makes them look bigger, stronger and more in control - a classic power framing for a hero beat or a moment of authority.'
   },
-  'Straight Up': {
-    group: 'Angle', title: 'Straight Up', image: SHOT_IMG_DIR + 'straight-up.png',
+  'Straight Up (Angle)': {
+    group: 'Angle', title: 'Straight Up (Angle)', image: SHOT_IMG_DIR + 'straight-up.png',
     desc: 'Camera points straight up at the sky or something towering overhead. Builds scale and awe - use it to make something feel massive.'
   },
-  'To The Side': {
-    group: 'Angle', title: 'To The Side', image: SHOT_IMG_DIR + 'to-the-side.png',
+  'To The Side (Angle)': {
+    group: 'Angle', title: 'To The Side (Angle)', image: SHOT_IMG_DIR + 'to-the-side.png',
     desc: "Camera holds level with the subject from the side, profile-on. Feels observational - like you're walking alongside them, not talking to them."
   },
-  'Top Down': {
-    group: 'Angle', title: 'Top Down', image: SHOT_IMG_DIR + 'top-down.png',
+  'Top Down (Angle)': {
+    group: 'Angle', title: 'Top Down (Angle)', image: SHOT_IMG_DIR + 'top-down.png',
     desc: 'Camera looks straight down from directly overhead. Flattens the scene into a graphic, map-like frame - great for reveals and process shots.'
   },
   /* ---- Composition ---- */
-  'Frame In A Frame': {
-    group: 'Composition', title: 'Frame In A Frame', image: SHOT_IMG_DIR + 'Frame In A Frame.png',
+  'Frame In A Frame (Composition)': {
+    group: 'Composition', title: 'Frame In A Frame (Composition)', image: SHOT_IMG_DIR + 'Frame In A Frame.png',
     desc: 'The subject is framed by something inside the scene - a doorway, window, or gap between objects. Adds depth and draws the eye straight to the subject.'
   },
-  'High Negative Space': {
-    group: 'Composition', title: 'High Negative Space', image: SHOT_IMG_DIR + 'high-negative-space.png',
+  'High Negative Space (Composition)': {
+    group: 'Composition', title: 'High Negative Space (Composition)', image: SHOT_IMG_DIR + 'high-negative-space.png',
     desc: 'The subject sits small inside a large, mostly empty frame. The empty space does the storytelling - isolation, scale, or room to think.'
   },
-  'Leading Lines': {
-    group: 'Composition', title: 'Leading Lines', image: SHOT_IMG_DIR + 'Leading Lines.png',
+  'Leading Lines (Composition)': {
+    group: 'Composition', title: 'Leading Lines (Composition)', image: SHOT_IMG_DIR + 'Leading Lines.png',
     desc: 'Lines in the scene - a road, railing, or shadow - pull the eye through the frame toward the subject. Gives a static shot direction and depth.'
   },
-  'Rule Of Thirds': {
-    group: 'Composition', title: 'Rule Of Thirds', image: SHOT_IMG_DIR + 'Rule Of Thirds.png',
+  'Rule Of Thirds (Composition)': {
+    group: 'Composition', title: 'Rule Of Thirds (Composition)', image: SHOT_IMG_DIR + 'Rule Of Thirds.png',
     desc: 'The subject sits off-center, on one of the grid intersections instead of dead center. Feels more natural and balanced than a centered frame.'
   },
-  'Symmetry': {
-    group: 'Composition', title: 'Symmetry', image: SHOT_IMG_DIR + 'Symmetry.png',
+  'Symmetry (Composition)': {
+    group: 'Composition', title: 'Symmetry (Composition)', image: SHOT_IMG_DIR + 'Symmetry.png',
     desc: 'The frame is built around a mirrored balance - matching elements on either side of center. Feels ordered, deliberate, and calm.'
   },
   /* ---- Effect ---- */
-  'Low Shutter': {
-    group: 'Effect', title: 'Low Shutter', image: SHOT_IMG_DIR + 'low-shutter.png',
+  'Low Shutter (Effect)': {
+    group: 'Effect', title: 'Low Shutter (Effect)', image: SHOT_IMG_DIR + 'low-shutter.png',
     desc: 'A slower shutter speed blurs motion inside the frame. Gives movement a dreamy, chaotic or hyper-kinetic feel depending on how far you push it.'
   },
-  'Slow Motion': {
-    group: 'Effect', title: 'Slow Motion', image: SHOT_IMG_DIR + 'slow-motion.png',
+  'Slow Motion (Effect)': {
+    group: 'Effect', title: 'Slow Motion (Effect)', image: SHOT_IMG_DIR + 'slow-motion.png',
     desc: 'Footage captured at a high frame rate and played back slow. Stretches a small moment into something that feels significant.'
   },
   /* ---- Perspective ---- */
+  'Close Up Object (POV)': {
+    group: 'Perspective', title: 'Close Up Object (POV)', image: SHOT_IMG_DIR + 'Close Up Object (POV).png',
+    desc: "The camera becomes an object right up close to the scene, framed tight. Puts the viewer inside the object's view at close range - intimate and immediate."
+  },
   'Object (POV)': {
     group: 'Perspective', title: 'Object (POV)', image: SHOT_IMG_DIR + 'object-pov.png',
     desc: "The camera becomes an object in the scene - a phone, a mirror, a product. The viewer sees exactly what that object 'sees.'"
@@ -982,16 +986,12 @@ const SHOT_TYPE_PREVIEWS = {
     desc: "The camera faces back at whoever is filming, hand-held selfie-style. Intimate and direct - like they're talking straight to camera on the move."
   },
   /* ---- Unique ---- */
-  'Mirror': {
-    group: 'Unique', title: 'Mirror', image: SHOT_IMG_DIR + 'mirror.png',
+  'Mirror (Unique)': {
+    group: 'Unique', title: 'Mirror (Unique)', image: SHOT_IMG_DIR + 'mirror.png',
     desc: "The camera becomes a person's own eyes, often via a mirror or reflection. Puts the viewer directly inside someone else's perspective."
   },
-  'Reveal': {
-    group: 'Unique', title: 'Reveal', image: SHOT_IMG_DIR + 'reveal.png',
-    desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject. Built-in payoff inside a single shot.'
-  },
-  'Shadows': {
-    group: 'Unique', title: 'Shadows', image: SHOT_IMG_DIR + 'shadows.png',
+  'Shadows (Unique)': {
+    group: 'Unique', title: 'Shadows (Unique)', image: SHOT_IMG_DIR + 'shadows.png',
     desc: 'Shadows lead the eye or partially hide the subject. Adds mood and mystery without needing extra lighting gear.'
   },
   /* ---- Close Up ---- */
@@ -1037,6 +1037,10 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Wide', title: 'Behind (Wide)', image: SHOT_IMG_DIR + 'behind-wide.png',
     desc: 'A wide shot from behind the subject, showing the full environment they\'re heading into. Sets scale before the reveal.'
   },
+  'Classic (Wide)': {
+    group: 'Wide', title: 'Classic (Wide)', image: SHOT_IMG_DIR + 'classic-wide.png',
+    desc: 'The standard wide establishing shot - full body, full environment, no tricks. Every scene needs at least one.'
+  },
   'Extreme (Wide)': {
     group: 'Wide', title: 'Extreme (Wide)', image: SHOT_IMG_DIR + 'extreme-wide.png',
     desc: 'The subject is small against a huge environment. Establishes location and stakes in a single frame.'
@@ -1052,10 +1056,6 @@ const SHOT_TYPE_PREVIEWS = {
   'Low (Wide)': {
     group: 'Wide', title: 'Low (Wide)', image: SHOT_IMG_DIR + 'low-wide.png',
     desc: 'A wide shot taken from a low camera position, looking up across the scene. Adds power and scale to the whole environment, not just the subject.'
-  },
-  'Wide (Classic)': {
-    group: 'Wide', title: 'Wide (Classic)', image: SHOT_IMG_DIR + 'classic-wide.png',
-    desc: 'The standard wide establishing shot - full body, full environment, no tricks. Every scene needs at least one.'
   },
   /* ---- Sequences ---- */
   '9 Shot Rule (Classic)': {
