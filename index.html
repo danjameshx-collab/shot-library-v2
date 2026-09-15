@@ -357,14 +357,14 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 }
 .cv-detail-scroll{flex:1 1 auto; min-height:0; overflow-y:auto; padding:20px 24px 28px;}
 .shot-table-actions{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
-.shot-table-actions-left{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.shot-table-actions-left, .shot-table-actions-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 @media (max-width:600px){
   .cv-detail-head{padding:16px 16px 12px; gap:10px;}
   .cv-detail-scroll{padding:16px 16px 24px;}
 }
 @media (max-width:480px){
-  .shot-table-actions-left{width:100%;}
-  .shot-table-actions-left .btn{flex:1 1 auto; text-align:center;}
+  .shot-table-actions-left, .shot-table-actions-right{width:100%;}
+  .shot-table-actions-left .btn, .shot-table-actions-right .btn{flex:1 1 auto; text-align:center;}
 }
 .shot-table-wrap{overflow-x:auto; overflow-y:hidden; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); background:var(--paper-raised); margin-bottom:18px;}
 table.shot-table{width:100%; min-width:296px; border-collapse:collapse; font-size:14px; table-layout:fixed;}
@@ -873,6 +873,10 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
           <button type="button" class="btn small" data-cv-shot-action="add-section">+ Add Section</button>
           <button type="button" class="btn small" data-cv-shot-action="all-shots">All Shots / Sequences</button>
         </div>
+        <div class="shot-table-actions-right">
+          <button type="button" class="btn small" data-cv-shot-action="mark-all-done">&check; Mark All Done</button>
+          <button type="button" class="btn small" data-cv-shot-action="mark-all-undone">Unmark All</button>
+        </div>
       </div>
       <div class="shot-table-wrap">
         <table class="shot-table">
@@ -890,6 +894,10 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
           <button type="button" class="btn small" data-cv-shot-action="add-row">+ Add Shot Row</button>
           <button type="button" class="btn small" data-cv-shot-action="add-section">+ Add Section</button>
           <button type="button" class="btn small" data-cv-shot-action="all-shots">All Shots / Sequences</button>
+        </div>
+        <div class="shot-table-actions-right">
+          <button type="button" class="btn small" data-cv-shot-action="mark-all-done">&check; Mark All Done</button>
+          <button type="button" class="btn small" data-cv-shot-action="mark-all-undone">Unmark All</button>
         </div>
       </div>
     </div>
@@ -2285,6 +2293,22 @@ async function cvToggleDone(shotId){
   cvRenderDetail();
   await cvSaveRecord(rec);
 }
+async function cvMarkAllRows(done){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const rows = rec.shots.filter(s=> !s.isSection);
+  if(!rows.length) return;
+  const ok = await lcConfirm(
+    done ? 'Mark all shots as done?' : 'Unmark all shots?',
+    done ? 'This will tick every shot row in this Cine Vlog as done.' : 'This will clear the done tick on every shot row in this Cine Vlog.',
+    { confirmText: done ? 'Mark All Done' : 'Unmark All' }
+  );
+  if(!ok) return;
+  rows.forEach(row=> { row.completed = done; });
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+}
 async function cvToggleMusicBox(shotId){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
@@ -2341,6 +2365,8 @@ function switchTab(tab){
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
   document.querySelectorAll('[data-cv-shot-action="add-section"]').forEach(btn=> btn.addEventListener('click', cvAddSection));
   document.querySelectorAll('[data-cv-shot-action="all-shots"]').forEach(btn=> btn.addEventListener('click', ()=> switchTab('library')));
+  document.querySelectorAll('[data-cv-shot-action="mark-all-done"]').forEach(btn=> btn.addEventListener('click', ()=> cvMarkAllRows(true)));
+  document.querySelectorAll('[data-cv-shot-action="mark-all-undone"]').forEach(btn=> btn.addEventListener('click', ()=> cvMarkAllRows(false)));
   outlineInit();
   ideasInit();
 
