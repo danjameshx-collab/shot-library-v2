@@ -3,6 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+  var ua = navigator.userAgent || '';
+  var isAndroid = /Android/i.test(ua);
+  var wideEnough = Math.max(window.innerWidth||0, window.screen && window.screen.width||0) >= 700;
+  if(isAndroid && (!/Mobile/i.test(ua) || wideEnough)){
+    document.documentElement.classList.add('lc-android-tablet');
+  }
+})();
+</script>
 <title>All Shot Types - Reference Library</title>
 <link rel="icon" type="image/png" href="logo.png">
 <style id="app-styles">
@@ -454,7 +464,7 @@ table.shot-table tbody tr.shot-row-done td:first-child{box-shadow:inset 4px 0 0 
 table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke); color:#fff;}
 
 /* ---------- shot table: tablet column tweak ---------- */
-@media (min-width:761px) and (max-width:1024px), (min-width:761px) and (pointer:coarse){
+@media (min-width:761px) and (max-width:1024px){
   table.shot-table .col-num{width:68px;}
   table.shot-table .col-content{width:120px;}
   table.shot-table .col-type{width:294px;}
@@ -462,6 +472,13 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
   table.shot-table .col-desc{width:105px;}
   table.shot-table .col-del{width:44px;}
 }
+/* Samsung S9 FE (and other Android tablets, tagged via JS above): apply regardless of exact viewport/orientation width */
+html.lc-android-tablet table.shot-table .col-num{width:68px;}
+html.lc-android-tablet table.shot-table .col-content{width:120px;}
+html.lc-android-tablet table.shot-table .col-type{width:294px;}
+html.lc-android-tablet table.shot-table .col-location{width:82px;}
+html.lc-android-tablet table.shot-table .col-desc{width:105px;}
+html.lc-android-tablet table.shot-table .col-del{width:44px;}
 
 /* ---------- shot table: mobile card layout ---------- */
 @media (max-width:760px){
