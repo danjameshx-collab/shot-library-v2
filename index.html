@@ -760,6 +760,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <div class="top-tabs" id="topTabs">
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shot Type Library</button>
+  <button type="button" class="top-tab-btn" data-tab="effects">Effects</button>
 </div>
 
 <div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
@@ -810,6 +811,28 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       </div>
     </div>
     <div class="all-shots-scroll" id="allShotsScroll"></div>
+  </div>
+</div>
+
+<div class="all-shots-overlay tab-page" id="effectsOverlay">
+  <div class="all-shots-box" id="effectsBox">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="effectsTitle">All Effects</h2></div>
+      <div class="all-shots-head-right">
+        <button type="button" class="modal-fullscreen-btn" id="effectsFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
+            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
+          </svg>
+        </button>
+        <button type="button" class="all-shots-close" id="effectsCloseBtn" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="all-shots-scroll" id="effectsScroll"></div>
   </div>
 </div>
 
@@ -1143,6 +1166,79 @@ const SHOT_TYPE_PREVIEWS = {
   },
 };
 
+/* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
+const EFFECT_TYPE_GROUPS = [
+  {group:'Frame', items:['Black Bars (Frame)','Quarter (Frame)','Third Vertical (Frame)','Third Vertical Transparent (Frame)']},
+  {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Zoom Quick In (Zoom)']},
+  {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
+  {group:'Wipp', items:['3D Camera (Wipp)']},
+];
+
+const EFFECT_IMG_DIR = 'effects images/';
+const EFFECT_TYPE_PREVIEWS = {
+  /* ---- Frame ---- */
+  'Black Bars (Frame)': {
+    group: 'Frame', title: 'Black Bars (Frame)', image: EFFECT_IMG_DIR + 'Black Bars (Frame).png',
+    desc: 'Thin black letterbox bars sit top and bottom of the frame. Gives a normal shot an instant cinematic, widescreen feel.'
+  },
+  'Quarter (Frame)': {
+    group: 'Frame', title: 'Quarter (Frame)', image: EFFECT_IMG_DIR + 'Quarter (Frame).png',
+    desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
+  },
+  'Third Vertical (Frame)': {
+    group: 'Frame', title: 'Third Vertical (Frame)', image: EFFECT_IMG_DIR + 'Third Vertical (Frame).png',
+    desc: 'The screen splits into three vertical panels of different footage side by side. Shows multiple angles or moments at once without cutting between them.'
+  },
+  'Third Vertical Transparent (Frame)': {
+    group: 'Frame', title: 'Third Vertical Transparent (Frame)', image: EFFECT_IMG_DIR + 'Third Vertical Transparent (Frame).png',
+    desc: 'The same three-panel vertical split, but each panel gets a transparent color wash and a bold label over it. Turns a plain split screen into a labeled, on-brand breakdown.'
+  },
+  /* ---- Zoom ---- */
+  'Camera Shutter (Zoom)': {
+    group: 'Zoom', title: 'Camera Shutter (Zoom)', image: EFFECT_IMG_DIR + 'Camera Shutter (Zoom).png',
+    desc: 'A quick shutter-punch blur snaps the frame in or out like a camera aperture closing. Sharp, punchy way to land on a beat.'
+  },
+  'Hyperzoom (Zoom)': {
+    group: 'Zoom', title: 'Hyperzoom (Zoom)', image: EFFECT_IMG_DIR + 'Hyperzoom (Zoom).png',
+    desc: 'A fast, heavily blurred push into the subject. Feels sudden and intense - good for a hard emphasis moment or a hook.'
+  },
+  'Zoom Quick In (Zoom)': {
+    group: 'Zoom', title: 'Zoom Quick In (Zoom)', image: EFFECT_IMG_DIR + 'Zoom Quick In (Zoom).png',
+    desc: 'A rapid push-in with motion blur trailing the frame, like the camera snaps forward mid-shot. Adds sudden energy without cutting.'
+  },
+  /* ---- Text ---- */
+  'Over A Roll (Text)': {
+    group: 'Text', title: 'Over A Roll (Text)', image: EFFECT_IMG_DIR + 'Over A Roll (Text).png',
+    desc: 'Bold text sits directly on top of the A-roll footage. Simple, direct way to stamp a word or name onto a talking shot.'
+  },
+  'Panel (Text)': {
+    group: 'Text', title: 'Panel (Text)', image: EFFECT_IMG_DIR + 'Panel (Text).png',
+    desc: 'The frame splits in two: a solid panel of bulleted text on one side, the A-roll video on the other. Good for listing questions or points while the talent keeps talking.'
+  },
+  'Split Screen (Text)': {
+    group: 'Text', title: 'Split Screen (Text)', image: EFFECT_IMG_DIR + 'Split Screen (Text).png',
+    desc: 'The frame splits in half: a big glowing headline on one side, the A-roll video on the other. Makes a single key phrase impossible to miss.'
+  },
+  'Timeline (Text)': {
+    group: 'Text', title: 'Timeline (Text)', image: EFFECT_IMG_DIR + 'Timeline (Text).png',
+    desc: 'A thin horizontal line with a running number sits across the frame like a scrubber. Reads as a timeline or progress marker over the shot.'
+  },
+  'Title (Text)': {
+    group: 'Text', title: 'Title (Text)', image: EFFECT_IMG_DIR + 'Title (Text).png',
+    desc: 'A single bold, glowing word fills a black frame as a full title card. Used to punctuate a beat or open a new segment.'
+  },
+  'Transparent Back (Text)': {
+    group: 'Text', title: 'Transparent Back (Text)', image: EFFECT_IMG_DIR + 'Transparent Back (Text).png',
+    desc: 'A large, low-opacity word sits ghosted in the background while a bolder headline sits in front of it. Builds a layered, two-tier text moment out of a single frame.'
+  },
+  /* ---- Wipp ---- */
+  '3D Camera (Wipp)': {
+    group: 'Wipp', title: '3D Camera (Wipp)', image: EFFECT_IMG_DIR + '3D Camera (Wipp).png',
+    desc: 'An on-screen text or graphic card tilts into 3D space as if the camera is whipping past it. Gives a flat overlay a sense of depth and motion.'
+  },
+};
+Object.assign(SHOT_TYPE_PREVIEWS, EFFECT_TYPE_PREVIEWS);
+
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
 
@@ -1157,6 +1253,27 @@ function allShotsGridHtml(){
       const p = SHOT_TYPE_PREVIEWS[i];
       return '<button type="button" class="all-shots-card" data-shot-preview="' + escAttr(i) + '">'
         + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference shot" loading="lazy"></div>'
+        + '<div class="all-shots-card-body">'
+          + '<h4 class="all-shots-card-title">' + esc(p.title) + '</h4>'
+          + '<p class="all-shots-card-desc">' + esc(p.desc) + '</p>'
+        + '</div>'
+      + '</button>';
+    }).join('') + '</div>';
+  });
+  return html;
+}
+
+/* ---------- effects grid render (mirrors the shot type grid above) ---------- */
+function effectsGridHtml(){
+  let html = '';
+  EFFECT_TYPE_GROUPS.forEach(g=>{
+    const items = g.items.filter(i=> EFFECT_TYPE_PREVIEWS[i]);
+    if(!items.length) return;
+    html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
+    html += '<div class="all-shots-grid">' + items.map(i=>{
+      const p = EFFECT_TYPE_PREVIEWS[i];
+      return '<button type="button" class="all-shots-card" data-shot-preview="' + escAttr(i) + '">'
+        + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference effect" loading="lazy"></div>'
         + '<div class="all-shots-card-body">'
           + '<h4 class="all-shots-card-title">' + esc(p.title) + '</h4>'
           + '<p class="all-shots-card-desc">' + esc(p.desc) + '</p>'
@@ -1269,6 +1386,13 @@ function toggleAllShotsFullscreen(){
   document.getElementById('allShotsOverlay').classList.toggle('fullscreen', allShotsFullscreen);
   document.body.classList.toggle('tabs-hidden', allShotsFullscreen);
 }
+let effectsFullscreen = false;
+function toggleEffectsFullscreen(){
+  effectsFullscreen = !effectsFullscreen;
+  document.getElementById('effectsBox').classList.toggle('fullscreen', effectsFullscreen);
+  document.getElementById('effectsOverlay').classList.toggle('fullscreen', effectsFullscreen);
+  document.body.classList.toggle('tabs-hidden', effectsFullscreen);
+}
 
 /* ================= CINE VLOGS ================= */
 const CV_COLLECTION = 'cineVlogs';
@@ -1349,7 +1473,7 @@ function cvLocationPanelHtml(current, rec){
 }
 function shotTypePanelHtml(current){
   let list = '';
-  SHOT_TYPE_GROUPS.forEach(g=>{
+  SHOT_TYPE_GROUPS.concat(EFFECT_TYPE_GROUPS).forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     if(!items.length) return;
     list += lcGroupLabel(g.group);
@@ -2333,6 +2457,7 @@ function switchTab(tab){
   try{ localStorage.setItem('lcActiveTab', tab); }catch(e){}
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
+  document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   const showLauncher = tab==='cine' && !cvActiveId;
   const showDetail = tab==='cine' && !!cvActiveId;
   document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
@@ -2353,6 +2478,19 @@ function switchTab(tab){
   document.getElementById('allShotsCloseBtn').addEventListener('click', ()=>{
     if(document.referrer){ history.back(); } else { window.close(); }
   });
+
+  const effectsScroll = document.getElementById('effectsScroll');
+  effectsScroll.innerHTML = effectsGridHtml();
+  effectsScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      openShotPreview(card.dataset.shotPreview);
+    });
+  });
+  document.getElementById('effectsFullscreenBtn').addEventListener('click', toggleEffectsFullscreen);
+  document.getElementById('effectsCloseBtn').addEventListener('click', ()=>{
+    if(document.referrer){ history.back(); } else { window.close(); }
+  });
+
   document.getElementById('shotPreviewCloseBtn').addEventListener('click', closeShotPreview);
   document.getElementById('shotPreviewOverlay').addEventListener('click', (e)=>{ if(e.target.id==='shotPreviewOverlay') closeShotPreview(); });
 
@@ -2372,10 +2510,10 @@ function switchTab(tab){
 
   let savedTab = null, savedCvId = null;
   try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
-  if(savedTab === 'library') switchTab('library');
+  if(savedTab === 'library' || savedTab === 'effects') switchTab(savedTab);
 
   cvLibrary = await cvFetchLibrary();
-  if(savedTab !== 'library' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
+  if(savedTab !== 'library' && savedTab !== 'effects' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
     cvOpen(savedCvId);
   }else{
     cvRenderLauncher();
