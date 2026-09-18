@@ -394,7 +394,6 @@ table.shot-table input[type=text]:focus, table.shot-table textarea:focus, table.
   outline:none; border-color:var(--mimeo); background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);
 }
 table.shot-table .col-num{width:58px; text-align:center; padding-top:12px;}
-table.shot-table .col-content{width:36px;}
 table.shot-table .col-type{width:64px;}
 table.shot-table .col-location{width:42px;}
 table.shot-table .col-desc{width:100px;}
@@ -485,7 +484,6 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
 /* ---------- shot table: tablet column tweak ---------- */
 @media (min-width:761px) and (max-width:1024px){
   table.shot-table .col-num{width:68px;}
-  table.shot-table .col-content{width:120px;}
   table.shot-table .col-type{width:294px;}
   table.shot-table .col-location{width:82px;}
   table.shot-table .col-desc{width:105px;}
@@ -493,7 +491,6 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
 }
 /* Samsung S9 FE (and other Android tablets, tagged via JS above): apply regardless of exact viewport/orientation width */
 html.lc-android-tablet table.shot-table .col-num{width:68px;}
-html.lc-android-tablet table.shot-table .col-content{width:120px;}
 html.lc-android-tablet table.shot-table .col-type{width:294px;}
 html.lc-android-tablet table.shot-table .col-location{width:82px;}
 html.lc-android-tablet table.shot-table .col-desc{width:105px;}
@@ -510,7 +507,7 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   table.shot-table tbody{display:block;}
   table.shot-table tr{
     display:grid; grid-template-columns:1fr auto; align-items:start; column-gap:10px;
-    grid-template-areas: "num del" "content content" "type type" "location location" "desc desc";
+    grid-template-areas: "num del" "type type" "location location" "desc desc";
     background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
     box-shadow:var(--shadow); padding:14px 14px 16px; margin-bottom:12px;
   }
@@ -520,7 +517,6 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   table.shot-table td{display:block; padding:0; border-bottom:none; width:auto;}
   table.shot-table td.col-num{grid-area:num; padding-top:2px; width:auto;}
   table.shot-table td.col-del{grid-area:del; text-align:right; width:auto;}
-  table.shot-table td.col-content{grid-area:content; margin-top:12px; width:auto;}
   table.shot-table td.col-type{grid-area:type; margin-top:12px; width:auto;}
   table.shot-table td.col-location{grid-area:location; margin-top:12px; width:auto;}
   table.shot-table td.col-desc{grid-area:desc; margin-top:12px; width:auto;}
@@ -539,7 +535,7 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
 @media (max-width:480px){
   table.shot-table tr{padding:12px 12px 14px; border-radius:12px; margin-bottom:10px; row-gap:2px;}
   table.shot-table tbody tr.shot-row-done{padding-left:10px;}
-  table.shot-table td.col-content, table.shot-table td.col-type, table.shot-table td.col-location, table.shot-table td.col-desc{margin-top:10px;}
+  table.shot-table td.col-type, table.shot-table td.col-location, table.shot-table td.col-desc{margin-top:10px;}
   .shot-type-chip{flex-wrap:wrap; row-gap:6px; padding:8px 8px 8px 12px;}
   .shot-type-chip-label{flex-basis:100%; white-space:normal; word-break:break-word;}
   .shot-type-chip-preview, .shot-type-chip-add, .shot-slot-remove{margin-left:auto;}
@@ -778,7 +774,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <div class="top-tabs" id="topTabs">
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shot Type Library</button>
-  <button type="button" class="top-tab-btn" data-tab="effects">Effects</button>
+  <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
 </div>
 
 <div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
@@ -835,7 +831,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <div class="all-shots-overlay tab-page" id="effectsOverlay">
   <div class="all-shots-box" id="effectsBox">
     <div class="all-shots-head">
-      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="effectsTitle">All Effects</h2></div>
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="effectsTitle">All Animation</h2></div>
       <div class="all-shots-head-right">
         <button type="button" class="modal-fullscreen-btn" id="effectsFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -922,10 +918,10 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       <div class="shot-table-wrap">
         <table class="shot-table">
           <colgroup>
-            <col style="width:58px"><col style="width:36px"><col style="width:64px"><col style="width:42px"><col style="width:100px"><col style="width:34px">
+            <col style="width:58px"><col style="width:64px"><col style="width:42px"><col style="width:100px"><col style="width:34px">
           </colgroup>
           <thead><tr>
-            <th>#</th><th>Content Type</th><th>Shot / Sequence</th><th>Location</th><th>Description</th><th></th>
+            <th>#</th><th>Shot / Sequence</th><th>Location</th><th>Description</th><th></th>
           </tr></thead>
           <tbody id="cvShotTableBody"></tbody>
         </table>
@@ -1457,8 +1453,6 @@ const LC_PLUS_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const LC_CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LC_EYE_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.1" stroke="currentColor" stroke-width="1.4"/></svg>';
 const LC_TRASH_SVG = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6.5 4.5v-1a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1M4.5 4.5l.5 8.2a1 1 0 0 0 1 .8h4a1 1 0 0 0 1-.8l.5-8.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const SHOT_CONTENT_TYPES = ['A-Roll','Animation','Net Footage','PSR'];
-
 /* ---------- custom select engine (search + grouped options + per-option preview) ---------- */
 let lcSelectOpen = null;
 function lcSelectHtml(field, displayValue, placeholder, previewValue){
@@ -1498,11 +1492,6 @@ function lcOptionRowDeletable(value, label, selected){
       + '<button type="button" class="lc-opt-delete" data-lc-delete="' + escAttr(value) + '" title="Delete ' + escAttr(label) + '" aria-label="Delete ' + escAttr(label) + '">' + LC_TRASH_SVG + '</button>'
     + '</span>'
   + '</li>';
-}
-function contentTypePanelHtml(current){
-  return '<ul class="lc-opt-list" role="listbox">'
-    + SHOT_CONTENT_TYPES.map(c=> lcOptionRow(c, c, c===current)).join('')
-  + '</ul>';
 }
 function cvLocationPanelHtml(current, rec){
   const saved = (rec.locations || []).slice();
@@ -1891,7 +1880,6 @@ function cvShotRowHtml(row, num, sectionColor){
         + '<button type="button" class="shot-num-badge" data-shot-duplicate title="Duplicate this shot">' + num + '</button>'
         + '<button type="button" class="shot-drag-handle" data-shot-drag-handle draggable="true" title="Drag to reorder" aria-label="Drag to reorder">' + CV_GRIP_SVG + '</button>'
       + '</div></td>'
-    + '<td class="col-content" data-label="Content Type">' + lcSelectHtml('contentType', row.contentType, 'Select content type…') + '</td>'
     + '<td class="col-type" data-label="Shot / Sequence">' + shotTypeStackHtml(row) + '</td>'
     + '<td class="col-location" data-label="Location">' + lcSelectHtml('location', row.location, 'Select location…') + '</td>'
     + '<td class="col-desc" data-label="Description">'
@@ -2278,24 +2266,6 @@ function cvWireRows(){
       });
     }
 
-    const contentTypeWrap = tr.querySelector('.lc-select[data-field="contentType"]');
-    if(contentTypeWrap){
-      const trigger = contentTypeWrap.querySelector('.lc-select-trigger');
-      trigger.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        const rec = cvLibrary.find(r=> r.id===cvActiveId);
-        const row = rec && rec.shots.find(s=> s.id===id);
-        if(!row) return;
-        openCustomSelect(trigger, {
-          panelHtml: contentTypePanelHtml(row.contentType),
-          onSelect: (val)=>{
-            cvUpdateShotField(id, 'contentType', val);
-            cvRenderDetail();
-          }
-        });
-      });
-    }
-
     const locationWrap = tr.querySelector('.lc-select[data-field="location"]');
     if(locationWrap){
       const trigger = locationWrap.querySelector('.lc-select-trigger');
@@ -2375,7 +2345,7 @@ async function cvUpdateShotField(shotId, field, value){
 async function cvAddRow(){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
-  rec.shots.push({ id: cvUid(), contentType:'', shotType:'', shotTypes:[], location:'', description:'' });
+  rec.shots.push({ id: cvUid(), shotType:'', shotTypes:[], location:'', description:'' });
   rec.updatedAt = Date.now();
   cvRenderDetail();
   await cvSaveRecord(rec);
