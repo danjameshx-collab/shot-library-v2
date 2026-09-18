@@ -1177,8 +1177,8 @@ const SHOT_TYPE_PREVIEWS = {
 
 /* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
 const EFFECT_TYPE_GROUPS = [
-  {group:'Frame', items:['Black Bars (Frame)','Quarter (Frame)','Quarter Black (Frame)','Third Horizontal (Frame)','Third Vertical (Frame)','Third Vertical Black (Frame)','Third Vertical Transparent (Frame)']},
-  {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Zoom Quick In (Zoom)']},
+  {group:'Frame', items:['2 Vertical (Frame)','2 Vertical Black (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical Black (Frame)','3 Vertical Transparent (Frame)','4 (Frame)','4 Black (Frame)','Black Bars (Frame)']},
+  {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
 ];
@@ -1186,33 +1186,41 @@ const EFFECT_TYPE_GROUPS = [
 const EFFECT_IMG_DIR = 'effects images/';
 const EFFECT_TYPE_PREVIEWS = {
   /* ---- Frame ---- */
+  '2 Vertical (Frame)': {
+    group: 'Frame', title: '2 Vertical (Frame)', image: EFFECT_IMG_DIR + '2 Vertical (Frame).jpg',
+    desc: 'The frame splits into vertical strips of two clips, repeating side by side across the screen. Shows two speakers at once without cutting between them.'
+  },
+  '2 Vertical Black (Frame)': {
+    group: 'Frame', title: '2 Vertical Black (Frame)', image: EFFECT_IMG_DIR + '2 Vertical Black (Frame).jpg',
+    desc: 'The same two-panel vertical split as 2 Vertical, but each panel sits in a rounded, bordered box with black filling the gap between them. Turns the plain split into a boxed, tile-like layout.'
+  },
+  '3 Horizontal (Frame)': {
+    group: 'Frame', title: '3 Horizontal (Frame)', image: EFFECT_IMG_DIR + '3 Horizontal (Frame).jpg',
+    desc: 'The screen splits into three horizontal panels of different footage stacked on top of each other. Shows multiple angles or moments at once without cutting between them.'
+  },
+  '3 Vertical (Frame)': {
+    group: 'Frame', title: '3 Vertical (Frame)', image: EFFECT_IMG_DIR + '3 Vertical (Frame).png',
+    desc: 'The screen splits into three vertical panels of different footage side by side. Shows multiple angles or moments at once without cutting between them.'
+  },
+  '3 Vertical Black (Frame)': {
+    group: 'Frame', title: '3 Vertical Black (Frame)', image: EFFECT_IMG_DIR + '3 Vertical Black (Frame).jpg',
+    desc: 'The same three-panel vertical split as 3 Vertical, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain split into a boxed, tile-like layout.'
+  },
+  '3 Vertical Transparent (Frame)': {
+    group: 'Frame', title: '3 Vertical Transparent (Frame)', image: EFFECT_IMG_DIR + '3 Vertical Transparent (Frame).png',
+    desc: 'The same three-panel vertical split, but each panel gets a transparent color wash and a bold label over it. Turns a plain split screen into a labeled, on-brand breakdown.'
+  },
+  '4 (Frame)': {
+    group: 'Frame', title: '4 (Frame)', image: EFFECT_IMG_DIR + '4 (Frame).png',
+    desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
+  },
+  '4 Black (Frame)': {
+    group: 'Frame', title: '4 Black (Frame)', image: EFFECT_IMG_DIR + '4 Black (Frame).jpg',
+    desc: 'The same four-quadrant split as 4, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain grid into a boxed, tile-like layout.'
+  },
   'Black Bars (Frame)': {
     group: 'Frame', title: 'Black Bars (Frame)', image: EFFECT_IMG_DIR + 'Black Bars (Frame).png',
     desc: 'Thin black letterbox bars sit top and bottom of the frame. Gives a normal shot an instant cinematic, widescreen feel.'
-  },
-  'Quarter (Frame)': {
-    group: 'Frame', title: 'Quarter (Frame)', image: EFFECT_IMG_DIR + 'Quarter (Frame).png',
-    desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
-  },
-  'Quarter Black (Frame)': {
-    group: 'Frame', title: 'Quarter Black (Frame)', image: EFFECT_IMG_DIR + 'Quarter Black (Frame).jpg',
-    desc: 'The same four-quadrant split as Quarter, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain grid into a boxed, tile-like layout.'
-  },
-  'Third Horizontal (Frame)': {
-    group: 'Frame', title: 'Third Horizontal (Frame)', image: EFFECT_IMG_DIR + 'Third Horizontal (Frame).jpg',
-    desc: 'The screen splits into three horizontal panels of different footage stacked on top of each other. Shows multiple angles or moments at once without cutting between them.'
-  },
-  'Third Vertical (Frame)': {
-    group: 'Frame', title: 'Third Vertical (Frame)', image: EFFECT_IMG_DIR + 'Third Vertical (Frame).png',
-    desc: 'The screen splits into three vertical panels of different footage side by side. Shows multiple angles or moments at once without cutting between them.'
-  },
-  'Third Vertical Black (Frame)': {
-    group: 'Frame', title: 'Third Vertical Black (Frame)', image: EFFECT_IMG_DIR + 'Third Vertical Black (Frame).jpg',
-    desc: 'The same three-panel vertical split as Third Vertical, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain split into a boxed, tile-like layout.'
-  },
-  'Third Vertical Transparent (Frame)': {
-    group: 'Frame', title: 'Third Vertical Transparent (Frame)', image: EFFECT_IMG_DIR + 'Third Vertical Transparent (Frame).png',
-    desc: 'The same three-panel vertical split, but each panel gets a transparent color wash and a bold label over it. Turns a plain split screen into a labeled, on-brand breakdown.'
   },
   /* ---- Zoom ---- */
   'Camera Shutter (Zoom)': {
@@ -1223,8 +1231,8 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Zoom', title: 'Hyperzoom (Zoom)', image: EFFECT_IMG_DIR + 'Hyperzoom (Zoom).png',
     desc: 'A fast, heavily blurred push into the subject. Feels sudden and intense - good for a hard emphasis moment or a hook.'
   },
-  'Zoom Quick In (Zoom)': {
-    group: 'Zoom', title: 'Zoom Quick In (Zoom)', image: EFFECT_IMG_DIR + 'Zoom Quick In (Zoom).png',
+  'Quick In (Zoom)': {
+    group: 'Zoom', title: 'Quick In (Zoom)', image: EFFECT_IMG_DIR + 'Quick In (Zoom).png',
     desc: 'A rapid push-in with motion blur trailing the frame, like the camera snaps forward mid-shot. Adds sudden energy without cutting.'
   },
   /* ---- Text ---- */
