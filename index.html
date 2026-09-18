@@ -707,6 +707,15 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;
 }
 .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
+.shot-type-chip.is-highlight-group{background:#1B3A6B; border-color:#1B3A6B;}
+.shot-type-chip.is-highlight-group:hover{border-color:#142C52;}
+.shot-type-chip.is-highlight-group .shot-type-chip-label{color:#fff;}
+.shot-type-chip.is-highlight-group .shot-type-chip-preview,
+.shot-type-chip.is-highlight-group .shot-type-chip-add{color:rgba(255,255,255,.75);}
+.shot-type-chip.is-highlight-group .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight-group .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
+.shot-type-chip.is-highlight-group .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
+.shot-type-chip.is-highlight-group .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
 
 /* ---------- shot table: section dividers (visually group a run of rows) ---------- */
 table.shot-table tbody tr.shot-section-row td{padding:0; border-bottom:none;}
@@ -1504,9 +1513,11 @@ function cvEnsureShotTypesArray(row){
   }
   return row.shotTypes;
 }
+const CV_HIGHLIGHT_GROUPS = ['Frame', 'Composition', 'Sequences'];
 function shotTypeChipHtml(value, idx){
   const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value]);
-  return '<div class="shot-type-chip" data-slot-idx="' + idx + '">'
+  const isHighlightGroup = !!(hasPreview && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
+  return '<div class="shot-type-chip' + (isHighlightGroup ? ' is-highlight-group' : '') + '" data-slot-idx="' + idx + '">'
     + '<span class="shot-type-chip-label">' + esc(value) + '</span>'
     + (hasPreview
         ? '<button type="button" class="shot-type-chip-preview" data-shot-preview="' + escAttr(value) + '" title="Preview ' + escAttr(value) + '" aria-label="Preview ' + escAttr(value) + '">' + LC_EYE_SVG + '</button>'
