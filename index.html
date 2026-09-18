@@ -712,15 +712,33 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
 .shot-type-chip.is-highlight-group .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
 .shot-type-chip.is-highlight-group .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
 .shot-type-chip.is-highlight-group .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
-.shot-type-chip.is-highlight-value{background:#6E1423; border-color:#6E1423;}
-.shot-type-chip.is-highlight-value:hover{border-color:#530F1A;}
-.shot-type-chip.is-highlight-value .shot-type-chip-label{color:#fff;}
-.shot-type-chip.is-highlight-value .shot-type-chip-preview,
-.shot-type-chip.is-highlight-value .shot-type-chip-add{color:rgba(255,255,255,.75);}
-.shot-type-chip.is-highlight-value .shot-type-chip-preview:hover,
-.shot-type-chip.is-highlight-value .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
-.shot-type-chip.is-highlight-value .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
-.shot-type-chip.is-highlight-value .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+.shot-type-chip.is-highlight-burgundy{background:#6E1423; border-color:#6E1423;}
+.shot-type-chip.is-highlight-burgundy:hover{border-color:#530F1A;}
+.shot-type-chip.is-highlight-burgundy .shot-type-chip-label{color:#fff;}
+.shot-type-chip.is-highlight-burgundy .shot-type-chip-preview,
+.shot-type-chip.is-highlight-burgundy .shot-type-chip-add{color:rgba(255,255,255,.75);}
+.shot-type-chip.is-highlight-burgundy .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight-burgundy .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
+.shot-type-chip.is-highlight-burgundy .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
+.shot-type-chip.is-highlight-burgundy .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+.shot-type-chip.is-highlight-purple{background:#4C2A85; border-color:#4C2A85;}
+.shot-type-chip.is-highlight-purple:hover{border-color:#391F63;}
+.shot-type-chip.is-highlight-purple .shot-type-chip-label{color:#fff;}
+.shot-type-chip.is-highlight-purple .shot-type-chip-preview,
+.shot-type-chip.is-highlight-purple .shot-type-chip-add{color:rgba(255,255,255,.75);}
+.shot-type-chip.is-highlight-purple .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight-purple .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
+.shot-type-chip.is-highlight-purple .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
+.shot-type-chip.is-highlight-purple .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+.shot-type-chip.is-highlight-yellow{background:#F0C419; border-color:#F0C419;}
+.shot-type-chip.is-highlight-yellow:hover{border-color:#D3A80B;}
+.shot-type-chip.is-highlight-yellow .shot-type-chip-label{color:#3A2E00;}
+.shot-type-chip.is-highlight-yellow .shot-type-chip-preview,
+.shot-type-chip.is-highlight-yellow .shot-type-chip-add{color:rgba(58,46,0,.65);}
+.shot-type-chip.is-highlight-yellow .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight-yellow .shot-type-chip-add:hover{background:rgba(58,46,0,.15); color:#3A2E00;}
+.shot-type-chip.is-highlight-yellow .shot-slot-remove{background:rgba(58,46,0,.1); border-color:rgba(58,46,0,.3); color:rgba(58,46,0,.75);}
+.shot-type-chip.is-highlight-yellow .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
 
 /* ---------- shot table: section dividers (visually group a run of rows) ---------- */
 table.shot-table tbody tr.shot-section-row td{padding:0; border-bottom:none;}
@@ -1190,6 +1208,7 @@ const EFFECT_TYPE_GROUPS = [
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
+  {group:'Misc', items:['Net','PSR']},
 ];
 
 const EFFECT_IMG_DIR = 'effects images/';
@@ -1274,6 +1293,15 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Wipp', title: '3D Camera (Wipp)', image: EFFECT_IMG_DIR + '3D Camera (Wipp).png',
     desc: 'An on-screen text or graphic card tilts into 3D space as if the camera is whipping past it. Gives a flat overlay a sense of depth and motion.'
   },
+  /* ---- Misc ---- */
+  'Net': {
+    group: 'Misc', title: 'Net', noPreview: true,
+    desc: 'Net footage.'
+  },
+  'PSR': {
+    group: 'Misc', title: 'PSR', noPreview: true,
+    desc: 'PSR.'
+  },
 };
 Object.assign(SHOT_TYPE_PREVIEWS, EFFECT_TYPE_PREVIEWS);
 
@@ -1305,7 +1333,7 @@ function allShotsGridHtml(){
 function effectsGridHtml(){
   let html = '';
   EFFECT_TYPE_GROUPS.forEach(g=>{
-    const items = g.items.filter(i=> EFFECT_TYPE_PREVIEWS[i]);
+    const items = g.items.filter(i=> EFFECT_TYPE_PREVIEWS[i] && !EFFECT_TYPE_PREVIEWS[i].noPreview);
     if(!items.length) return;
     html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
     html += '<div class="all-shots-grid">' + items.map(i=>{
@@ -1469,7 +1497,7 @@ function lcSelectHtml(field, displayValue, placeholder, previewValue){
   + '</div>';
 }
 function lcOptionRow(value, label, selected, previewValue){
-  const hasPreview = !!(previewValue && SHOT_TYPE_PREVIEWS[previewValue]);
+  const hasPreview = !!(previewValue && SHOT_TYPE_PREVIEWS[previewValue] && !SHOT_TYPE_PREVIEWS[previewValue].noPreview);
   const rightHtml = hasPreview
     ? '<span class="lc-opt-right">'
         + (selected ? LC_CHECK_SVG : '')
@@ -1524,12 +1552,12 @@ function cvEnsureShotTypesArray(row){
   return row.shotTypes;
 }
 const CV_HIGHLIGHT_GROUPS = ['Frame', 'Composition', 'Sequences'];
-const CV_HIGHLIGHT_VALUES = ['Talking Head (Medium)'];
+const CV_HIGHLIGHT_VALUE_CLASS = { 'Talking Head (Medium)': 'is-highlight-burgundy', 'PSR': 'is-highlight-purple', 'Net': 'is-highlight-yellow' };
 function shotTypeChipHtml(value, idx){
-  const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value]);
-  const isHighlightGroup = !!(hasPreview && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
-  const isHighlightValue = CV_HIGHLIGHT_VALUES.includes(value);
-  const chipClass = isHighlightValue ? ' is-highlight-value' : (isHighlightGroup ? ' is-highlight-group' : '');
+  const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value] && !SHOT_TYPE_PREVIEWS[value].noPreview);
+  const isHighlightGroup = !!(value && SHOT_TYPE_PREVIEWS[value] && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
+  const highlightValueClass = CV_HIGHLIGHT_VALUE_CLASS[value];
+  const chipClass = highlightValueClass ? (' ' + highlightValueClass) : (isHighlightGroup ? ' is-highlight-group' : '');
   return '<div class="shot-type-chip' + chipClass + '" data-slot-idx="' + idx + '">'
     + '<span class="shot-type-chip-label">' + esc(value) + '</span>'
     + (hasPreview
