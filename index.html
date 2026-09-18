@@ -970,7 +970,7 @@ const SHOT_TYPE_GROUPS = [
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
   {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
-  {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)']},
+  {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1030,6 +1030,10 @@ const SHOT_TYPE_PREVIEWS = {
   'Slow Motion (Effect)': {
     group: 'Effect', title: 'Slow Motion (Effect)', image: SHOT_IMG_DIR + 'slow-motion.png',
     desc: 'Footage captured at a high frame rate and played back slow. Stretches a small moment into something that feels significant.'
+  },
+  'Speed Ramping (Effect)': {
+    group: 'Effect', title: 'Speed Ramping (Effect)', image: SHOT_IMG_DIR + 'Speed Ramping.png',
+    desc: 'A shot (or sequence of shots) that smoothly shifts between slow motion and normal/fast speed mid-clip for emphasis.'
   },
   /* ---- Perspective ---- */
   'Close Up Object (POV)': {
@@ -1177,7 +1181,6 @@ const EFFECT_TYPE_GROUPS = [
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
-  {group:'Speed', items:['Speed Ramping']},
 ];
 
 const EFFECT_IMG_DIR = 'effects images/';
@@ -1261,11 +1264,6 @@ const EFFECT_TYPE_PREVIEWS = {
   '3D Camera (Wipp)': {
     group: 'Wipp', title: '3D Camera (Wipp)', image: EFFECT_IMG_DIR + '3D Camera (Wipp).png',
     desc: 'An on-screen text or graphic card tilts into 3D space as if the camera is whipping past it. Gives a flat overlay a sense of depth and motion.'
-  },
-  /* ---- Speed ---- */
-  'Speed Ramping': {
-    group: 'Speed', title: 'Speed Ramping', image: EFFECT_IMG_DIR + 'Speed Ramping.png',
-    desc: 'A shot (or sequence of shots) that smoothly shifts between slow motion and normal/fast speed mid-clip for emphasis.'
   },
 };
 Object.assign(SHOT_TYPE_PREVIEWS, EFFECT_TYPE_PREVIEWS);
