@@ -1925,7 +1925,7 @@ function cvSectionRowHtml(row){
     '<button type="button" class="shot-section-swatch' + (c.hex===color ? ' is-active' : '') + '" data-section-color="' + escAttr(c.hex) + '" style="--sw-color:' + escAttr(c.hex) + '" title="' + escAttr(c.name) + '" aria-label="Set section color to ' + escAttr(c.name) + '"></button>'
   ).join('');
   return '<tr class="shot-section-row" data-shot-id="' + escAttr(row.id) + '" style="--sec-color:' + escAttr(color) + '">'
-    + '<td colspan="6"><div class="shot-section-inner">'
+    + '<td colspan="5"><div class="shot-section-inner">'
         + '<button type="button" class="shot-drag-handle" data-shot-drag-handle draggable="true" title="Drag to move this section" aria-label="Drag to move this section">' + CV_GRIP_SVG + '</button>'
         + '<span class="shot-section-dot" aria-hidden="true"></span>'
         + '<input type="text" class="shot-section-title-input" data-field="title" value="' + escAttr(row.title || '') + '" placeholder="Section name…" spellcheck="false">'
@@ -2063,7 +2063,7 @@ function cvRenderDetail(){
   requestAnimationFrame(()=> outlineAutoGrow(outlineTa));
   const body = document.getElementById('cvShotTableBody');
   if(!rec.shots.length){
-    body.innerHTML = '<tr><td colspan="6" style="padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;">No shots yet - add a row to get started.</td></tr>';
+    body.innerHTML = '<tr><td colspan="5" style="padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;">No shots yet - add a row to get started.</td></tr>';
   } else {
     let shotNum = 0;
     let activeColor = '';
