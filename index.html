@@ -716,6 +716,15 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
 .shot-type-chip.is-highlight-group .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
 .shot-type-chip.is-highlight-group .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
 .shot-type-chip.is-highlight-group .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+.shot-type-chip.is-highlight-value{background:#6E1423; border-color:#6E1423;}
+.shot-type-chip.is-highlight-value:hover{border-color:#530F1A;}
+.shot-type-chip.is-highlight-value .shot-type-chip-label{color:#fff;}
+.shot-type-chip.is-highlight-value .shot-type-chip-preview,
+.shot-type-chip.is-highlight-value .shot-type-chip-add{color:rgba(255,255,255,.75);}
+.shot-type-chip.is-highlight-value .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight-value .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
+.shot-type-chip.is-highlight-value .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
+.shot-type-chip.is-highlight-value .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
 
 /* ---------- shot table: section dividers (visually group a run of rows) ---------- */
 table.shot-table tbody tr.shot-section-row td{padding:0; border-bottom:none;}
@@ -965,7 +974,7 @@ const SHOT_TYPE_GROUPS = [
   {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
   {group:'Composition', items:['Frame In A Frame (Composition)','High Negative Space (Composition)','Leading Lines (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
-  {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
+  {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)','Talking Head (Medium)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
   {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
@@ -1090,6 +1099,10 @@ const SHOT_TYPE_PREVIEWS = {
   'Reveal (Medium)': {
     group: 'Medium', title: 'Reveal (Medium)', image: SHOT_IMG_DIR + 'reveal-medium.png',
     desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance. Built-in payoff inside a single shot.'
+  },
+  'Talking Head (Medium)': {
+    group: 'Medium', title: 'Talking Head (Medium)', image: SHOT_IMG_DIR + 'Talking Head (Medium).png',
+    desc: 'A tight medium shot framed from the chest up, subject looking straight into the lens. The default framing for direct-to-camera talking segments.'
   },
   /* ---- Wide ---- */
   'AWTA (Wide)': {
@@ -1522,10 +1535,13 @@ function cvEnsureShotTypesArray(row){
   return row.shotTypes;
 }
 const CV_HIGHLIGHT_GROUPS = ['Frame', 'Composition', 'Sequences'];
+const CV_HIGHLIGHT_VALUES = ['Talking Head (Medium)'];
 function shotTypeChipHtml(value, idx){
   const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value]);
   const isHighlightGroup = !!(hasPreview && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
-  return '<div class="shot-type-chip' + (isHighlightGroup ? ' is-highlight-group' : '') + '" data-slot-idx="' + idx + '">'
+  const isHighlightValue = CV_HIGHLIGHT_VALUES.includes(value);
+  const chipClass = isHighlightValue ? ' is-highlight-value' : (isHighlightGroup ? ' is-highlight-group' : '');
+  return '<div class="shot-type-chip' + chipClass + '" data-slot-idx="' + idx + '">'
     + '<span class="shot-type-chip-label">' + esc(value) + '</span>'
     + (hasPreview
         ? '<button type="button" class="shot-type-chip-preview" data-shot-preview="' + escAttr(value) + '" title="Preview ' + escAttr(value) + '" aria-label="Preview ' + escAttr(value) + '">' + LC_EYE_SVG + '</button>'
