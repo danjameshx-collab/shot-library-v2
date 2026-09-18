@@ -367,7 +367,7 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   .shot-table-actions-left .btn, .shot-table-actions-right .btn{flex:1 1 auto; text-align:center;}
 }
 .shot-table-wrap{overflow-x:auto; overflow-y:hidden; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); background:var(--paper-raised); margin-bottom:18px;}
-table.shot-table{width:100%; min-width:296px; border-collapse:collapse; font-size:14px; table-layout:fixed;}
+table.shot-table{width:100%; min-width:296px; border-collapse:collapse; font-size:14px; table-layout:auto;}
 table.shot-table th{
   text-align:left; font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:11.5px; color:var(--bespoke);
   background:var(--bespoke-bg); padding:12px 12px; border-bottom:1.5px solid var(--line-strong); white-space:nowrap;
@@ -393,11 +393,11 @@ table.shot-table input[type=text]:hover, table.shot-table textarea:hover, table.
 table.shot-table input[type=text]:focus, table.shot-table textarea:focus, table.shot-table select:focus{
   outline:none; border-color:var(--mimeo); background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);
 }
-table.shot-table .col-num{width:58px; text-align:center; padding-top:12px;}
-table.shot-table .col-type{width:64px;}
-table.shot-table .col-location{width:42px;}
-table.shot-table .col-desc{width:100px;}
-table.shot-table .col-del{width:40px; text-align:center; padding-top:10px;}
+table.shot-table .col-num{width:60px; text-align:center; padding-top:12px;}
+table.shot-table .col-type{width:26%; min-width:220px;}
+table.shot-table .col-location{width:13%; min-width:110px;}
+table.shot-table .col-desc{width:45%; min-width:260px;}
+table.shot-table .col-del{width:44px; text-align:center; padding-top:10px;}
 .shot-num-cell{display:flex; flex-direction:row; align-items:center; justify-content:center; gap:4px;}
 .shot-num-badge{
   display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
@@ -483,17 +483,17 @@ table.shot-table tbody tr.shot-row-done .shot-num-badge{background:var(--bespoke
 
 /* ---------- shot table: tablet column tweak ---------- */
 @media (min-width:761px) and (max-width:1024px){
-  table.shot-table .col-num{width:68px;}
-  table.shot-table .col-type{width:294px;}
-  table.shot-table .col-location{width:82px;}
-  table.shot-table .col-desc{width:105px;}
+  table.shot-table .col-num{width:60px;}
+  table.shot-table .col-type{width:30%; min-width:180px;}
+  table.shot-table .col-location{width:14%; min-width:90px;}
+  table.shot-table .col-desc{width:38%; min-width:200px;}
   table.shot-table .col-del{width:44px;}
 }
 /* Samsung S9 FE (and other Android tablets, tagged via JS above): apply regardless of exact viewport/orientation width */
-html.lc-android-tablet table.shot-table .col-num{width:68px;}
-html.lc-android-tablet table.shot-table .col-type{width:294px;}
-html.lc-android-tablet table.shot-table .col-location{width:82px;}
-html.lc-android-tablet table.shot-table .col-desc{width:105px;}
+html.lc-android-tablet table.shot-table .col-num{width:60px;}
+html.lc-android-tablet table.shot-table .col-type{width:30%; min-width:180px;}
+html.lc-android-tablet table.shot-table .col-location{width:14%; min-width:90px;}
+html.lc-android-tablet table.shot-table .col-desc{width:38%; min-width:200px;}
 html.lc-android-tablet table.shot-table .col-del{width:44px;}
 
 /* ---------- shot table: mobile card layout ---------- */
@@ -935,11 +935,8 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       </div>
       <div class="shot-table-wrap">
         <table class="shot-table">
-          <colgroup>
-            <col style="width:58px"><col style="width:64px"><col style="width:42px"><col style="width:100px"><col style="width:34px">
-          </colgroup>
           <thead><tr>
-            <th>#</th><th>Shot / Sequence</th><th>Location</th><th>Description</th><th></th>
+            <th class="col-num">#</th><th class="col-type">Shot / Sequence</th><th class="col-location">Location</th><th class="col-desc">Description</th><th class="col-del"></th>
           </tr></thead>
           <tbody id="cvShotTableBody"></tbody>
         </table>
