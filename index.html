@@ -1177,7 +1177,7 @@ const SHOT_TYPE_PREVIEWS = {
 
 /* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
 const EFFECT_TYPE_GROUPS = [
-  {group:'Frame', items:['2 Vertical (Frame)','2 Vertical Black (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical Black (Frame)','3 Vertical Transparent (Frame)','4 (Frame)','4 Black (Frame)','Black Bars (Frame)']},
+  {group:'Frame', items:['2 Vertical (Frame)','2 Vertical Black (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical Black (Frame)','3 Vertical Transparent (Frame)','4 Black Horizontal (Frame)','4 Horizontal (Frame)','Black Bars (Frame)']},
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
@@ -1210,13 +1210,13 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Frame', title: '3 Vertical Transparent (Frame)', image: EFFECT_IMG_DIR + '3 Vertical Transparent (Frame).png',
     desc: 'The same three-panel vertical split, but each panel gets a transparent color wash and a bold label over it. Turns a plain split screen into a labeled, on-brand breakdown.'
   },
-  '4 (Frame)': {
-    group: 'Frame', title: '4 (Frame)', image: EFFECT_IMG_DIR + '4 (Frame).png',
-    desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
+  '4 Black Horizontal (Frame)': {
+    group: 'Frame', title: '4 Black Horizontal (Frame)', image: EFFECT_IMG_DIR + '4 Black Horizontal (Frame).jpg',
+    desc: 'The same four-quadrant split as 4 Horizontal, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain grid into a boxed, tile-like layout.'
   },
-  '4 Black (Frame)': {
-    group: 'Frame', title: '4 Black (Frame)', image: EFFECT_IMG_DIR + '4 Black (Frame).jpg',
-    desc: 'The same four-quadrant split as 4, but each panel sits in a rounded, bordered box with black filling the gaps between them. Turns the plain grid into a boxed, tile-like layout.'
+  '4 Horizontal (Frame)': {
+    group: 'Frame', title: '4 Horizontal (Frame)', image: EFFECT_IMG_DIR + '4 Horizontal (Frame).png',
+    desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
   },
   'Black Bars (Frame)': {
     group: 'Frame', title: 'Black Bars (Frame)', image: EFFECT_IMG_DIR + 'Black Bars (Frame).png',
