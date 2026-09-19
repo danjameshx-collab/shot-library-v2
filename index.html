@@ -1201,8 +1201,8 @@ const SHOT_TYPE_PREVIEWS = {
 
 /* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
 const EFFECT_TYPE_GROUPS = [
-  {group:'Frame', items:['2 Vertical (Frame)','2 Vertical Black (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical Black (Frame)','3 Vertical Transparent (Frame)','4 Black Horizontal (Frame)','4 Horizontal (Frame)','Black Bars (Frame)']},
-  {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Quick In (Zoom)']},
+  {group:'Frame', items:['2 Vertical (Frame)','2 Vertical Black (Frame)','2 Wipp (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical Black (Frame)','3 Vertical Transparent (Frame)','3 Wipp (Frame)','4 Black Horizontal (Frame)','4 Horizontal (Frame)','Black Bars (Frame)']},
+  {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Infinite Cut (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
   {group:'Misc', items:['Net','PSR']},
@@ -1218,6 +1218,10 @@ const EFFECT_TYPE_PREVIEWS = {
   '2 Vertical Black (Frame)': {
     group: 'Frame', title: '2 Vertical Black (Frame)', image: EFFECT_IMG_DIR + '2 Vertical Black (Frame).jpg',
     desc: 'The same two-panel vertical split as 2 Vertical, but each panel sits in a rounded, bordered box with black filling the gap between them. Turns the plain split into a boxed, tile-like layout.'
+  },
+  '2 Wipp (Frame)': {
+    group: 'Frame', title: '2 Wipp (Frame)', image: EFFECT_IMG_DIR + '2 Wipp (Frame).jpg',
+    desc: 'Two rounded panels of the same clip sit side by side, slightly offset in depth rather than flush. Gives the plain two-panel split a stacked, dimensional feel.'
   },
   '3 Horizontal (Frame)': {
     group: 'Frame', title: '3 Horizontal (Frame)', image: EFFECT_IMG_DIR + '3 Horizontal (Frame).jpg',
@@ -1243,6 +1247,10 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Frame', title: '4 Horizontal (Frame)', image: EFFECT_IMG_DIR + '4 Horizontal (Frame).png',
     desc: 'The screen splits into four equal quadrants, each running its own clip with its own caption. Good for stacking a run of locations or beats into one frame.'
   },
+  '3 Wipp (Frame)': {
+    group: 'Frame', title: '3 Wipp (Frame)', image: EFFECT_IMG_DIR + '3 Wipp (Frame).jpg',
+    desc: 'Three rounded panels of the same clip cascade across the frame, each overlapping the last and growing toward the front. Turns a plain three-way split into a fanned, layered stack.'
+  },
   'Black Bars (Frame)': {
     group: 'Frame', title: 'Black Bars (Frame)', image: EFFECT_IMG_DIR + 'Black Bars (Frame).png',
     desc: 'Thin black letterbox bars sit top and bottom of the frame. Gives a normal shot an instant cinematic, widescreen feel.'
@@ -1255,6 +1263,10 @@ const EFFECT_TYPE_PREVIEWS = {
   'Hyperzoom (Zoom)': {
     group: 'Zoom', title: 'Hyperzoom (Zoom)', image: EFFECT_IMG_DIR + 'Hyperzoom (Zoom).png',
     desc: 'A fast, heavily blurred push into the subject. Feels sudden and intense - good for a hard emphasis moment or a hook.'
+  },
+  'Infinite Cut (Zoom)': {
+    group: 'Zoom', title: 'Infinite Cut (Zoom)', image: EFFECT_IMG_DIR + 'Infinite Zoom Cut.png',
+    desc: 'A continuous zoom push that cuts seamlessly into the next identical shot at the peak of the zoom, repeating so the push never seems to end. Great for building relentless momentum into a cut.'
   },
   'Quick In (Zoom)': {
     group: 'Zoom', title: 'Quick In (Zoom)', image: EFFECT_IMG_DIR + 'Quick In (Zoom).png',
