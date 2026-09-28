@@ -983,7 +983,7 @@ analyticsIsSupported().then(ok=>{
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
   {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
-  {group:'Composition', items:['Frame In A Frame (Composition)','High Negative Space (Composition)','Leading Lines (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
+  {group:'Composition', items:['Frame In A Frame (Composition)','Leading Lines (Composition)','Negative Space (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
   {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
@@ -1027,8 +1027,8 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Composition', title: 'Frame In A Frame (Composition)', image: SHOT_IMG_DIR + 'Frame In A Frame.png',
     desc: 'The subject is framed by something inside the scene - a doorway, window, or gap between objects. Adds depth and draws the eye straight to the subject.'
   },
-  'High Negative Space (Composition)': {
-    group: 'Composition', title: 'High Negative Space (Composition)', image: SHOT_IMG_DIR + 'high-negative-space.png',
+  'Negative Space (Composition)': {
+    group: 'Composition', title: 'Negative Space (Composition)', image: SHOT_IMG_DIR + 'high-negative-space.png',
     desc: 'The subject sits small inside a large, mostly empty frame. The empty space does the storytelling - isolation, scale, or room to think.'
   },
   'Leading Lines (Composition)': {
@@ -1581,7 +1581,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)' };
+const SHOT_TYPE_ALIASES = { 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
