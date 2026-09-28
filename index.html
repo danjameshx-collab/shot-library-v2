@@ -983,14 +983,15 @@ analyticsIsSupported().then(ok=>{
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
   {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
-  {group:'Composition', items:['Frame In A Frame (Composition)','High Negative Space (Composition)','Leading Lines (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
-  {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
-  {group:'Medium', items:['Behind (Medium)','Classic (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)','Talking Head (Medium)']},
-  {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
-  {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
-  {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
+  {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
+  {group:'Composition', items:['Frame In A Frame (Composition)','High Negative Space (Composition)','Leading Lines (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
+  {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
+  {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
+  {group:'Talking Head', items:['Classic (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
+  {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
+  {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1090,14 +1091,31 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Close Up', title: 'Foreground (Close Up)', image: SHOT_IMG_DIR + 'foreground-close-up.png',
     desc: "A close, out-of-focus element sits in the foreground while the subject holds focus behind it. Adds depth and a sense of being 'in' the scene."
   },
+  /* ---- Talking Head ---- */
+  'Classic (Talking Head)': {
+    group: 'Talking Head', title: 'Classic (Talking Head)', image: SHOT_IMG_DIR + 'Talking Head (Medium).png',
+    desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
+  },
+  'Landscape (Talking Head)': {
+    group: 'Talking Head', title: 'Landscape (Talking Head)', image: SHOT_IMG_DIR + 'Landscape (Talking Head).png',
+    desc: 'Seated talking head framed a little wider, with a big open landscape stretching out behind. The view does the setting-the-scene work while they talk.'
+  },
+  'Subject (Talking Head)': {
+    group: 'Talking Head', title: 'Subject (Talking Head)', image: SHOT_IMG_DIR + 'Subject (Talking Head).png',
+    desc: 'The subject owns the frame - big, expressive gestures and props around them, with a dramatic backdrop behind. Personality first, place second.'
+  },
+  'Unique (Talking Head)': {
+    group: 'Talking Head', title: 'Unique (Talking Head)', image: SHOT_IMG_DIR + 'Unique (Talking Head).png',
+    desc: 'Talking to camera from an unexpected spot, like perched on the back of a truck. Swaps the chair for something that says more about who they are.'
+  },
+  'Wide (Talking Head)': {
+    group: 'Talking Head', title: 'Wide (Talking Head)', image: SHOT_IMG_DIR + 'Wide (Talking Head).png',
+    desc: 'The subject sits small in the frame with an epic environment all around. A cinematic, breathing-room take on the talking head.'
+  },
   /* ---- Medium ---- */
   'Behind (Medium)': {
     group: 'Medium', title: 'Behind (Medium)', image: SHOT_IMG_DIR + 'behind-medium.png',
     desc: "Camera sits behind the subject at medium distance, showing what they're looking at. Builds anticipation for the reveal."
-  },
-  'Classic (Medium)': {
-    group: 'Medium', title: 'Classic (Medium)', image: SHOT_IMG_DIR + 'head-on-medium.png',
-    desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
   },
   'Environment (Medium)': {
     group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment v2.png',
@@ -1110,10 +1128,6 @@ const SHOT_TYPE_PREVIEWS = {
   'Reveal (Medium)': {
     group: 'Medium', title: 'Reveal (Medium)', image: SHOT_IMG_DIR + 'reveal-medium.png',
     desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance. Built-in payoff inside a single shot.'
-  },
-  'Talking Head (Medium)': {
-    group: 'Medium', title: 'Talking Head (Medium)', image: SHOT_IMG_DIR + 'Talking Head (Medium).png',
-    desc: 'A tight medium shot framed from the chest up, subject looking straight into the lens. The default framing for direct-to-camera talking segments.'
   },
   /* ---- Wide ---- */
   'AWTA (Wide)': {
@@ -1558,18 +1572,22 @@ function shotTypePanelHtml(current){
   return '<div class="lc-select-search-wrap"><input type="text" class="lc-select-search" placeholder="Search shot types…" autocomplete="off"></div>'
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
+// Old shot type names that were renamed/moved -> their current name.
+const SHOT_TYPE_ALIASES = { 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)' };
+function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
-  if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v);
-  return row.shotType ? [row.shotType] : [];
+  if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
+  return row.shotType ? [cvShotAlias(row.shotType)] : [];
 }
 function cvEnsureShotTypesArray(row){
   if(!Array.isArray(row.shotTypes)){
     row.shotTypes = row.shotType ? [row.shotType] : [];
   }
+  row.shotTypes = row.shotTypes.map(cvShotAlias);
   return row.shotTypes;
 }
 const CV_HIGHLIGHT_GROUPS = ['Frame', 'Composition', 'Sequences'];
-const CV_HIGHLIGHT_VALUE_CLASS = { 'Talking Head (Medium)': 'is-highlight-burgundy', 'PSR': 'is-highlight-purple', 'Net': 'is-highlight-teal' };
+const CV_HIGHLIGHT_VALUE_CLASS = { 'Classic (Talking Head)': 'is-highlight-burgundy', 'PSR': 'is-highlight-purple', 'Net': 'is-highlight-teal' };
 function shotTypeChipHtml(value, idx){
   const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value] && !SHOT_TYPE_PREVIEWS[value].noPreview);
   const isHighlightGroup = !!(value && SHOT_TYPE_PREVIEWS[value] && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
