@@ -989,7 +989,7 @@ const SHOT_TYPE_GROUPS = [
   {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
   {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)','Reveal (Medium)']},
   {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
-  {group:'Talking Head', items:['Classic (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
+  {group:'Talking Head', items:['Angled (Talking Head)','Classic (Talking Head)','Composition (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
 ];
@@ -1092,9 +1092,17 @@ const SHOT_TYPE_PREVIEWS = {
     desc: "A close, out-of-focus element sits in the foreground while the subject holds focus behind it. Adds depth and a sense of being 'in' the scene."
   },
   /* ---- Talking Head ---- */
+  'Angled (Talking Head)': {
+    group: 'Talking Head', title: 'Angled (Talking Head)', image: SHOT_IMG_DIR + 'Angled (Talking Head).png',
+    desc: 'Shot from a high angle looking down on the subject, sat on the ground with a mic. Graphic lines and hard shadows turn a simple chat into a styled frame.'
+  },
   'Classic (Talking Head)': {
     group: 'Talking Head', title: 'Classic (Talking Head)', image: SHOT_IMG_DIR + 'Talking Head (Medium).png',
     desc: 'Subject faces the camera directly at medium distance. Direct, confident, conversational - the workhorse talking-shot.'
+  },
+  'Composition (Talking Head)': {
+    group: 'Talking Head', title: 'Composition (Talking Head)', image: SHOT_IMG_DIR + 'Composition (Talking Head).png',
+    desc: 'The conversation is framed through foreground trees, with the subjects small in the middle of the shot. Feels observed and cinematic, like we are watching from a distance.'
   },
   'Landscape (Talking Head)': {
     group: 'Talking Head', title: 'Landscape (Talking Head)', image: SHOT_IMG_DIR + 'Landscape (Talking Head).png',
