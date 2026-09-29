@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yt_dlp
 
-CHANNELS = ['@danieldalen', '@inside.outline', '@LifeOfRiza', '@sleepycharliee']
+CHANNELS = ['@danieldalen', '@GregLaVecchia', '@inside.outline', '@LifeOfRiza', '@sleepycharliee']
 PER_CHANNEL = 30
 OUT = Path(__file__).with_name('thumbnails.js')
 

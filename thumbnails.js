@@ -1,5 +1,5 @@
 window.THUMBNAILS_DATA = {
- "updated": "2026-09-29T16:20:43+00:00",
+ "updated": "2026-09-29T16:26:32+00:00",
  "channels": [
   {
    "handle": "@danieldalen",
@@ -124,6 +124,132 @@ window.THUMBNAILS_DATA = {
     {
      "id": "mWDBZ4yHh6A",
      "title": "pov: life as a 27 y/o founder building a company in Dubai"
+    }
+   ]
+  },
+  {
+   "handle": "@GregLaVecchia",
+   "name": "Greg Lav",
+   "videos": [
+    {
+     "id": "nJlv1sidfKE",
+     "title": "You Can Have the Life You Always Dreamed of in Two Years"
+    },
+    {
+     "id": "2FkfWuPr_DE",
+     "title": "How Simple Ideas Become Billion Dollar Businesses (you can too)"
+    },
+    {
+     "id": "wrWl294c5VM",
+     "title": "If You’re a Nobody But You Have Ambition, Watch This"
+    },
+    {
+     "id": "V-iMQ2ktX7k",
+     "title": "$1B CEO: 8 rules I wish I knew in my 20s"
+    },
+    {
+     "id": "2H4Q2FgP2w4",
+     "title": "What a $1B CEO Actually Does in a Day"
+    },
+    {
+     "id": "qxkJO5JVLDg",
+     "title": "You’re Not Ready for the Life You Want"
+    },
+    {
+     "id": "bT5cNaE_40Y",
+     "title": "Your parents can’t teach you this"
+    },
+    {
+     "id": "Dik5iGPinEI",
+     "title": "Become Unbreakable"
+    },
+    {
+     "id": "y48VlK6XIcw",
+     "title": "What Sacrificing my 20s got me…"
+    },
+    {
+     "id": "Uil05AC7R8U",
+     "title": "$1B CEO: This was my Biggest Unlock"
+    },
+    {
+     "id": "uyCoTdBqjuA",
+     "title": "Turn into the man who can handle your dreams"
+    },
+    {
+     "id": "Wvvwztf2CF0",
+     "title": "You’re 6 Months Away From the Life You Want"
+    },
+    {
+     "id": "9NTawfl1Rko",
+     "title": "You’re Not Too Late. You’re Probably Too Early."
+    },
+    {
+     "id": "XPYdYNIpZRk",
+     "title": "Before You Chase Success, Watch This"
+    },
+    {
+     "id": "7XREijH-qIo",
+     "title": "Unlocking a Huge Opportunity"
+    },
+    {
+     "id": "ZlepS1Uz5WU",
+     "title": "My Best Friend and I Run a Billion-Dollar Business, Here’s the Playbook"
+    },
+    {
+     "id": "owLvP0qF42U",
+     "title": "10 Years of Mistakes in 38 Minutes"
+    },
+    {
+     "id": "qm6kliODG8M",
+     "title": "168 Hours of Decisions Most People Never See"
+    },
+    {
+     "id": "CjLW6fCMDKY",
+     "title": "If you’re Undisciplined and Want to be Successful, Watch This"
+    },
+    {
+     "id": "ORKBX1r5-zI",
+     "title": "$1B Brand: How we became #1 on TikTok Shop"
+    },
+    {
+     "id": "K_bUFFSOON8",
+     "title": "How Millionaires Think Different"
+    },
+    {
+     "id": "6a8wGgWx3EY",
+     "title": "$1B Brand: 6 Decisions I made in my 20’s"
+    },
+    {
+     "id": "ZIU4SDu4gHQ",
+     "title": "Inside the Business of a $500 million watch dealer"
+    },
+    {
+     "id": "6xO3NP8x9Y0",
+     "title": "How to Launch a Product Without a Following (What Actually Works)"
+    },
+    {
+     "id": "ut2X6SC84bA",
+     "title": "How I Built a $1B Brand in My 20s"
+    },
+    {
+     "id": "pZhqgJ9wILE",
+     "title": "The Raw Founder Conversations You Never See"
+    },
+    {
+     "id": "rcLpq5Ikv7c",
+     "title": "$1B CEO: \"We signed $100m deals at this show in LA\""
+    },
+    {
+     "id": "YNrI2juyNK0",
+     "title": "Two generations of TikTok Millionaires "
+    },
+    {
+     "id": "DPdvIjUkqrc",
+     "title": "$1B CEO - The Secret City Where Deals Get Made"
+    },
+    {
+     "id": "yW6S3b0JG4A",
+     "title": "I promised myself i’d own this"
     }
    ]
   },
