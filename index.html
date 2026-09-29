@@ -2626,7 +2626,7 @@ async function thumbsLoad(){
     if(!data || !Array.isArray(data.channels)) throw new Error('thumbnails.js has no data');
     const channels = data.channels.slice().sort((a,b)=> a.name.localeCompare(b.name, undefined, { sensitivity:'base' }));
     const nav = document.getElementById('thumbsNav');
-    nav.innerHTML = channels.map((c,i)=>
+    nav.innerHTML = '<button type="button" class="thumbs-nav-btn" data-thumbs-jump="all">All</button>' + channels.map((c,i)=>
       '<button type="button" class="thumbs-nav-btn" data-thumbs-jump="thumbs-ch-' + i + '">' + esc(c.name) + '</button>'
     ).join('');
     scroll.innerHTML = channels.map((c,i)=>
@@ -2639,18 +2639,18 @@ async function thumbsLoad(){
         + '<div class="all-shots-grid thumbs-grid">' + c.videos.map(thumbsCardHtml).join('') + '</div>'
       + '</section>'
     ).join('');
-    // One creator card at a time: the nav buttons switch which card is shown.
+    // One creator card at a time (or 'all' for one continuous scroll): the nav buttons switch what's shown.
     const showCreator = (id)=>{
-      if(!document.getElementById(id)) id = 'thumbs-ch-0';
+      if(id!=='all' && !document.getElementById(id)) id = 'thumbs-ch-0';
       nav.querySelectorAll('.thumbs-nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.thumbsJump===id));
-      scroll.querySelectorAll('.thumbs-channel').forEach(sec=> sec.hidden = sec.id!==id);
+      scroll.querySelectorAll('.thumbs-channel').forEach(sec=> sec.hidden = id!=='all' && sec.id!==id);
       document.getElementById('thumbsOverlay').scrollTop = 0;
-      try{ localStorage.setItem('lcThumbsCreator', channels[+id.split('-').pop()].handle); }catch(e){}
+      try{ localStorage.setItem('lcThumbsCreator', id==='all' ? 'all' : channels[+id.split('-').pop()].handle); }catch(e){}
     };
     nav.querySelectorAll('[data-thumbs-jump]').forEach(btn=> btn.addEventListener('click', ()=> showCreator(btn.dataset.thumbsJump)));
     let savedHandle = null;
     try{ savedHandle = localStorage.getItem('lcThumbsCreator'); }catch(e){}
-    showCreator('thumbs-ch-' + Math.max(0, channels.findIndex(c=> c.handle===savedHandle)));
+    showCreator(savedHandle==='all' ? 'all' : 'thumbs-ch-' + Math.max(0, channels.findIndex(c=> c.handle===savedHandle)));
     // maxresdefault doesn't exist for every video; YouTube serves a 120x90 grey placeholder instead of a 404.
     scroll.querySelectorAll('img[data-fallback]').forEach(img=>{
       const swap = ()=>{ if(img.dataset.fallback){ img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); } };
