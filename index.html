@@ -218,6 +218,7 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 }
 .all-shots-scroll > .all-shots-group-label:first-child{margin-top:0; padding-top:0; border-top:none;}
 .all-shots-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:18px;}
+.all-shots-empty{font-size:13px; color:var(--ink-soft); padding:4px 0 6px;}
 .all-shots-card{
   display:flex; flex-direction:column; text-align:left; border:1px solid var(--line); border-radius:11px;
   background:var(--paper); overflow:hidden; cursor:pointer; padding:0;
@@ -825,7 +826,8 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 
 <div class="top-tabs" id="topTabs">
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
-  <button type="button" class="top-tab-btn" data-tab="library">Shot Type Library</button>
+  <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
+  <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
   <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
   <button type="button" class="top-tab-btn" data-tab="thumbs">Thumbnails</button>
 </div>
@@ -881,6 +883,28 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   </div>
 </div>
 
+<div class="all-shots-overlay tab-page" id="sequencesOverlay">
+  <div class="all-shots-box" id="sequencesBox">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="sequencesTitle">All Sequences</h2></div>
+      <div class="all-shots-head-right">
+        <button type="button" class="modal-fullscreen-btn" id="sequencesFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
+            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
+          </svg>
+        </button>
+        <button type="button" class="all-shots-close" id="sequencesCloseBtn" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="all-shots-scroll" id="sequencesScroll"></div>
+  </div>
+</div>
+
 <div class="all-shots-overlay tab-page" id="effectsOverlay">
   <div class="all-shots-box" id="effectsBox">
     <div class="all-shots-head">
@@ -916,7 +940,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <div class="cv-launcher-overlay tab-page active" id="cvLauncherOverlay">
   <div class="launcher-inner">
     <div class="launcher-header">
-      <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shot Type Library</button>
+      <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shots</button>
       <h1 class="launcher-title"><span class="logo-mark">CV</span>Cine Vlogs</h1>
       <p class="launcher-subhead">Create A New Cine Vlog or Browse Previous Cine Vlogs</p>
     </div>
@@ -1027,7 +1051,6 @@ analyticsIsSupported().then(ok=>{
 
 /* ---------- shot type reference data (mirrors super-loom.html) ---------- */
 const SHOT_TYPE_GROUPS = [
-  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
   {group:'Composition', items:['Frame In A Frame (Composition)','Leading Lines (Composition)','Negative Space (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
@@ -1037,6 +1060,13 @@ const SHOT_TYPE_GROUPS = [
   {group:'Talking Head', items:['Angled (Talking Head)','Classic (Talking Head)','Composition (Talking Head)','Kitching Cuts (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
+];
+
+/* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
+const SEQUENCE_TYPE_GROUPS = [
+  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cross Cutting','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
+  {group:'Introductions', items:[]},
+  {group:'Transitions', items:[]},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1413,6 +1443,27 @@ function allShotsGridHtml(){
   return html;
 }
 
+/* ---------- sequences grid render (empty sections still show, as placeholders) ---------- */
+function sequencesGridHtml(){
+  let html = '';
+  SEQUENCE_TYPE_GROUPS.forEach(g=>{
+    const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
+    html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
+    if(!items.length){ html += '<div class="all-shots-empty">Nothing here yet.</div>'; return; }
+    html += '<div class="all-shots-grid">' + items.map(i=>{
+      const p = SHOT_TYPE_PREVIEWS[i];
+      return '<button type="button" class="all-shots-card" data-shot-preview="' + escAttr(i) + '">'
+        + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference sequence" loading="lazy"></div>'
+        + '<div class="all-shots-card-body">'
+          + '<h4 class="all-shots-card-title">' + esc(p.title) + '</h4>'
+          + '<p class="all-shots-card-desc">' + esc(p.desc) + '</p>'
+        + '</div>'
+      + '</button>';
+    }).join('') + '</div>';
+  });
+  return html;
+}
+
 /* ---------- effects grid render (mirrors the shot type grid above) ---------- */
 function effectsGridHtml(){
   let html = '';
@@ -1536,6 +1587,13 @@ function toggleAllShotsFullscreen(){
   document.getElementById('allShotsOverlay').classList.toggle('fullscreen', allShotsFullscreen);
   document.body.classList.toggle('tabs-hidden', allShotsFullscreen);
 }
+let sequencesFullscreen = false;
+function toggleSequencesFullscreen(){
+  sequencesFullscreen = !sequencesFullscreen;
+  document.getElementById('sequencesBox').classList.toggle('fullscreen', sequencesFullscreen);
+  document.getElementById('sequencesOverlay').classList.toggle('fullscreen', sequencesFullscreen);
+  document.body.classList.toggle('tabs-hidden', sequencesFullscreen);
+}
 let effectsFullscreen = false;
 function toggleEffectsFullscreen(){
   effectsFullscreen = !effectsFullscreen;
@@ -1616,7 +1674,7 @@ function cvLocationPanelHtml(current, rec){
 }
 function shotTypePanelHtml(current){
   let list = '';
-  SHOT_TYPE_GROUPS.concat(EFFECT_TYPE_GROUPS).forEach(g=>{
+  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     if(!items.length) return;
     list += lcGroupLabel(g.group);
@@ -2673,6 +2731,7 @@ function switchTab(tab){
   try{ localStorage.setItem('lcActiveTab', tab); }catch(e){}
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
+  document.getElementById('sequencesOverlay').classList.toggle('active', tab==='sequences');
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
   if(tab==='thumbs') thumbsLoad();
@@ -2694,6 +2753,18 @@ function switchTab(tab){
   });
   document.getElementById('allShotsFullscreenBtn').addEventListener('click', toggleAllShotsFullscreen);
   document.getElementById('allShotsCloseBtn').addEventListener('click', ()=>{
+    if(document.referrer){ history.back(); } else { window.close(); }
+  });
+
+  const sequencesScroll = document.getElementById('sequencesScroll');
+  sequencesScroll.innerHTML = sequencesGridHtml();
+  sequencesScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      openShotPreview(card.dataset.shotPreview);
+    });
+  });
+  document.getElementById('sequencesFullscreenBtn').addEventListener('click', toggleSequencesFullscreen);
+  document.getElementById('sequencesCloseBtn').addEventListener('click', ()=>{
     if(document.referrer){ history.back(); } else { window.close(); }
   });
 
@@ -2728,10 +2799,10 @@ function switchTab(tab){
 
   let savedTab = null, savedCvId = null;
   try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
-  if(savedTab === 'library' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
+  if(savedTab === 'library' || savedTab === 'sequences' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
 
   cvLibrary = await cvFetchLibrary();
-  if(savedTab !== 'library' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
+  if(savedTab !== 'library' && savedTab !== 'sequences' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
     cvOpen(savedCvId);
   }else{
     cvRenderLauncher();
