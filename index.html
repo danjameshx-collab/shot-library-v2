@@ -229,6 +229,15 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .all-shots-card-body{padding:10px 12px 12px;}
 .all-shots-card-title{font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--ink); margin:0 0 4px;}
 .all-shots-card-desc{margin:0; font-size:11.5px; line-height:1.5; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+/* ---------- thumbnails tab (YouTube reference channels) ---------- */
+.thumbs-channel-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+.thumbs-channel-head a{color:var(--ink-faint); font-weight:600; text-transform:none; letter-spacing:normal; text-decoration:none;}
+.thumbs-channel-head a:hover{color:var(--ink); text-decoration:underline;}
+.thumbs-grid{grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));}
+.thumbs-card{text-decoration:none; color:inherit;}
+.thumbs-card .all-shots-card-media{aspect-ratio:16/9;}
+.thumbs-card .all-shots-card-title{font-weight:700; line-height:1.35; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.thumbs-empty{padding:26px; text-align:center; color:var(--ink-faint); font-style:italic;}
 @media (max-width:720px){
   .all-shots-overlay{padding:0;}
   .all-shots-box{max-width:none; max-height:none; border-radius:0;}
@@ -794,6 +803,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shot Type Library</button>
   <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
+  <button type="button" class="top-tab-btn" data-tab="thumbs">Thumbnails</button>
 </div>
 
 <div class="shot-preview-overlay" id="shotPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="shotPreviewTitle">
@@ -866,6 +876,15 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       </div>
     </div>
     <div class="all-shots-scroll" id="effectsScroll"></div>
+  </div>
+</div>
+
+<div class="all-shots-overlay tab-page" id="thumbsOverlay">
+  <div class="all-shots-box">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2>Thumbnails</h2></div>
+    </div>
+    <div class="all-shots-scroll" id="thumbsScroll"><div class="thumbs-empty">Loading thumbnails…</div></div>
   </div>
 </div>
 
@@ -2555,6 +2574,42 @@ async function cvToggleMusicBox(shotId){
   }
 }
 
+/* ---------- thumbnails tab: latest uploads from reference channels (thumbnails.json, built by fetch_thumbnails.py) ---------- */
+let thumbsLoaded = false;
+function thumbsCardHtml(v){
+  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
+  const base = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/';
+  return '<a class="all-shots-card thumbs-card" href="' + escAttr(url) + '" target="_blank" rel="noopener">'
+    + '<div class="all-shots-card-media"><img src="' + escAttr(base + 'maxresdefault.jpg') + '" data-fallback="' + escAttr(base + 'hqdefault.jpg') + '" alt="' + escAttr(v.title) + '" loading="lazy"></div>'
+    + '<div class="all-shots-card-body"><h4 class="all-shots-card-title">' + esc(v.title) + '</h4></div>'
+  + '</a>';
+}
+async function thumbsLoad(){
+  if(thumbsLoaded) return;
+  thumbsLoaded = true;
+  const scroll = document.getElementById('thumbsScroll');
+  try{
+    const res = await fetch('thumbnails.json', { cache: 'no-cache' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const channels = data.channels.slice().sort((a,b)=> a.handle.replace(/^@/,'').toLowerCase().localeCompare(b.handle.replace(/^@/,'').toLowerCase()));
+    scroll.innerHTML = channels.map(c=>
+      '<div class="all-shots-group-label thumbs-channel-head">' + esc(c.name)
+        + ' <a href="https://www.youtube.com/' + escAttr(c.handle) + '/videos" target="_blank" rel="noopener">' + esc(c.handle) + '</a></div>'
+      + '<div class="all-shots-grid thumbs-grid">' + c.videos.map(thumbsCardHtml).join('') + '</div>'
+    ).join('');
+    // maxresdefault doesn't exist for every video; YouTube serves a 120x90 grey placeholder instead of a 404.
+    scroll.querySelectorAll('img[data-fallback]').forEach(img=>{
+      const swap = ()=>{ if(img.dataset.fallback){ img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); } };
+      img.addEventListener('error', swap);
+      img.addEventListener('load', ()=>{ if(img.naturalWidth <= 120) swap(); });
+    });
+  }catch(e){
+    thumbsLoaded = false;
+    scroll.innerHTML = '<div class="thumbs-empty">Could not load thumbnails. Check your connection and try again.</div>';
+  }
+}
+
 /* ---------- tab switching ---------- */
 function switchTab(tab){
   if(cvActiveId && tab!=='cine'){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
@@ -2562,6 +2617,8 @@ function switchTab(tab){
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
+  document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
+  if(tab==='thumbs') thumbsLoad();
   const showLauncher = tab==='cine' && !cvActiveId;
   const showDetail = tab==='cine' && !!cvActiveId;
   document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
@@ -2614,10 +2671,10 @@ function switchTab(tab){
 
   let savedTab = null, savedCvId = null;
   try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
-  if(savedTab === 'library' || savedTab === 'effects') switchTab(savedTab);
+  if(savedTab === 'library' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
 
   cvLibrary = await cvFetchLibrary();
-  if(savedTab !== 'library' && savedTab !== 'effects' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
+  if(savedTab !== 'library' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
     cvOpen(savedCvId);
   }else{
     cvRenderLauncher();
