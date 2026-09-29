@@ -1,5 +1,5 @@
-{
- "updated": "2026-09-29T16:17:24+00:00",
+window.THUMBNAILS_DATA = {
+ "updated": "2026-09-29T16:20:43+00:00",
  "channels": [
   {
    "handle": "@danieldalen",
@@ -410,4 +410,4 @@
    ]
   }
  ]
-}
+};

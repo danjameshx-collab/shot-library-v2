@@ -2574,7 +2574,7 @@ async function cvToggleMusicBox(shotId){
   }
 }
 
-/* ---------- thumbnails tab: latest uploads from reference channels (thumbnails.json, built by fetch_thumbnails.py) ---------- */
+/* ---------- thumbnails tab: latest uploads from reference channels (thumbnails.js, built by fetch_thumbnails.py) ---------- */
 let thumbsLoaded = false;
 function thumbsCardHtml(v){
   const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
@@ -2589,9 +2589,16 @@ async function thumbsLoad(){
   thumbsLoaded = true;
   const scroll = document.getElementById('thumbsScroll');
   try{
-    const res = await fetch('thumbnails.json', { cache: 'no-cache' });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    // Loaded as a <script> rather than fetch() so it also works when the page is opened from disk (file://).
+    await new Promise((resolve, reject)=>{
+      const tag = document.createElement('script');
+      tag.src = 'thumbnails.js?v=' + Date.now();
+      tag.onload = resolve;
+      tag.onerror = ()=>{ tag.remove(); reject(new Error('thumbnails.js failed to load')); };
+      document.head.appendChild(tag);
+    });
+    const data = window.THUMBNAILS_DATA;
+    if(!data || !Array.isArray(data.channels)) throw new Error('thumbnails.js has no data');
     const channels = data.channels.slice().sort((a,b)=> a.handle.replace(/^@/,'').toLowerCase().localeCompare(b.handle.replace(/^@/,'').toLowerCase()));
     scroll.innerHTML = channels.map(c=>
       '<div class="all-shots-group-label thumbs-channel-head">' + esc(c.name)

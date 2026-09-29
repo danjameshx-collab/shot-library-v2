@@ -1,5 +1,6 @@
 """Pull the latest 30 long-form videos (title + thumbnail) from each reference
-channel and write them to thumbnails.json for the Thumbnails tab.
+channel and write them to thumbnails.js for the Thumbnails tab.
+(A .js file rather than .json so the page also works when opened straight from disk.)
 
 Run:  py fetch_thumbnails.py
 Needs yt-dlp (pip install yt-dlp). Edit CHANNELS to add or remove channels.
@@ -13,7 +14,7 @@ import yt_dlp
 
 CHANNELS = ['@danieldalen', '@inside.outline', '@LifeOfRiza', '@sleepycharliee']
 PER_CHANNEL = 30
-OUT = Path(__file__).with_name('thumbnails.json')
+OUT = Path(__file__).with_name('thumbnails.js')
 
 
 def fetch_channel(handle):
@@ -35,7 +36,7 @@ def main():
     channels = [fetch_channel(h) for h in CHANNELS]
     channels.sort(key=lambda c: c['handle'].lstrip('@').lower())
     data = {'updated': datetime.now(timezone.utc).isoformat(timespec='seconds'), 'channels': channels}
-    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding='utf-8')
+    OUT.write_text('window.THUMBNAILS_DATA = ' + json.dumps(data, ensure_ascii=False, indent=1) + ';\n', encoding='utf-8')
     for c in channels:
         print(f"{c['handle']}: {len(c['videos'])} videos ({c['name']})")
 
