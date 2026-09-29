@@ -1,6 +1,132 @@
 window.THUMBNAILS_DATA = {
- "updated": "2026-09-29T16:26:32+00:00",
+ "updated": "2026-09-29T17:14:31+00:00",
  "channels": [
+  {
+   "handle": "@AndrewPaul1",
+   "name": "Andrew",
+   "videos": [
+    {
+     "id": "GCfUT7jPkvk",
+     "title": "I tried and it didnt work."
+    },
+    {
+     "id": "Wwe0DPnVbsc",
+     "title": "social media fatigue is real."
+    },
+    {
+     "id": "yF03YNETiXw",
+     "title": "Hiking the Camino De Santiago"
+    },
+    {
+     "id": "_fuYj229zSk",
+     "title": "How to Start Filming Alone in 2026"
+    },
+    {
+     "id": "fkruu-g1X6o",
+     "title": "I left Everything to Start Over"
+    },
+    {
+     "id": "67DtAMsUrAA",
+     "title": "The Affordable Camera to make ANY video CINEMATIC"
+    },
+    {
+     "id": "Pb4gLF5s6_A",
+     "title": "How Much Money I made as a \"Medium\" Size Creator."
+    },
+    {
+     "id": "1YG5fXxHRp8",
+     "title": "the POWER of Simple Writing."
+    },
+    {
+     "id": "pdLEHfkwgV8",
+     "title": "The Power of SIMPLE Editing"
+    },
+    {
+     "id": "FrFjOsBjh44",
+     "title": "How to make YOUTUBE a Career in 2026"
+    },
+    {
+     "id": "Uq3JztvbuWI",
+     "title": "the power of simply starting."
+    },
+    {
+     "id": "_hqgK4iRLBY",
+     "title": "The power of SIMPLE Colorgrading"
+    },
+    {
+     "id": "14_APWUNFeI",
+     "title": "the power of simply starting."
+    },
+    {
+     "id": "gPG3UxEpSuk",
+     "title": "Searching for Art in a Digital World"
+    },
+    {
+     "id": "Qt9yh-CanOA",
+     "title": "For those Somewhere in the Middle"
+    },
+    {
+     "id": "V_JWuD8t93M",
+     "title": "The anatomy of trying."
+    },
+    {
+     "id": "vHfVI_4unYY",
+     "title": "how to FILM Cinematic Videos SOLO in 2026"
+    },
+    {
+     "id": "mj_qEaobbI4",
+     "title": "I decided to slow down, and it changed my life."
+    },
+    {
+     "id": "B5q9hCbga44",
+     "title": "I actually tried chasing my dreams for 365 days."
+    },
+    {
+     "id": "es7gIuIdrC4",
+     "title": "Chasing Dreams at 27"
+    },
+    {
+     "id": "nqUUIOwU2bA",
+     "title": "start before you’re ready"
+    },
+    {
+     "id": "XMNxOZzv3Uk",
+     "title": "the thing your afraid of is your super power"
+    },
+    {
+     "id": "Lyj1u-JRonY",
+     "title": "How to FILM YOURSELF for CINEMATIC VIDEOS (2025)"
+    },
+    {
+     "id": "yurdQBm3dL8",
+     "title": "the guide to becoming alive"
+    },
+    {
+     "id": "GG3ZzO8_hH0",
+     "title": "How I discovered my creativity was my key to happiness"
+    },
+    {
+     "id": "Io_2SYwOS2Q",
+     "title": "I realized something about my dreams"
+    },
+    {
+     "id": "b9Y6nG61LkE",
+     "title": "I learned the greatest life lesson."
+    },
+    {
+     "id": "Mx5SiTl9trY",
+     "title": "The Mistake that Changed my Life (in a good way)"
+    },
+    {
+     "id": "X3Wo8t7TMbU",
+     "title": "How I Used Science to be More Creative."
+    },
+    {
+     "id": "R7xA3ITYsj4",
+     "title": "For those in their 20s"
+    }
+   ]
+  },
   {
    "handle": "@danieldalen",
    "name": "Daniel Dalen",
@@ -133,7 +259,7 @@ window.THUMBNAILS_DATA = {
    "videos": [
     {
      "id": "nJlv1sidfKE",
-     "title": "You Can Have the Life You Always Dreamed of in Two Years"
+     "title": "The real inside look of a Generational Run"
     },
     {
      "id": "2FkfWuPr_DE",
