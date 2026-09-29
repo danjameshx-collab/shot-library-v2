@@ -245,8 +245,9 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .thumbs-nav-btn.active{background:var(--bespoke); border-color:var(--bespoke); color:#fff;}
 .thumbs-channel{
   border:1px solid var(--line); border-radius:14px; padding:16px 18px 18px; margin-top:18px;
-  background:var(--paper); scroll-margin-top:80px;
+  background:var(--paper);
 }
+.thumbs-channel[hidden]{display:none;}
 .thumbs-channel-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 14px;}
 .thumbs-channel-name{margin:0; font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--ink);}
 .thumbs-channel-head a{color:var(--ink-faint); font-size:12.5px; font-weight:600; text-decoration:none;}
@@ -254,7 +255,7 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .thumbs-channel-count{margin-left:auto; font-size:12px; color:var(--ink-faint);}
 @media (max-width:720px){
   .thumbs-nav{padding:10px 16px; top:0;}
-  .thumbs-channel{padding:14px 12px; scroll-margin-top:110px;}
+  .thumbs-channel{padding:14px 12px;}
 }
 .thumbs-grid{grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));}
 .thumbs-card{text-decoration:none; color:inherit;}
@@ -907,7 +908,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
     <div class="all-shots-head">
       <div><div class="all-shots-eyebrow">Reference Library</div><h2>Thumbnails</h2></div>
     </div>
-    <div class="thumbs-nav" id="thumbsNav" aria-label="Jump to creator"></div>
+    <div class="thumbs-nav" id="thumbsNav" aria-label="Choose creator"></div>
     <div class="all-shots-scroll" id="thumbsScroll"><div class="thumbs-empty">Loading thumbnails…</div></div>
   </div>
 </div>
@@ -2638,12 +2639,18 @@ async function thumbsLoad(){
         + '<div class="all-shots-grid thumbs-grid">' + c.videos.map(thumbsCardHtml).join('') + '</div>'
       + '</section>'
     ).join('');
-    nav.querySelectorAll('[data-thumbs-jump]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        nav.querySelectorAll('.thumbs-nav-btn').forEach(b=> b.classList.toggle('active', b===btn));
-        document.getElementById(btn.dataset.thumbsJump).scrollIntoView({ behavior:'smooth', block:'start' });
-      });
-    });
+    // One creator card at a time: the nav buttons switch which card is shown.
+    const showCreator = (id)=>{
+      if(!document.getElementById(id)) id = 'thumbs-ch-0';
+      nav.querySelectorAll('.thumbs-nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.thumbsJump===id));
+      scroll.querySelectorAll('.thumbs-channel').forEach(sec=> sec.hidden = sec.id!==id);
+      document.getElementById('thumbsOverlay').scrollTop = 0;
+      try{ localStorage.setItem('lcThumbsCreator', channels[+id.split('-').pop()].handle); }catch(e){}
+    };
+    nav.querySelectorAll('[data-thumbs-jump]').forEach(btn=> btn.addEventListener('click', ()=> showCreator(btn.dataset.thumbsJump)));
+    let savedHandle = null;
+    try{ savedHandle = localStorage.getItem('lcThumbsCreator'); }catch(e){}
+    showCreator('thumbs-ch-' + Math.max(0, channels.findIndex(c=> c.handle===savedHandle)));
     // maxresdefault doesn't exist for every video; YouTube serves a 120x90 grey placeholder instead of a 404.
     scroll.querySelectorAll('img[data-fallback]').forEach(img=>{
       const swap = ()=>{ if(img.dataset.fallback){ img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); } };
