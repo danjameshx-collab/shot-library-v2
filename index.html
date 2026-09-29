@@ -230,9 +230,32 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .all-shots-card-title{font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--ink); margin:0 0 4px;}
 .all-shots-card-desc{margin:0; font-size:11.5px; line-height:1.5; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
 /* ---------- thumbnails tab (YouTube reference channels) ---------- */
-.thumbs-channel-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
-.thumbs-channel-head a{color:var(--ink-faint); font-weight:600; text-transform:none; letter-spacing:normal; text-decoration:none;}
+#thumbsOverlay .all-shots-box{overflow:clip;} /* clip, not hidden, so the creator nav can stick */
+.thumbs-nav{
+  position:sticky; top:-32px; z-index:2; display:flex; flex-wrap:wrap; gap:8px; /* -32px cancels the overlay's top padding so it pins flush under the tab bar */
+  padding:12px 24px; background:var(--paper-raised); border-bottom:1px solid var(--line);
+}
+.thumbs-nav:empty{display:none;}
+.thumbs-nav-btn{
+  border:1px solid var(--line-strong); background:var(--paper); color:var(--ink-soft); cursor:pointer;
+  font-family:var(--font-display); font-weight:700; font-size:12.5px; padding:7px 14px; border-radius:999px;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.thumbs-nav-btn:hover{color:var(--ink); border-color:var(--ink-soft);}
+.thumbs-nav-btn.active{background:var(--bespoke); border-color:var(--bespoke); color:#fff;}
+.thumbs-channel{
+  border:1px solid var(--line); border-radius:14px; padding:16px 18px 18px; margin-top:18px;
+  background:var(--paper); scroll-margin-top:80px;
+}
+.thumbs-channel-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 14px;}
+.thumbs-channel-name{margin:0; font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--ink);}
+.thumbs-channel-head a{color:var(--ink-faint); font-size:12.5px; font-weight:600; text-decoration:none;}
 .thumbs-channel-head a:hover{color:var(--ink); text-decoration:underline;}
+.thumbs-channel-count{margin-left:auto; font-size:12px; color:var(--ink-faint);}
+@media (max-width:720px){
+  .thumbs-nav{padding:10px 16px; top:0;}
+  .thumbs-channel{padding:14px 12px; scroll-margin-top:110px;}
+}
 .thumbs-grid{grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));}
 .thumbs-card{text-decoration:none; color:inherit;}
 .thumbs-card .all-shots-card-media{aspect-ratio:16/9;}
@@ -884,6 +907,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
     <div class="all-shots-head">
       <div><div class="all-shots-eyebrow">Reference Library</div><h2>Thumbnails</h2></div>
     </div>
+    <div class="thumbs-nav" id="thumbsNav" aria-label="Jump to creator"></div>
     <div class="all-shots-scroll" id="thumbsScroll"><div class="thumbs-empty">Loading thumbnails…</div></div>
   </div>
 </div>
@@ -2599,12 +2623,27 @@ async function thumbsLoad(){
     });
     const data = window.THUMBNAILS_DATA;
     if(!data || !Array.isArray(data.channels)) throw new Error('thumbnails.js has no data');
-    const channels = data.channels.slice().sort((a,b)=> a.handle.replace(/^@/,'').toLowerCase().localeCompare(b.handle.replace(/^@/,'').toLowerCase()));
-    scroll.innerHTML = channels.map(c=>
-      '<div class="all-shots-group-label thumbs-channel-head">' + esc(c.name)
-        + ' <a href="https://www.youtube.com/' + escAttr(c.handle) + '/videos" target="_blank" rel="noopener">' + esc(c.handle) + '</a></div>'
-      + '<div class="all-shots-grid thumbs-grid">' + c.videos.map(thumbsCardHtml).join('') + '</div>'
+    const channels = data.channels.slice().sort((a,b)=> a.name.localeCompare(b.name, undefined, { sensitivity:'base' }));
+    const nav = document.getElementById('thumbsNav');
+    nav.innerHTML = channels.map((c,i)=>
+      '<button type="button" class="thumbs-nav-btn" data-thumbs-jump="thumbs-ch-' + i + '">' + esc(c.name) + '</button>'
     ).join('');
+    scroll.innerHTML = channels.map((c,i)=>
+      '<section class="thumbs-channel" id="thumbs-ch-' + i + '">'
+        + '<div class="thumbs-channel-head">'
+          + '<h3 class="thumbs-channel-name">' + esc(c.name) + '</h3>'
+          + '<a href="https://www.youtube.com/' + escAttr(c.handle) + '/videos" target="_blank" rel="noopener">' + esc(c.handle) + '</a>'
+          + '<span class="thumbs-channel-count">' + c.videos.length + ' videos</span>'
+        + '</div>'
+        + '<div class="all-shots-grid thumbs-grid">' + c.videos.map(thumbsCardHtml).join('') + '</div>'
+      + '</section>'
+    ).join('');
+    nav.querySelectorAll('[data-thumbs-jump]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        nav.querySelectorAll('.thumbs-nav-btn').forEach(b=> b.classList.toggle('active', b===btn));
+        document.getElementById(btn.dataset.thumbsJump).scrollIntoView({ behavior:'smooth', block:'start' });
+      });
+    });
     // maxresdefault doesn't exist for every video; YouTube serves a 120x90 grey placeholder instead of a 404.
     scroll.querySelectorAll('img[data-fallback]').forEach(img=>{
       const swap = ()=>{ if(img.dataset.fallback){ img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); } };
