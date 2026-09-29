@@ -769,6 +769,7 @@ table.shot-table tbody tr:first-child.shot-section-row .shot-section-inner{borde
   color:var(--ink-faint); cursor:pointer; font-size:15px; line-height:1; padding:0; display:flex; align-items:center; justify-content:center;
   transition:background-color .15s ease, color .15s ease;
 }
+.shot-section-locked .shot-section-title-input{cursor:default; color:var(--sec-color);}
 .shot-section-remove:hover{background:var(--warn); color:#fff;}
 
 /* ---------- shot table: rows grouped under a section get a colored spine ---------- */
@@ -1966,6 +1967,14 @@ function cvShotRowHtml(row, num, sectionColor){
 }
 
 function cvSectionRowHtml(row){
+  if(row.locked){
+    return '<tr class="shot-section-row shot-section-locked" data-shot-id="' + escAttr(row.id) + '" style="--sec-color:' + escAttr(row.color) + '">'
+      + '<td colspan="5"><div class="shot-section-inner">'
+          + '<span class="shot-section-dot" aria-hidden="true"></span>'
+          + '<input type="text" class="shot-section-title-input" value="' + escAttr(row.title) + '" readonly tabindex="-1">'
+        + '</div></td>'
+    + '</tr>';
+  }
   const color = row.color || SECTION_COLORS[0].hex;
   const swatches = SECTION_COLORS.map(c=>
     '<button type="button" class="shot-section-swatch' + (c.hex===color ? ' is-active' : '') + '" data-section-color="' + escAttr(c.hex) + '" style="--sw-color:' + escAttr(c.hex) + '" title="' + escAttr(c.name) + '" aria-label="Set section color to ' + escAttr(c.name) + '"></button>'
@@ -2093,9 +2102,20 @@ function cvBackToLauncher(){
   cvRenderLauncher();
 }
 
+// Every Cine Vlog has a permanent Thumbnail section pinned to the top of the shot table.
+const CV_THUMBNAIL_SECTION = { id:'section-thumbnail', isSection:true, locked:true, title:'THUMBNAIL', color:'#E8731C' };
+function cvEnsureThumbnailSection(rec){
+  const idx = rec.shots.findIndex(s=> s.id===CV_THUMBNAIL_SECTION.id);
+  if(idx === 0) return false;
+  if(idx > 0) rec.shots.splice(idx, 1);
+  rec.shots.unshift({ ...CV_THUMBNAIL_SECTION });
+  return true;
+}
+
 function cvRenderDetail(){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
+  if(cvEnsureThumbnailSection(rec)) cvSaveRecord(rec);
   document.getElementById('cvDetailTitle').textContent = rec.name || 'Untitled Cine Vlog';
   const ideasTa = document.getElementById('ideasTextarea');
   ideasTa.value = ideasGetText(rec);
@@ -2176,7 +2196,7 @@ function cvWireDragAndDrop(){
       if(cvDraggedBlockIds(rec, cvDragState).includes(tr.dataset.shotId)) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2;
+      const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2 && !tr.classList.contains('shot-section-locked');
       tr.classList.toggle('drag-over-top', before);
       tr.classList.toggle('drag-over-bottom', !before);
     });
@@ -2188,7 +2208,7 @@ function cvWireDragAndDrop(){
       tr.classList.remove('drag-over-top','drag-over-bottom');
       if(!cvDragState || cvDragState === tr.dataset.shotId) return;
       if(cvDraggedBlockIds(rec, cvDragState).includes(tr.dataset.shotId)){ cvDragState = null; return; }
-      const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2;
+      const before = (e.clientY - tr.getBoundingClientRect().top) < tr.offsetHeight / 2 && !tr.classList.contains('shot-section-locked');
       cvMoveShot(cvDragState, tr.dataset.shotId, before);
       cvDragState = null;
     });
@@ -2443,7 +2463,7 @@ async function cvAddSection(){
 }
 async function cvRemoveSection(sectionId){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
-  if(!rec) return;
+  if(!rec || sectionId===CV_THUMBNAIL_SECTION.id) return;
   rec.shots = rec.shots.filter(s=> s.id!==sectionId);
   rec.updatedAt = Date.now();
   cvRenderDetail();
@@ -2453,7 +2473,7 @@ async function cvSetSectionColor(sectionId, color){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
   const row = rec.shots.find(s=> s.id===sectionId);
-  if(!row) return;
+  if(!row || row.locked) return;
   row.color = color;
   rec.updatedAt = Date.now();
   cvRenderDetail();
