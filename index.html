@@ -1083,15 +1083,14 @@ const SHOT_TYPE_GROUPS = [
   {group:'Talking Head', items:['Angled (Talking Head)','Classic (Talking Head)','Composition (Talking Head)','Kitching Cuts (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
-  {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)']},
+  {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
 
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const SEQUENCE_TYPE_GROUPS = [
   {group:'Full Coverage', items:['9 Shot Rule Classic (Full Coverage)','9 Shot Rule Mixed (Full Coverage)','9 Shot Rule Reverse (Full Coverage)']},
-  {group:'Camera', items:['Duplication (Camera)','Lots Of Cuts (Camera)']},
-  {group:'Lens', items:['APS-C (Lens)']},
-  {group:'Drone', items:['Drone Sequence (Drone)','Top-Down (Drone)']},
+  {group:'Camera', items:['Lots Of Cuts (Camera)']},
+  {group:'Drone', items:['Drone Sequence (Drone)']},
   {group:'Introductions', items:['Cinematics & Talking Head (Introductions)','Cinematics & Voiceover (Introductions)','Music Montage Into A-Roll (Introductions)','Straight Into Raw (Introductions)','Talking Head & B-Roll (Introductions)']},
   {group:'Transitions', items:['Music (Transitions)','Object Gives Context (Transitions)','Speech Adds Context (Transitions)','Text Card (Transitions)','Text Card With A Roll (Transitions)']},
 ];
@@ -1280,6 +1279,18 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Stylised Shots', title: 'Slow Motion Sequence (Stylised Shots)', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
     desc: 'A run of shots all captured at a high frame rate and played back slow, stretching a string of small moments into something significant.'
   },
+  'Top-Down (Stylised Shots)': {
+    group: 'Stylised Shots', title: 'Top-Down (Stylised Shots)', image: SEQ_IMG_DIR + 'Top-Down.png',
+    desc: 'A sequence built entirely from overhead, top-down angles. Flattens every beat into a graphic, process-driven feel.'
+  },
+  'APS-C (Stylised Shots)': {
+    group: 'Stylised Shots', title: 'APS-C (Stylised Shots)', image: SEQ_IMG_DIR + 'APS-C.png',
+    desc: 'A moody, tightly-cropped talking-head clip shot on an APS-C sensor for extra reach and a punchier, more compressed look. Good for hook or testimonial beats.'
+  },
+  'Duplication (Stylised Shots)': {
+    group: 'Stylised Shots', title: 'Duplication (Stylised Shots)', image: SEQ_IMG_DIR + 'Duplication.png',
+    desc: 'The same subject appears multiple times within one frame, cloned across the scene doing different things at once. Turns a single actor into a busy, populated shot.'
+  },
   'Reveal (Stylised Shots)': {
     group: 'Stylised Shots', title: 'Reveal (Stylised Shots)', image: SHOT_IMG_DIR + 'reveal-medium.png',
     desc: 'The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance. Built-in payoff inside a single shot.'
@@ -1326,21 +1337,9 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Full Coverage', title: '9 Shot Rule Reverse (Full Coverage)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
     desc: 'The 9-shot coverage run back to front - close-up and unique first, wide and drone last. Builds outward instead of establishing first.'
   },
-  'Top-Down (Drone)': {
-    group: 'Drone', title: 'Top-Down (Drone)', image: SEQ_IMG_DIR + 'Top-Down.png',
-    desc: 'A sequence built entirely from overhead, top-down angles. Flattens every beat into a graphic, process-driven feel.'
-  },
   'Drone Sequence (Drone)': {
     group: 'Drone', title: 'Drone Sequence (Drone)', image: SEQ_IMG_DIR + 'Drone Sequence.png',
     desc: 'A run of aerial drone shots cut together to establish scale and location before dropping into ground-level coverage.'
-  },
-  'APS-C (Lens)': {
-    group: 'Lens', title: 'APS-C (Lens)', image: SEQ_IMG_DIR + 'APS-C.png',
-    desc: 'A moody, tightly-cropped talking-head clip shot on an APS-C sensor for extra reach and a punchier, more compressed look. Good for hook or testimonial beats.'
-  },
-  'Duplication (Camera)': {
-    group: 'Camera', title: 'Duplication (Camera)', image: SEQ_IMG_DIR + 'Duplication.png',
-    desc: 'The same subject appears multiple times within one frame, cloned across the scene doing different things at once. Turns a single actor into a busy, populated shot.'
   },
   'Lots Of Cuts (Camera)': {
     group: 'Camera', title: 'Lots Of Cuts (Camera)', image: SHOT_IMG_DIR + 'Lots Of Cuts.png',
@@ -1790,7 +1789,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'Environment (Medium)': 'Environment (Stylised Shots)', 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Stylised Shots)', 'Close Up Sequence (Camera)': 'Close Up Sequence (Stylised Shots)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Stylised Shots)', 'Cut Sequence Zoom (Camera)': 'Cut Sequence Zoom (Stylised Shots)', 'Duplication': 'Duplication (Camera)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Stylised Shots)', 'Match Cuts (Camera)': 'Match Cuts (Stylised Shots)', 'Slow Motion Sequence': 'Slow Motion Sequence (Stylised Shots)', 'Slow Motion Sequence (Camera)': 'Slow Motion Sequence (Stylised Shots)', 'APS-C': 'APS-C (Lens)', 'POV': 'POV (Stylised Shots)', 'POV (Lens)': 'POV (Stylised Shots)', 'Top-Down': 'Top-Down (Drone)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
+const SHOT_TYPE_ALIASES = { 'Environment (Medium)': 'Environment (Stylised Shots)', 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Stylised Shots)', 'Close Up Sequence (Camera)': 'Close Up Sequence (Stylised Shots)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Stylised Shots)', 'Cut Sequence Zoom (Camera)': 'Cut Sequence Zoom (Stylised Shots)', 'Duplication': 'Duplication (Stylised Shots)', 'Duplication (Camera)': 'Duplication (Stylised Shots)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Stylised Shots)', 'Match Cuts (Camera)': 'Match Cuts (Stylised Shots)', 'Slow Motion Sequence': 'Slow Motion Sequence (Stylised Shots)', 'Slow Motion Sequence (Camera)': 'Slow Motion Sequence (Stylised Shots)', 'APS-C': 'APS-C (Stylised Shots)', 'APS-C (Lens)': 'APS-C (Stylised Shots)', 'POV': 'POV (Stylised Shots)', 'POV (Lens)': 'POV (Stylised Shots)', 'Top-Down': 'Top-Down (Stylised Shots)', 'Top-Down (Drone)': 'Top-Down (Stylised Shots)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
