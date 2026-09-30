@@ -1097,7 +1097,7 @@ const SEQUENCE_TYPE_GROUPS = [
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const STYLE_TYPE_GROUPS = [
-  {group:'Title Cards', items:['Title Card']},
+  {group:'Styles', items:['Title Card']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1327,7 +1327,7 @@ const SHOT_TYPE_PREVIEWS = {
   },
   /* ---- Styles ---- */
   'Title Card': {
-    group: 'Title Cards', title: 'Title Card', image: SHOT_IMG_DIR + 'Title Card.png',
+    group: 'Styles', title: 'Title Card', image: SHOT_IMG_DIR + 'Title Card.png',
     desc: 'Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them. Opens a video like a film poster.'
   },
 };
@@ -1475,12 +1475,12 @@ function allShotsGridHtml(){
   return html;
 }
 
-/* ---------- sequences / styles grid render (empty sections still show, as placeholders) ---------- */
+/* ---------- sequences / styles grid render (empty sections still show, as placeholders; a single-section tab gets no heading) ---------- */
 function sectionedGridHtml(groups){
   let html = '';
   groups.forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
-    html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
+    if(groups.length > 1) html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
     if(!items.length){ html += '<div class="all-shots-empty">Nothing here yet.</div>'; return; }
     html += '<div class="all-shots-grid">' + items.map(i=>{
       const p = SHOT_TYPE_PREVIEWS[i];
