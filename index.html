@@ -1064,7 +1064,10 @@ const SHOT_TYPE_GROUPS = [
 
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const SEQUENCE_TYPE_GROUPS = [
-  {group:'Sequences', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)','APS-C','Close Up Sequence','Cut Sequence Zoom','Drone Sequence','Duplication','Match Cuts','POV','Slow Motion Sequence','Top-Down']},
+  {group:'Full Coverage', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)']},
+  {group:'Camera', items:['Close Up Sequence','Cut Sequence Zoom','Duplication','Match Cuts','Slow Motion Sequence']},
+  {group:'Lens', items:['APS-C','POV']},
+  {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:[]},
   {group:'Transitions', items:[]},
 ];
@@ -1247,51 +1250,51 @@ const SHOT_TYPE_PREVIEWS = {
   },
   /* ---- Sequences ---- */
   '9 Shot Rule (Classic)': {
-    group: 'Sequences', title: '9 Shot Rule (Classic)', image: SEQ_IMG_DIR + '9 Shot Rule (Classic).png',
+    group: 'Full Coverage', title: '9 Shot Rule (Classic)', image: SEQ_IMG_DIR + '9 Shot Rule (Classic).png',
     desc: '2 drone, 2 wide, 2 medium, 2 close-up, 1 unique - shot in that order for full, predictable coverage of a scene.'
   },
   '9 Shot Rule (Mixed)': {
-    group: 'Sequences', title: '9 Shot Rule (Mixed)', image: SEQ_IMG_DIR + '9 Shot Rule (Mixed).jpg',
+    group: 'Full Coverage', title: '9 Shot Rule (Mixed)', image: SEQ_IMG_DIR + '9 Shot Rule (Mixed).jpg',
     desc: 'The same 9-shot coverage (drone, wide, medium, close-up, unique) captured out of order and intercut for a less predictable, more dynamic edit.'
   },
   '9-Shot Rule (Reverse)': {
-    group: 'Sequences', title: '9-Shot Rule (Reverse)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
+    group: 'Full Coverage', title: '9-Shot Rule (Reverse)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
     desc: 'The 9-shot coverage run back to front - close-up and unique first, wide and drone last. Builds outward instead of establishing first.'
   },
   'Top-Down': {
-    group: 'Sequences', title: 'Top-Down', image: SEQ_IMG_DIR + 'Top-Down.png',
+    group: 'Drone', title: 'Top-Down', image: SEQ_IMG_DIR + 'Top-Down.png',
     desc: 'A sequence built entirely from overhead, top-down angles. Flattens every beat into a graphic, process-driven feel.'
   },
   'Slow Motion Sequence': {
-    group: 'Sequences', title: 'Slow Motion Sequence', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
+    group: 'Camera', title: 'Slow Motion Sequence', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
     desc: 'A run of shots all captured at a high frame rate and played back slow, stretching a string of small moments into something significant.'
   },
   'Close Up Sequence': {
-    group: 'Sequences', title: 'Close Up Sequence', image: SEQ_IMG_DIR + 'Close Up Sequence.png',
+    group: 'Camera', title: 'Close Up Sequence', image: SEQ_IMG_DIR + 'Close Up Sequence.png',
     desc: 'A run of tight close-up shots cut together back to back. Stacks emotional beats without ever pulling back to breathe.'
   },
   'Drone Sequence': {
-    group: 'Sequences', title: 'Drone Sequence', image: SEQ_IMG_DIR + 'Drone Sequence.png',
+    group: 'Drone', title: 'Drone Sequence', image: SEQ_IMG_DIR + 'Drone Sequence.png',
     desc: 'A run of aerial drone shots cut together to establish scale and location before dropping into ground-level coverage.'
   },
   'APS-C': {
-    group: 'Sequences', title: 'APS-C', image: SEQ_IMG_DIR + 'APS-C.png',
+    group: 'Lens', title: 'APS-C', image: SEQ_IMG_DIR + 'APS-C.png',
     desc: 'A moody, tightly-cropped talking-head clip shot on an APS-C sensor for extra reach and a punchier, more compressed look. Good for hook or testimonial beats.'
   },
   'Cut Sequence Zoom': {
-    group: 'Sequences', title: 'Cut Sequence Zoom', image: SEQ_IMG_DIR + 'Cut Sequence Zoom.png',
+    group: 'Camera', title: 'Cut Sequence Zoom', image: SEQ_IMG_DIR + 'Cut Sequence Zoom.png',
     desc: 'A run of cutaway inserts that punch progressively closer on the same action, building anticipation shot by shot before the payoff.'
   },
   'Duplication': {
-    group: 'Sequences', title: 'Duplication', image: SEQ_IMG_DIR + 'Duplication.png',
+    group: 'Camera', title: 'Duplication', image: SEQ_IMG_DIR + 'Duplication.png',
     desc: 'The same subject appears multiple times within one frame, cloned across the scene doing different things at once. Turns a single actor into a busy, populated shot.'
   },
   'Match Cuts': {
-    group: 'Sequences', title: 'Match Cuts', image: SEQ_IMG_DIR + 'Match Cuts.png',
+    group: 'Camera', title: 'Match Cuts', image: SEQ_IMG_DIR + 'Match Cuts.png',
     desc: 'Shots linked by matching action, shape or motion across the cut, so one scene flows straight into the next without a visible seam.'
   },
   'POV': {
-    group: 'Sequences', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
+    group: 'Lens', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
     desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
   },
 };
