@@ -1303,7 +1303,7 @@ const SHOT_TYPE_PREVIEWS = {
 const EFFECT_TYPE_GROUPS = [
   {group:'Frame', items:['2 Vertical (Frame)','2 Vertical White (Frame)','2 Wipp (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical White (Frame)','3 Vertical Transparent (Frame)','4 White Horizontal (Frame)','4 Horizontal (Frame)','Black Bars (Frame)','Pelijo Supercut (Frame)','Pelijo Title Card (Frame)']},
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Infinite Cut (Zoom)','Quick In (Zoom)']},
-  {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
+  {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Title Card (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
   {group:'Misc', items:['Net','PSR']},
 ];
@@ -1396,6 +1396,10 @@ const EFFECT_TYPE_PREVIEWS = {
   'Title (Text)': {
     group: 'Text', title: 'Title (Text)', image: EFFECT_IMG_DIR + 'Title (Text).png',
     desc: 'A single bold, glowing word fills a black frame as a full title card. Used to punctuate a beat or open a new segment.'
+  },
+  'Title Card (Text)': {
+    group: 'Text', title: 'Title Card (Text)', image: SHOT_IMG_DIR + 'Title Card.png',
+    desc: 'Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them. Opens a video like a film poster.'
   },
   'Transparent Back (Text)': {
     group: 'Text', title: 'Transparent Back (Text)', image: EFFECT_IMG_DIR + 'Transparent Back (Text).png',
