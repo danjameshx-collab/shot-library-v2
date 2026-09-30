@@ -1091,7 +1091,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Camera', items:['Close Up Sequence','Cut Sequence Zoom','Duplication','Lots Of Cuts','Match Cuts','Slow Motion Sequence']},
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
-  {group:'Introductions', items:[]},
+  {group:'Introductions', items:['Talking Head & B-Roll','Straight Into Raw','Music Montage Into A-Roll','Cinematics & Talking Head','Cinematics & Voiceover']},
   {group:'Transitions', items:['Object Gives Context']},
 ];
 
@@ -1328,6 +1328,27 @@ const SHOT_TYPE_PREVIEWS = {
   'Lots Of Cuts': {
     group: 'Camera', title: 'Lots Of Cuts', image: SHOT_IMG_DIR + 'Lots Of Cuts.png',
     desc: 'Rapid cuts between many short angles of the same moment, often shot through foreground gear and people. The pace makes an event feel busy, packed and alive.'
+  },
+  /* ---- Introductions ---- */
+  'Talking Head & B-Roll': {
+    group: 'Introductions', title: 'Talking Head & B-Roll', image: SHOT_IMG_DIR + 'Talking Head & B-Roll.png',
+    desc: 'Open straight on a close talking head speaking to camera, with bold words popping on screen, then cut into B-roll as the story builds. Hooks with a face and a line before showing anything else.'
+  },
+  'Straight Into Raw': {
+    group: 'Introductions', title: 'Straight Into Raw', image: SHOT_IMG_DIR + 'Straight Into Raw.png',
+    desc: 'No setup, no titles: the video opens mid-moment on raw, handheld footage with the subject already talking. Drops the viewer right into the action like they have walked in on it.'
+  },
+  'Music Montage Into A-Roll': {
+    group: 'Introductions', title: 'Music Montage Into A-Roll', image: SHOT_IMG_DIR + 'Music Montage Into A-Roll.png',
+    desc: 'Open on a music-led montage of the scene and the people in it, then land on the first line of A-roll. Sets the mood and the world before anyone speaks.'
+  },
+  'Cinematics & Talking Head': {
+    group: 'Introductions', title: 'Cinematics & Talking Head', image: SHOT_IMG_DIR + 'Cinematics & Talking Head.png',
+    desc: 'Open on crafted cinematic shots, like a styled top-down of a notebook titled with the topic, then cut to the talking head. The visuals frame the subject before the host takes over.'
+  },
+  'Cinematics & Voiceover': {
+    group: 'Introductions', title: 'Cinematics & Voiceover', image: SHOT_IMG_DIR + 'Cinematics & Voiceover.png',
+    desc: 'Open on slow, moody cinematic shots, like hands on a passport in warm window light, carried by a voiceover instead of a face on camera. Builds intrigue and story before revealing who is talking.'
   },
   /* ---- Transitions ---- */
   'Object Gives Context': {
