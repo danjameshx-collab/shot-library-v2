@@ -1092,7 +1092,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:[]},
-  {group:'Transitions', items:[]},
+  {group:'Transitions', items:['Object Gives Context']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1324,6 +1324,11 @@ const SHOT_TYPE_PREVIEWS = {
   'POV': {
     group: 'Lens', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
     desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
+  },
+  /* ---- Transitions ---- */
+  'Object Gives Context': {
+    group: 'Transitions', title: 'Object Gives Context', image: SHOT_IMG_DIR + 'Object Gives Context.png',
+    desc: 'Cut to a low, close shot of a telling object, like skates being set down on the floor, before the next scene. The object tells the viewer where we are going before they see it.'
   },
   /* ---- Styles ---- */
   'Title Card': {
