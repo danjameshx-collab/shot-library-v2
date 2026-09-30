@@ -1092,7 +1092,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:['Talking Head & B-Roll','Straight Into Raw','Music Montage Into A-Roll','Cinematics & Talking Head','Cinematics & Voiceover']},
-  {group:'Transitions', items:['Object Gives Context']},
+  {group:'Transitions', items:['Chapter Card','Object Gives Context']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1351,6 +1351,10 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'Open on slow, moody cinematic shots, like hands on a passport in warm window light, carried by a voiceover instead of a face on camera. Builds intrigue and story before revealing who is talking.'
   },
   /* ---- Transitions ---- */
+  'Chapter Card': {
+    group: 'Transitions', title: 'Chapter Card', image: SHOT_IMG_DIR + 'Chapter Card.png',
+    desc: 'Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath. Gives the viewer a breath and signals a new part of the story.'
+  },
   'Object Gives Context': {
     group: 'Transitions', title: 'Object Gives Context', image: SHOT_IMG_DIR + 'Object Gives Context.png',
     desc: 'Cut to a low, close shot of a telling object, like skates being set down on the floor, before the next scene. The object tells the viewer where we are going before they see it.'
