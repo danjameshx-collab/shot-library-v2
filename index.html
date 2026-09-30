@@ -1087,12 +1087,12 @@ const SHOT_TYPE_GROUPS = [
 
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const SEQUENCE_TYPE_GROUPS = [
-  {group:'Full Coverage', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)']},
-  {group:'Camera', items:['Close Up Sequence','Cut Sequence Zoom','Duplication','Lots Of Cuts','Match Cuts','Slow Motion Sequence']},
-  {group:'Lens', items:['APS-C','POV']},
-  {group:'Drone', items:['Top-Down','Drone Sequence']},
-  {group:'Introductions', items:['Talking Head & B-Roll','Straight Into Raw','Music Montage Into A-Roll','Cinematics & Talking Head','Cinematics & Voiceover']},
-  {group:'Transitions', items:['Object Gives Context','Speech Adds Context','Text Card','Text Card With A Roll']},
+  {group:'Full Coverage', items:['9 Shot Rule Classic (Full Coverage)','9 Shot Rule Mixed (Full Coverage)','9 Shot Rule Reverse (Full Coverage)']},
+  {group:'Camera', items:['Close Up Sequence (Camera)','Cut Sequence Zoom (Camera)','Duplication (Camera)','Lots Of Cuts (Camera)','Match Cuts (Camera)','Slow Motion Sequence (Camera)']},
+  {group:'Lens', items:['APS-C (Lens)','POV (Lens)']},
+  {group:'Drone', items:['Top-Down (Drone)','Drone Sequence (Drone)']},
+  {group:'Introductions', items:['Talking Head & B-Roll (Introductions)','Straight Into Raw (Introductions)','Music Montage Into A-Roll (Introductions)','Cinematics & Talking Head (Introductions)','Cinematics & Voiceover (Introductions)']},
+  {group:'Transitions', items:['Object Gives Context (Transitions)','Speech Adds Context (Transitions)','Text Card (Transitions)','Text Card With A Roll (Transitions)']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1277,94 +1277,94 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'A wide shot taken from a low camera position, looking up across the scene. Adds power and scale to the whole environment, not just the subject.'
   },
   /* ---- Sequences ---- */
-  '9 Shot Rule (Classic)': {
-    group: 'Full Coverage', title: '9 Shot Rule (Classic)', image: SEQ_IMG_DIR + '9 Shot Rule (Classic).png',
+  '9 Shot Rule Classic (Full Coverage)': {
+    group: 'Full Coverage', title: '9 Shot Rule Classic (Full Coverage)', image: SEQ_IMG_DIR + '9 Shot Rule (Classic).png',
     desc: '2 drone, 2 wide, 2 medium, 2 close-up, 1 unique - shot in that order for full, predictable coverage of a scene.'
   },
-  '9 Shot Rule (Mixed)': {
-    group: 'Full Coverage', title: '9 Shot Rule (Mixed)', image: SEQ_IMG_DIR + '9 Shot Rule (Mixed).jpg',
+  '9 Shot Rule Mixed (Full Coverage)': {
+    group: 'Full Coverage', title: '9 Shot Rule Mixed (Full Coverage)', image: SEQ_IMG_DIR + '9 Shot Rule (Mixed).jpg',
     desc: 'The same 9-shot coverage (drone, wide, medium, close-up, unique) captured out of order and intercut for a less predictable, more dynamic edit.'
   },
-  '9-Shot Rule (Reverse)': {
-    group: 'Full Coverage', title: '9-Shot Rule (Reverse)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
+  '9 Shot Rule Reverse (Full Coverage)': {
+    group: 'Full Coverage', title: '9 Shot Rule Reverse (Full Coverage)', image: SEQ_IMG_DIR + '9-Shot Rule (Reverse).png',
     desc: 'The 9-shot coverage run back to front - close-up and unique first, wide and drone last. Builds outward instead of establishing first.'
   },
-  'Top-Down': {
-    group: 'Drone', title: 'Top-Down', image: SEQ_IMG_DIR + 'Top-Down.png',
+  'Top-Down (Drone)': {
+    group: 'Drone', title: 'Top-Down (Drone)', image: SEQ_IMG_DIR + 'Top-Down.png',
     desc: 'A sequence built entirely from overhead, top-down angles. Flattens every beat into a graphic, process-driven feel.'
   },
-  'Slow Motion Sequence': {
-    group: 'Camera', title: 'Slow Motion Sequence', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
+  'Slow Motion Sequence (Camera)': {
+    group: 'Camera', title: 'Slow Motion Sequence (Camera)', image: SEQ_IMG_DIR + 'Slow Motion Sequence.png',
     desc: 'A run of shots all captured at a high frame rate and played back slow, stretching a string of small moments into something significant.'
   },
-  'Close Up Sequence': {
-    group: 'Camera', title: 'Close Up Sequence', image: SEQ_IMG_DIR + 'Close Up Sequence.png',
+  'Close Up Sequence (Camera)': {
+    group: 'Camera', title: 'Close Up Sequence (Camera)', image: SEQ_IMG_DIR + 'Close Up Sequence.png',
     desc: 'A run of tight close-up shots cut together back to back. Stacks emotional beats without ever pulling back to breathe.'
   },
-  'Drone Sequence': {
-    group: 'Drone', title: 'Drone Sequence', image: SEQ_IMG_DIR + 'Drone Sequence.png',
+  'Drone Sequence (Drone)': {
+    group: 'Drone', title: 'Drone Sequence (Drone)', image: SEQ_IMG_DIR + 'Drone Sequence.png',
     desc: 'A run of aerial drone shots cut together to establish scale and location before dropping into ground-level coverage.'
   },
-  'APS-C': {
-    group: 'Lens', title: 'APS-C', image: SEQ_IMG_DIR + 'APS-C.png',
+  'APS-C (Lens)': {
+    group: 'Lens', title: 'APS-C (Lens)', image: SEQ_IMG_DIR + 'APS-C.png',
     desc: 'A moody, tightly-cropped talking-head clip shot on an APS-C sensor for extra reach and a punchier, more compressed look. Good for hook or testimonial beats.'
   },
-  'Cut Sequence Zoom': {
-    group: 'Camera', title: 'Cut Sequence Zoom', image: SEQ_IMG_DIR + 'Cut Sequence Zoom.png',
+  'Cut Sequence Zoom (Camera)': {
+    group: 'Camera', title: 'Cut Sequence Zoom (Camera)', image: SEQ_IMG_DIR + 'Cut Sequence Zoom.png',
     desc: 'A run of cutaway inserts that punch progressively closer on the same action, building anticipation shot by shot before the payoff.'
   },
-  'Duplication': {
-    group: 'Camera', title: 'Duplication', image: SEQ_IMG_DIR + 'Duplication.png',
+  'Duplication (Camera)': {
+    group: 'Camera', title: 'Duplication (Camera)', image: SEQ_IMG_DIR + 'Duplication.png',
     desc: 'The same subject appears multiple times within one frame, cloned across the scene doing different things at once. Turns a single actor into a busy, populated shot.'
   },
-  'Match Cuts': {
-    group: 'Camera', title: 'Match Cuts', image: SEQ_IMG_DIR + 'Match Cuts.png',
+  'Match Cuts (Camera)': {
+    group: 'Camera', title: 'Match Cuts (Camera)', image: SEQ_IMG_DIR + 'Match Cuts.png',
     desc: 'Shots linked by matching action, shape or motion across the cut, so one scene flows straight into the next without a visible seam.'
   },
-  'POV': {
-    group: 'Lens', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
+  'POV (Lens)': {
+    group: 'Lens', title: 'POV (Lens)', image: SEQ_IMG_DIR + 'POV.png',
     desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
   },
-  'Lots Of Cuts': {
-    group: 'Camera', title: 'Lots Of Cuts', image: SHOT_IMG_DIR + 'Lots Of Cuts.png',
+  'Lots Of Cuts (Camera)': {
+    group: 'Camera', title: 'Lots Of Cuts (Camera)', image: SHOT_IMG_DIR + 'Lots Of Cuts.png',
     desc: 'Rapid cuts between many short angles of the same moment, often shot through foreground gear and people. The pace makes an event feel busy, packed and alive.'
   },
   /* ---- Introductions ---- */
-  'Talking Head & B-Roll': {
-    group: 'Introductions', title: 'Talking Head & B-Roll', image: SHOT_IMG_DIR + 'Talking Head & B-Roll.png',
+  'Talking Head & B-Roll (Introductions)': {
+    group: 'Introductions', title: 'Talking Head & B-Roll (Introductions)', image: SHOT_IMG_DIR + 'Talking Head & B-Roll.png',
     desc: 'Open straight on a close talking head speaking to camera, with bold words popping on screen, then cut into B-roll as the story builds. Hooks with a face and a line before showing anything else.'
   },
-  'Straight Into Raw': {
-    group: 'Introductions', title: 'Straight Into Raw', image: SHOT_IMG_DIR + 'Straight Into Raw.png',
+  'Straight Into Raw (Introductions)': {
+    group: 'Introductions', title: 'Straight Into Raw (Introductions)', image: SHOT_IMG_DIR + 'Straight Into Raw.png',
     desc: 'No setup, no titles: the video opens mid-moment on raw, handheld footage with the subject already talking. Drops the viewer right into the action like they have walked in on it.'
   },
-  'Music Montage Into A-Roll': {
-    group: 'Introductions', title: 'Music Montage Into A-Roll', image: SHOT_IMG_DIR + 'Music Montage Into A-Roll.png',
+  'Music Montage Into A-Roll (Introductions)': {
+    group: 'Introductions', title: 'Music Montage Into A-Roll (Introductions)', image: SHOT_IMG_DIR + 'Music Montage Into A-Roll.png',
     desc: 'Open on a music-led montage of the scene and the people in it, then land on the first line of A-roll. Sets the mood and the world before anyone speaks.'
   },
-  'Cinematics & Talking Head': {
-    group: 'Introductions', title: 'Cinematics & Talking Head', image: SHOT_IMG_DIR + 'Cinematics & Talking Head.png',
+  'Cinematics & Talking Head (Introductions)': {
+    group: 'Introductions', title: 'Cinematics & Talking Head (Introductions)', image: SHOT_IMG_DIR + 'Cinematics & Talking Head.png',
     desc: 'Open on crafted cinematic shots, like a styled top-down of a notebook titled with the topic, then cut to the talking head. The visuals frame the subject before the host takes over.'
   },
-  'Cinematics & Voiceover': {
-    group: 'Introductions', title: 'Cinematics & Voiceover', image: SHOT_IMG_DIR + 'Cinematics & Voiceover.png',
+  'Cinematics & Voiceover (Introductions)': {
+    group: 'Introductions', title: 'Cinematics & Voiceover (Introductions)', image: SHOT_IMG_DIR + 'Cinematics & Voiceover.png',
     desc: 'Open on slow, moody cinematic shots, like hands on a passport in warm window light, carried by a voiceover instead of a face on camera. Builds intrigue and story before revealing who is talking.'
   },
   /* ---- Transitions ---- */
-  'Text Card': {
-    group: 'Transitions', title: 'Text Card', image: SHOT_IMG_DIR + 'Chapter Card.png',
+  'Text Card (Transitions)': {
+    group: 'Transitions', title: 'Text Card (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card.png',
     desc: 'Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath. Gives the viewer a breath and signals a new part of the story.'
   },
-  'Text Card With A Roll': {
-    group: 'Transitions', title: 'Text Card With A Roll', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
+  'Text Card With A Roll (Transitions)': {
+    group: 'Transitions', title: 'Text Card With A Roll (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
     desc: 'The same quiet serif text card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
   },
-  'Object Gives Context': {
-    group: 'Transitions', title: 'Object Gives Context', image: SHOT_IMG_DIR + 'Object Gives Context.png',
+  'Object Gives Context (Transitions)': {
+    group: 'Transitions', title: 'Object Gives Context (Transitions)', image: SHOT_IMG_DIR + 'Object Gives Context.png',
     desc: 'Cut to a low, close shot of a telling object, like skates being set down on the floor, before the next scene. The object tells the viewer where we are going before they see it.'
   },
-  'Speech Adds Context': {
-    group: 'Transitions', title: 'Speech Adds Context', image: SHOT_IMG_DIR + 'Speech Adds Context.png',
+  'Speech Adds Context (Transitions)': {
+    group: 'Transitions', title: 'Speech Adds Context (Transitions)', image: SHOT_IMG_DIR + 'Speech Adds Context.png',
     desc: 'The subject watches or listens to something, like a speech playing on a screen, and its audio carries us into the next scene. The words they hear set up what comes next.'
   },
   /* ---- Styles ---- */
@@ -1769,7 +1769,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', 'Chapter Card': 'Text Card', 'Chapter Card With A Roll': 'Text Card With A Roll' };
+const SHOT_TYPE_ALIASES = { 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Camera)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Camera)', 'Duplication': 'Duplication (Camera)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Camera)', 'Slow Motion Sequence': 'Slow Motion Sequence (Camera)', 'APS-C': 'APS-C (Lens)', 'POV': 'POV (Lens)', 'Top-Down': 'Top-Down (Drone)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
