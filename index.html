@@ -1092,7 +1092,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:['Talking Head & B-Roll','Straight Into Raw','Music Montage Into A-Roll','Cinematics & Talking Head','Cinematics & Voiceover']},
-  {group:'Transitions', items:['Chapter Card','Object Gives Context']},
+  {group:'Transitions', items:['Chapter Card','Chapter Card With A Roll','Object Gives Context']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1354,6 +1354,10 @@ const SHOT_TYPE_PREVIEWS = {
   'Chapter Card': {
     group: 'Transitions', title: 'Chapter Card', image: SHOT_IMG_DIR + 'Chapter Card.png',
     desc: 'Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath. Gives the viewer a breath and signals a new part of the story.'
+  },
+  'Chapter Card With A Roll': {
+    group: 'Transitions', title: 'Chapter Card With A Roll', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
+    desc: 'The same quiet serif chapter card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
   },
   'Object Gives Context': {
     group: 'Transitions', title: 'Object Gives Context', image: SHOT_IMG_DIR + 'Object Gives Context.png',
