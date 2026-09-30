@@ -828,6 +828,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
+  <button type="button" class="top-tab-btn" data-tab="styles">Styles</button>
   <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
   <button type="button" class="top-tab-btn" data-tab="thumbs">Thumbnails</button>
 </div>
@@ -902,6 +903,28 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       </div>
     </div>
     <div class="all-shots-scroll" id="sequencesScroll"></div>
+  </div>
+</div>
+
+<div class="all-shots-overlay tab-page" id="stylesOverlay">
+  <div class="all-shots-box" id="stylesBox">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="stylesTitle">All Styles</h2></div>
+      <div class="all-shots-head-right">
+        <button type="button" class="modal-fullscreen-btn" id="stylesFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
+            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
+          </svg>
+        </button>
+        <button type="button" class="all-shots-close" id="stylesCloseBtn" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="all-shots-scroll" id="stylesScroll"></div>
   </div>
 </div>
 
@@ -1070,6 +1093,11 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:[]},
   {group:'Transitions', items:[]},
+];
+
+/* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
+const STYLE_TYPE_GROUPS = [
+  {group:'Title Cards', items:['Title Card']},
 ];
 
 const SHOT_IMG_DIR = 'images for super-loom/';
@@ -1297,13 +1325,18 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Lens', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
     desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
   },
+  /* ---- Styles ---- */
+  'Title Card': {
+    group: 'Title Cards', title: 'Title Card', image: SHOT_IMG_DIR + 'Title Card.png',
+    desc: 'Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them. Opens a video like a film poster.'
+  },
 };
 
 /* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
 const EFFECT_TYPE_GROUPS = [
   {group:'Frame', items:['2 Vertical (Frame)','2 Vertical White (Frame)','2 Wipp (Frame)','3 Horizontal (Frame)','3 Vertical (Frame)','3 Vertical White (Frame)','3 Vertical Transparent (Frame)','4 White Horizontal (Frame)','4 Horizontal (Frame)','Black Bars (Frame)','Pelijo Supercut (Frame)','Pelijo Title Card (Frame)']},
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Infinite Cut (Zoom)','Quick In (Zoom)']},
-  {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Title Card (Text)','Transparent Back (Text)']},
+  {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
   {group:'Misc', items:['Net','PSR']},
 ];
@@ -1397,10 +1430,6 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Text', title: 'Title (Text)', image: EFFECT_IMG_DIR + 'Title (Text).png',
     desc: 'A single bold, glowing word fills a black frame as a full title card. Used to punctuate a beat or open a new segment.'
   },
-  'Title Card (Text)': {
-    group: 'Text', title: 'Title Card (Text)', image: SHOT_IMG_DIR + 'Title Card.png',
-    desc: 'Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them. Opens a video like a film poster.'
-  },
   'Transparent Back (Text)': {
     group: 'Text', title: 'Transparent Back (Text)', image: EFFECT_IMG_DIR + 'Transparent Back (Text).png',
     desc: 'A large, low-opacity word sits ghosted in the background while a bolder headline sits in front of it. Builds a layered, two-tier text moment out of a single frame.'
@@ -1446,17 +1475,17 @@ function allShotsGridHtml(){
   return html;
 }
 
-/* ---------- sequences grid render (empty sections still show, as placeholders) ---------- */
-function sequencesGridHtml(){
+/* ---------- sequences / styles grid render (empty sections still show, as placeholders) ---------- */
+function sectionedGridHtml(groups){
   let html = '';
-  SEQUENCE_TYPE_GROUPS.forEach(g=>{
+  groups.forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     html += '<div class="all-shots-group-label">' + esc(g.group) + '</div>';
     if(!items.length){ html += '<div class="all-shots-empty">Nothing here yet.</div>'; return; }
     html += '<div class="all-shots-grid">' + items.map(i=>{
       const p = SHOT_TYPE_PREVIEWS[i];
       return '<button type="button" class="all-shots-card" data-shot-preview="' + escAttr(i) + '">'
-        + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference sequence" loading="lazy"></div>'
+        + '<div class="all-shots-card-media"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + ' - reference" loading="lazy"></div>'
         + '<div class="all-shots-card-body">'
           + '<h4 class="all-shots-card-title">' + esc(p.title) + '</h4>'
           + '<p class="all-shots-card-desc">' + esc(p.desc) + '</p>'
@@ -1597,6 +1626,13 @@ function toggleSequencesFullscreen(){
   document.getElementById('sequencesOverlay').classList.toggle('fullscreen', sequencesFullscreen);
   document.body.classList.toggle('tabs-hidden', sequencesFullscreen);
 }
+let stylesFullscreen = false;
+function toggleStylesFullscreen(){
+  stylesFullscreen = !stylesFullscreen;
+  document.getElementById('stylesBox').classList.toggle('fullscreen', stylesFullscreen);
+  document.getElementById('stylesOverlay').classList.toggle('fullscreen', stylesFullscreen);
+  document.body.classList.toggle('tabs-hidden', stylesFullscreen);
+}
 let effectsFullscreen = false;
 function toggleEffectsFullscreen(){
   effectsFullscreen = !effectsFullscreen;
@@ -1677,7 +1713,7 @@ function cvLocationPanelHtml(current, rec){
 }
 function shotTypePanelHtml(current){
   let list = '';
-  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
+  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, STYLE_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     if(!items.length) return;
     list += lcGroupLabel(g.group);
@@ -2735,6 +2771,7 @@ function switchTab(tab){
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
   document.getElementById('sequencesOverlay').classList.toggle('active', tab==='sequences');
+  document.getElementById('stylesOverlay').classList.toggle('active', tab==='styles');
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
   if(tab==='thumbs') thumbsLoad();
@@ -2760,7 +2797,7 @@ function switchTab(tab){
   });
 
   const sequencesScroll = document.getElementById('sequencesScroll');
-  sequencesScroll.innerHTML = sequencesGridHtml();
+  sequencesScroll.innerHTML = sectionedGridHtml(SEQUENCE_TYPE_GROUPS);
   sequencesScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
     card.addEventListener('click', ()=>{
       openShotPreview(card.dataset.shotPreview);
@@ -2768,6 +2805,18 @@ function switchTab(tab){
   });
   document.getElementById('sequencesFullscreenBtn').addEventListener('click', toggleSequencesFullscreen);
   document.getElementById('sequencesCloseBtn').addEventListener('click', ()=>{
+    if(document.referrer){ history.back(); } else { window.close(); }
+  });
+
+  const stylesScroll = document.getElementById('stylesScroll');
+  stylesScroll.innerHTML = sectionedGridHtml(STYLE_TYPE_GROUPS);
+  stylesScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      openShotPreview(card.dataset.shotPreview);
+    });
+  });
+  document.getElementById('stylesFullscreenBtn').addEventListener('click', toggleStylesFullscreen);
+  document.getElementById('stylesCloseBtn').addEventListener('click', ()=>{
     if(document.referrer){ history.back(); } else { window.close(); }
   });
 
@@ -2802,10 +2851,10 @@ function switchTab(tab){
 
   let savedTab = null, savedCvId = null;
   try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
-  if(savedTab === 'library' || savedTab === 'sequences' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
+  if(savedTab === 'library' || savedTab === 'sequences' || savedTab === 'styles' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
 
   cvLibrary = await cvFetchLibrary();
-  if(savedTab !== 'library' && savedTab !== 'sequences' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
+  if(savedTab !== 'library' && savedTab !== 'sequences' && savedTab !== 'styles' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
     cvOpen(savedCvId);
   }else{
     cvRenderLauncher();
