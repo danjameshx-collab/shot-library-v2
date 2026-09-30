@@ -1088,7 +1088,7 @@ const SHOT_TYPE_GROUPS = [
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const SEQUENCE_TYPE_GROUPS = [
   {group:'Full Coverage', items:['9 Shot Rule (Classic)','9 Shot Rule (Mixed)','9-Shot Rule (Reverse)']},
-  {group:'Camera', items:['Close Up Sequence','Cut Sequence Zoom','Duplication','Match Cuts','Slow Motion Sequence']},
+  {group:'Camera', items:['Close Up Sequence','Cut Sequence Zoom','Duplication','Lots Of Cuts','Match Cuts','Slow Motion Sequence']},
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:[]},
@@ -1324,6 +1324,10 @@ const SHOT_TYPE_PREVIEWS = {
   'POV': {
     group: 'Lens', title: 'POV', image: SEQ_IMG_DIR + 'POV.png',
     desc: 'A first-person, often fisheye action-cam angle that puts the viewer directly in the subject\'s hands or eyeline for a raw, in-the-moment feel.'
+  },
+  'Lots Of Cuts': {
+    group: 'Camera', title: 'Lots Of Cuts', image: SHOT_IMG_DIR + 'Lots Of Cuts.png',
+    desc: 'Rapid cuts between many short angles of the same moment, often shot through foreground gear and people. The pace makes an event feel busy, packed and alive.'
   },
   /* ---- Transitions ---- */
   'Object Gives Context': {
