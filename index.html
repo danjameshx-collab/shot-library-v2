@@ -1078,12 +1078,12 @@ const SHOT_TYPE_GROUPS = [
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
   {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
   {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
-  {group:'Medium', items:['Behind (Medium)','Environment (Medium)','Foreground (Medium)']},
+  {group:'Medium', items:['Behind (Medium)','Foreground (Medium)']},
   {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
   {group:'Talking Head', items:['Angled (Talking Head)','Classic (Talking Head)','Composition (Talking Head)','Kitching Cuts (Talking Head)','Landscape (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
-  {group:'Stylised Shots', items:['Close Up & Context (Stylised Shots)','Reveal (Stylised Shots)']},
+  {group:'Stylised Shots', items:['Close Up & Context (Stylised Shots)','Environment (Stylised Shots)','Reveal (Stylised Shots)']},
 ];
 
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1236,8 +1236,8 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Medium', title: 'Behind (Medium)', image: SHOT_IMG_DIR + 'behind-medium.png',
     desc: "Camera sits behind the subject at medium distance, showing what they're looking at. Builds anticipation for the reveal."
   },
-  'Environment (Medium)': {
-    group: 'Medium', title: 'Environment (Medium)', image: SHOT_IMG_DIR + 'environment v2.png',
+  'Environment (Stylised Shots)': {
+    group: 'Stylised Shots', title: 'Environment (Stylised Shots)', image: SHOT_IMG_DIR + 'environment v2.png',
     desc: 'A medium-distance frame that keeps enough of the location visible to set the scene. Balances subject and place evenly.'
   },
   'Foreground (Medium)': {
@@ -1778,7 +1778,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Camera)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Camera)', 'Duplication': 'Duplication (Camera)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Camera)', 'Slow Motion Sequence': 'Slow Motion Sequence (Camera)', 'APS-C': 'APS-C (Lens)', 'POV': 'POV (Lens)', 'Top-Down': 'Top-Down (Drone)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
+const SHOT_TYPE_ALIASES = { 'Environment (Medium)': 'Environment (Stylised Shots)', 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Camera)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Camera)', 'Duplication': 'Duplication (Camera)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Camera)', 'Slow Motion Sequence': 'Slow Motion Sequence (Camera)', 'APS-C': 'APS-C (Lens)', 'POV': 'POV (Lens)', 'Top-Down': 'Top-Down (Drone)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
