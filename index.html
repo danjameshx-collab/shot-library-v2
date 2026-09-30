@@ -1092,7 +1092,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Lens', items:['APS-C','POV']},
   {group:'Drone', items:['Top-Down','Drone Sequence']},
   {group:'Introductions', items:['Talking Head & B-Roll','Straight Into Raw','Music Montage Into A-Roll','Cinematics & Talking Head','Cinematics & Voiceover']},
-  {group:'Transitions', items:['Chapter Card','Chapter Card With A Roll','Object Gives Context','Speech Adds Context']},
+  {group:'Transitions', items:['Object Gives Context','Speech Adds Context','Text Card','Text Card With A Roll']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -1351,13 +1351,13 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'Open on slow, moody cinematic shots, like hands on a passport in warm window light, carried by a voiceover instead of a face on camera. Builds intrigue and story before revealing who is talking.'
   },
   /* ---- Transitions ---- */
-  'Chapter Card': {
-    group: 'Transitions', title: 'Chapter Card', image: SHOT_IMG_DIR + 'Chapter Card.png',
+  'Text Card': {
+    group: 'Transitions', title: 'Text Card', image: SHOT_IMG_DIR + 'Chapter Card.png',
     desc: 'Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath. Gives the viewer a breath and signals a new part of the story.'
   },
-  'Chapter Card With A Roll': {
-    group: 'Transitions', title: 'Chapter Card With A Roll', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
-    desc: 'The same quiet serif chapter card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
+  'Text Card With A Roll': {
+    group: 'Transitions', title: 'Text Card With A Roll', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
+    desc: 'The same quiet serif text card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
   },
   'Object Gives Context': {
     group: 'Transitions', title: 'Object Gives Context', image: SHOT_IMG_DIR + 'Object Gives Context.png',
@@ -1769,7 +1769,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)' };
+const SHOT_TYPE_ALIASES = { 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Classic (Medium)': 'Classic (Talking Head)', 'Talking Head (Medium)': 'Classic (Talking Head)', 'Chapter Card': 'Text Card', 'Chapter Card With A Roll': 'Text Card With A Roll' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
