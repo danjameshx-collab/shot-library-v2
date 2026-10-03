@@ -1076,7 +1076,7 @@ analyticsIsSupported().then(ok=>{
 const SHOT_TYPE_GROUPS = [
   {group:'Composition', items:['Frame In A Frame (Composition)','Leading Lines (Composition)','Negative Space (Composition)','Rule Of Thirds (Composition)','Symmetry (Composition)']},
   {group:'Angle', items:['Ground (Angle)','High (Angle)','Low (Angle)','Straight Up (Angle)','To The Side (Angle)','Top Down (Angle)']},
-  {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Foreground (Close Up)']},
+  {group:'Close Up', items:['Classic (Close Up)','Extreme (Close Up)','Fine Details (Close Up)','Foreground (Close Up)']},
   {group:'Effect', items:['Low Shutter (Effect)','Slow Motion (Effect)','Speed Ramping (Effect)']},
   {group:'Medium', items:['Behind (Medium)','Foreground (Medium)']},
   {group:'Perspective', items:['Close Up Object (POV)','Object (POV)','Reverse (POV)']},
@@ -1192,6 +1192,10 @@ const SHOT_TYPE_PREVIEWS = {
   'Extreme (Close Up)': {
     group: 'Close Up', title: 'Extreme (Close Up)', image: SHOT_IMG_DIR + 'extreme-close-up.png',
     desc: 'Even tighter than classic - eyes, hands, texture. Almost abstract, used to punctuate a beat rather than sit in it.'
+  },
+  'Fine Details (Close Up)': {
+    group: 'Close Up', title: 'Fine Details (Close Up)', image: SHOT_IMG_DIR + 'Fine Details (Close Up).png',
+    desc: 'Macro-tight on the small details of a product or object, like texture, buttons and grilles. Great as a backdrop for on-screen text and makes everyday gear feel premium.'
   },
   'Foreground (Close Up)': {
     group: 'Close Up', title: 'Foreground (Close Up)', image: SHOT_IMG_DIR + 'foreground-close-up.png',
