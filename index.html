@@ -825,6 +825,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <body>
 
 <div class="top-tabs" id="topTabs">
+  <button type="button" class="top-tab-btn" data-tab="outreach">Creative Outreach Movie</button>
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
@@ -964,8 +965,8 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   <div class="launcher-inner">
     <div class="launcher-header">
       <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shots</button>
-      <h1 class="launcher-title"><span class="logo-mark">CV</span>Cine Vlogs</h1>
-      <p class="launcher-subhead">Create A New Cine Vlog or Browse Previous Cine Vlogs</p>
+      <h1 class="launcher-title"><span class="logo-mark" id="cvLauncherMark">CV</span><span id="cvLauncherTitle">Cine Vlogs</span></h1>
+      <p class="launcher-subhead" id="cvLauncherSubhead">Create A New Cine Vlog or Browse Previous Cine Vlogs</p>
     </div>
     <div class="launcher-grid" id="cvLauncherGrid"></div>
   </div>
@@ -1720,7 +1721,13 @@ function toggleEffectsFullscreen(){
 }
 
 /* ================= CINE VLOGS ================= */
-const CV_COLLECTION = 'cineVlogs';
+// The Cine Vlogs and Creative Outreach Movie tabs share one UI; each mode keeps its own Firestore collection.
+const CV_MODES = {
+  cine:     { collection:'cineVlogs',              singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId' },
+  outreach: { collection:'creativeOutreachMovies', singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId' },
+};
+let cvMode = 'cine';
+function cvM(){ return CV_MODES[cvMode]; }
 const CV_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>';
 const CV_PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 const CV_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline class="shot-done-check-path" points="4 12.5 9.5 18 20 5"></polyline></svg>';
@@ -2137,24 +2144,60 @@ function outlineInit(){
 
 async function cvFetchLibrary(){
   try{
-    const snap = await getDocs(collection(db, CV_COLLECTION));
+    const snap = await getDocs(collection(db, cvM().collection));
     return snap.docs.map(d=> ({ id: d.id, ...d.data() }));
   }catch(e){
-    console.error('Failed to load Cine Vlogs from Firebase:', e);
-    await lcAlert('Connection error', 'Could not load Cine Vlogs from the database. Check your connection and try again.');
+    console.error('Failed to load ' + cvM().plural + ' from Firebase:', e);
+    await lcAlert('Connection error', 'Could not load ' + cvM().plural + ' from the database. Check your connection and try again.');
     return [];
   }
 }
 async function cvSaveRecord(rec){
   try{
-    await updateDoc(doc(db, CV_COLLECTION, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, locations: rec.locations || [], outlineText: rec.outlineText || '', ideasText: rec.ideasText || '', completed: !!rec.completed });
+    await updateDoc(doc(db, cvM().collection, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, locations: rec.locations || [], outlineText: rec.outlineText || '', ideasText: rec.ideasText || '', completed: !!rec.completed });
   }catch(e){
-    console.error('Failed to save Cine Vlog to Firebase:', e);
+    console.error('Failed to save ' + cvM().singular + ' to Firebase:', e);
     await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
   }
 }
 let cvLibrary = [];
 let cvActiveId = null;
+let cvCurrentTab = 'cine';
+// Stashed library/active record for whichever mode is not currently showing.
+const cvStash = { cine:{library:[], activeId:null}, outreach:{library:[], activeId:null} };
+const cvLoaded = { cine:false, outreach:false };
+const cvLoading = { cine:false, outreach:false };
+
+function cvApplyModeLabels(){
+  const m = cvM();
+  document.getElementById('cvLauncherMark').textContent = m.mark;
+  document.getElementById('cvLauncherTitle').textContent = m.plural;
+  document.getElementById('cvLauncherSubhead').textContent = 'Create A New ' + m.singular + ' or Browse Previous ' + m.plural;
+  document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + esc(m.plural);
+}
+function cvSetMode(mode){
+  if(mode===cvMode) return;
+  cvStash[cvMode] = { library: cvLibrary, activeId: cvActiveId };
+  cvMode = mode;
+  cvLibrary = cvStash[mode].library;
+  cvActiveId = cvStash[mode].activeId;
+  outlineDirty = false; outlineSetMode('view');
+  ideasDirty = false; ideasSetMode('view');
+  cvApplyModeLabels();
+}
+async function cvLoadMode(mode){
+  if(cvLoaded[mode] || cvLoading[mode] || mode!==cvMode) return;
+  cvLoading[mode] = true;
+  const lib = await cvFetchLibrary();
+  cvLoading[mode] = false;
+  cvLoaded[mode] = true;
+  let savedId = null;
+  try{ savedId = localStorage.getItem(CV_MODES[mode].storageKey); }catch(e){}
+  const activeId = savedId && lib.some(r=> r.id===savedId) ? savedId : null;
+  if(mode===cvMode){ cvLibrary = lib; cvActiveId = activeId; }
+  else cvStash[mode] = { library: lib, activeId };
+  if(cvCurrentTab===mode) switchTab(mode);
+}
 
 function cvUid(){ return 'shot_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function cvFmtDate(ts){ try{ return new Date(ts).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}); }catch(e){ return ''; } }
@@ -2211,23 +2254,25 @@ function cvSectionRowHtml(row){
 
 function cvRenderLauncher(){
   const grid = document.getElementById('cvLauncherGrid');
-  let html = '<button type="button" class="launcher-card new" id="cvCreateBtn"><span class="plus">+</span><span class="label">Create New Cine Vlog</span></button>';
+  if(!cvLoaded[cvMode]){ grid.innerHTML = ''; return; }
+  const m = cvM();
+  let html = '<button type="button" class="launcher-card new" id="cvCreateBtn"><span class="plus">+</span><span class="label">Create New ' + esc(m.singular) + '</span></button>';
   const sorted = cvLibrary.slice().sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
   if(!sorted.length){
-    html += '<div class="launcher-empty">No Cine Vlogs saved yet - create your first one to get started.</div>';
+    html += '<div class="launcher-empty">No ' + esc(m.plural) + ' saved yet - create your first one to get started.</div>';
   }
   sorted.forEach(rec=>{
     const count = (rec.shots||[]).length;
     const done = !!rec.completed;
     html += '<div class="launcher-card' + (done ? ' is-complete' : '') + '" data-cv-id="' + escAttr(rec.id) + '">'
       + '<button type="button" class="lc-complete-btn' + (done ? ' is-complete' : '') + '" data-complete-id="' + escAttr(rec.id) + '" title="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-label="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
-      + '<h3 class="lc-name">' + esc(rec.name || 'Untitled Cine Vlog') + '</h3>'
+      + '<h3 class="lc-name">' + esc(rec.name || 'Untitled ' + m.singular) + '</h3>'
       + '<p class="lc-meta">Updated ' + cvFmtDate(rec.updatedAt) + ' · ' + count + ' shot' + (count===1?'':'s') + '</p>'
       + '<div class="lc-footer">'
         + (done ? '<span class="lc-complete-badge">' + CV_CHECK_SVG + 'Completed</span>' : '<span></span>')
         + '<div class="lc-actions">'
-          + '<button type="button" class="lc-icon-btn lc-rename" data-rename-id="' + escAttr(rec.id) + '" title="Rename this Cine Vlog" aria-label="Rename">' + CV_PENCIL_SVG + '</button>'
-          + '<button type="button" class="lc-icon-btn lc-delete" data-delete-id="' + escAttr(rec.id) + '" title="Delete this Cine Vlog" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
+          + '<button type="button" class="lc-icon-btn lc-rename" data-rename-id="' + escAttr(rec.id) + '" title="Rename this ' + escAttr(m.singular) + '" aria-label="Rename">' + CV_PENCIL_SVG + '</button>'
+          + '<button type="button" class="lc-icon-btn lc-delete" data-delete-id="' + escAttr(rec.id) + '" title="Delete this ' + escAttr(m.singular) + '" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
         + '</div>'
       + '</div>'
     + '</div>';
@@ -2248,26 +2293,27 @@ function cvRenderLauncher(){
 }
 
 async function cvCreate(){
-  const name = await lcPrompt('Create Cine Vlog', 'Untitled Cine Vlog', {
-    message: 'Give this Cine Vlog a name.', confirmText: 'Create'
+  const m = cvM();
+  const name = await lcPrompt('Create ' + m.singular, 'Untitled ' + m.singular, {
+    message: 'Give this ' + m.singular + ' a name.', confirmText: 'Create'
   });
   if(name === null) return;
-  const rec = { name: name || 'Untitled Cine Vlog', updatedAt: Date.now(), shots: [], locations: [], outlineText: '', ideasText: '' };
+  const rec = { name: name || 'Untitled ' + m.singular, updatedAt: Date.now(), shots: [], locations: [], outlineText: '', ideasText: '' };
   try{
-    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    const ref = await addDoc(collection(db, m.collection), rec);
     rec.id = ref.id;
     cvLibrary.push(rec);
     cvOpen(rec.id);
   }catch(e){
-    console.error('Failed to create Cine Vlog:', e);
-    await lcAlert('Connection error', 'Could not create this Cine Vlog. Check your connection and try again.');
+    console.error('Failed to create ' + m.singular + ':', e);
+    await lcAlert('Connection error', 'Could not create this ' + m.singular + '. Check your connection and try again.');
   }
 }
 async function cvRename(id){
   const rec = cvLibrary.find(r=> r.id===id);
   if(!rec) return;
-  const name = await lcPrompt('Rename Cine Vlog', rec.name || '', {
-    message: 'Choose a new name for this Cine Vlog.', confirmText: 'Save'
+  const name = await lcPrompt('Rename ' + cvM().singular, rec.name || '', {
+    message: 'Choose a new name for this ' + cvM().singular + '.', confirmText: 'Save'
   });
   if(name === null) return;
   rec.name = name || rec.name;
@@ -2286,15 +2332,16 @@ async function cvToggleComplete(id){
 async function cvDelete(id){
   const rec = cvLibrary.find(r=> r.id===id);
   if(!rec) return;
-  const ok = await lcConfirm('Delete this Cine Vlog?', 'Delete "' + (rec.name||'Untitled Cine Vlog') + '"? This cannot be undone.', {
+  const m = cvM();
+  const ok = await lcConfirm('Delete this ' + m.singular + '?', 'Delete "' + (rec.name||'Untitled ' + m.singular) + '"? This cannot be undone.', {
     confirmText: 'Delete', danger: true
   });
   if(!ok) return;
   try{
-    await deleteDoc(doc(db, CV_COLLECTION, id));
+    await deleteDoc(doc(db, m.collection, id));
   }catch(e){
-    console.error('Failed to delete Cine Vlog:', e);
-    await lcAlert('Connection error', 'Could not delete this Cine Vlog. Check your connection and try again.');
+    console.error('Failed to delete ' + m.singular + ':', e);
+    await lcAlert('Connection error', 'Could not delete this ' + m.singular + '. Check your connection and try again.');
     return;
   }
   cvLibrary = cvLibrary.filter(r=> r.id!==id);
@@ -2306,7 +2353,7 @@ function cvOpen(id){
   const rec = cvLibrary.find(r=> r.id===id);
   if(!rec) return;
   cvActiveId = id;
-  try{ localStorage.setItem('lcActiveCvId', id); }catch(e){}
+  try{ localStorage.setItem(cvM().storageKey, id); }catch(e){}
   document.getElementById('cvLauncherOverlay').classList.remove('active');
   document.getElementById('cvDetailOverlay').classList.add('active');
   cvRenderDetail();
@@ -2315,13 +2362,13 @@ function cvBackToLauncher(){
   outlineAutoSaveIfDirty();
   ideasAutoSaveIfDirty();
   cvActiveId = null;
-  try{ localStorage.removeItem('lcActiveCvId'); }catch(e){}
+  try{ localStorage.removeItem(cvM().storageKey); }catch(e){}
   document.getElementById('cvDetailOverlay').classList.remove('active');
   document.getElementById('cvLauncherOverlay').classList.add('active');
   cvRenderLauncher();
 }
 
-// Every Cine Vlog has a permanent Thumbnail section pinned to the top of the shot table.
+// Every Cine Vlog / Creative Outreach Movie has a permanent Thumbnail section pinned to the top of the shot table.
 const CV_THUMBNAIL_SECTION = { id:'section-thumbnail', isSection:true, locked:true, title:'THUMBNAIL', color:'#E8731C' };
 function cvEnsureThumbnailSection(rec){
   const idx = rec.shots.findIndex(s=> s.id===CV_THUMBNAIL_SECTION.id);
@@ -2335,7 +2382,7 @@ function cvRenderDetail(){
   const rec = cvLibrary.find(r=> r.id===cvActiveId);
   if(!rec) return;
   if(cvEnsureThumbnailSection(rec)) cvSaveRecord(rec);
-  document.getElementById('cvDetailTitle').textContent = rec.name || 'Untitled Cine Vlog';
+  document.getElementById('cvDetailTitle').textContent = rec.name || 'Untitled ' + cvM().singular;
   const ideasTa = document.getElementById('ideasTextarea');
   ideasTa.value = ideasGetText(rec);
   ideasDirty = false;
@@ -2751,7 +2798,7 @@ async function cvMarkAllRows(done){
   if(!rows.length) return;
   const ok = await lcConfirm(
     done ? 'Mark all shots as done?' : 'Unmark all shots?',
-    done ? 'This will tick every shot row in this Cine Vlog as done.' : 'This will clear the done tick on every shot row in this Cine Vlog.',
+    done ? 'This will tick every shot row in this ' + cvM().singular + ' as done.' : 'This will clear the done tick on every shot row in this ' + cvM().singular + '.',
     { confirmText: done ? 'Mark All Done' : 'Unmark All' }
   );
   if(!ok) return;
@@ -2844,7 +2891,10 @@ async function thumbsLoad(){
 
 /* ---------- tab switching ---------- */
 function switchTab(tab){
-  if(cvActiveId && tab!=='cine'){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
+  const isCv = tab==='cine' || tab==='outreach';
+  if(cvActiveId && tab!==cvMode){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
+  if(isCv) cvSetMode(tab);
+  cvCurrentTab = tab;
   try{ localStorage.setItem('lcActiveTab', tab); }catch(e){}
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
@@ -2853,12 +2903,13 @@ function switchTab(tab){
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
   if(tab==='thumbs') thumbsLoad();
-  const showLauncher = tab==='cine' && !cvActiveId;
-  const showDetail = tab==='cine' && !!cvActiveId;
+  const showLauncher = isCv && !cvActiveId;
+  const showDetail = isCv && !!cvActiveId;
   document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
   document.getElementById('cvDetailOverlay').classList.toggle('active', showDetail);
   if(showLauncher) cvRenderLauncher();
   if(showDetail) cvRenderDetail();
+  if(isCv) cvLoadMode(tab);
 }
 
 (async function init(){
@@ -2927,16 +2978,10 @@ function switchTab(tab){
   outlineInit();
   ideasInit();
 
-  let savedTab = null, savedCvId = null;
-  try{ savedTab = localStorage.getItem('lcActiveTab'); savedCvId = localStorage.getItem('lcActiveCvId'); }catch(e){}
-  if(savedTab === 'library' || savedTab === 'sequences' || savedTab === 'styles' || savedTab === 'effects' || savedTab === 'thumbs') switchTab(savedTab);
-
-  cvLibrary = await cvFetchLibrary();
-  if(savedTab !== 'library' && savedTab !== 'sequences' && savedTab !== 'styles' && savedTab !== 'effects' && savedTab !== 'thumbs' && savedCvId && cvLibrary.some(r=> r.id===savedCvId)){
-    cvOpen(savedCvId);
-  }else{
-    cvRenderLauncher();
-  }
+  let savedTab = null;
+  try{ savedTab = localStorage.getItem('lcActiveTab'); }catch(e){}
+  const validTabs = ['outreach','cine','library','sequences','styles','effects','thumbs'];
+  switchTab(validTabs.includes(savedTab) ? savedTab : 'cine');
 })();
 </script>
 </body>
