@@ -15,6 +15,9 @@
 </script>
 <title>All Shot Types - Reference Library</title>
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400&display=swap" rel="stylesheet">
 <style id="app-styles">
 :root{
   --paper:#FFFFFF; --paper-raised:#FFFFFF; --paper-tab:#FFFFFF;
@@ -335,86 +338,190 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   color:var(--bespoke-dark); margin:0 0 6px;
 }
 /* ---------- physical good page (Creative Outreach -> prospect -> Physical Good) ---------- */
-.pg-inner{max-width:1240px; margin:0 auto;}
-.pg-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; font-size:12.5px; color:var(--ink-soft);}
+#pgDetailOverlay .cv-detail-scroll{background:#F6F8F7; padding:28px 24px 64px;}
+.pg-inner{max-width:1120px; margin:0 auto; display:flex; flex-direction:column; gap:28px;}
+.pg-k{font-family:var(--font-display); font-weight:800; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 6px;}
 .pg-pill{
-  display:inline-flex; align-items:center; gap:4px; font-family:var(--font-display); font-weight:700; font-size:10.5px;
-  letter-spacing:.04em; text-transform:uppercase; border-radius:20px; padding:3px 9px; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:5px; font-family:var(--font-display); font-weight:700; font-size:11px;
+  letter-spacing:.03em; border-radius:999px; padding:4px 10px; white-space:nowrap; line-height:1.2;
   background:var(--mimeo-ink); color:var(--bespoke-dark);
 }
-.pg-pill.is-original{background:#EFE7F8; color:#5E3FA0;}
-.pg-pill.is-warn{background:#FBEEE0; color:var(--warn);}
-.pg-pill.is-plain{background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);}
-.pg-lead{
-  display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;
-  background:var(--bespoke-bg); border:1px solid #CBE6D6; border-left:4px solid var(--bespoke); border-radius:12px;
-  padding:14px 18px; margin-bottom:20px;
+.pg-pill svg{width:13px; height:13px;}
+.pg-pill.is-original{background:#EFE9FB; color:#5B3DA6;}
+.pg-pill.is-warn{background:#FCEFE2; color:#9A5512;}
+.pg-pill.is-plain{background:#fff; color:var(--ink-soft); border:1px solid var(--line);}
+
+/* status colours, shared by the tab dots, the hero and the status control */
+.s-idea{--st:#7A847E; --st-bg:#EEF1EF;}
+.s-approved{--st:#2B6CB0; --st-bg:#E6F0FA;}
+.s-ordered{--st:#B4691A; --st-bg:#FCF1E4;}
+.s-sent{--st:#7C5CBF; --st-bg:#F0EBFA;}
+.s-delivered{--st:#1E6B45; --st-bg:#E3F3EA;}
+.s-off{--st:#A0443F; --st-bg:#FBEAE9;}
+.pg-status-tag{display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--st); background:var(--st-bg); border-radius:999px; padding:3px 10px 3px 8px; white-space:nowrap;}
+.pg-status-tag:before{content:''; width:7px; height:7px; border-radius:50%; background:var(--st);}
+
+/* hero */
+.pg-hero{
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:20px; align-items:stretch;
 }
-.pg-lead-label{font-family:var(--font-display); font-weight:700; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--bespoke);}
-.pg-lead-pick{font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--ink); margin:2px 0 4px;}
-.pg-lead-reason{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0; white-space:pre-wrap;}
-.pg-lead-body{flex:1 1 320px; min-width:0;}
-.pg-tiers{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:26px; align-items:start;}
-.pg-tier{
-  position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
-  display:flex; flex-direction:column; overflow:hidden; min-width:0;
+.pg-hero-main{padding:6px 2px;}
+.pg-hero-title{font-family:var(--font-display); font-weight:800; font-size:clamp(26px, 4vw, 36px); letter-spacing:-.02em; line-height:1.1; color:var(--ink); margin:2px 0 8px;}
+.pg-hero-sub{font-size:15px; color:var(--ink); margin:0;}
+.pg-hero-loc{font-size:13.5px; color:var(--ink-soft); margin:3px 0 14px;}
+.pg-chips{display:flex; gap:8px; flex-wrap:wrap;}
+.pg-hero-lead{
+  position:relative; background:linear-gradient(155deg, #1E6B45, #123D28); color:#fff; border-radius:18px;
+  padding:20px 22px; box-shadow:0 18px 40px -22px rgba(18,61,40,.7); display:flex; flex-direction:column; gap:6px;
 }
-.pg-tier.is-lead{border-color:var(--bespoke); box-shadow:0 0 0 2px rgba(30,107,69,.18), var(--shadow);}
-.pg-tier-band{
-  display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 16px;
-  background:var(--paper); border-bottom:1px solid var(--line);
+.pg-hero-lead .pg-k{color:rgba(255,255,255,.72);}
+.pg-hero-lead-name{font-family:var(--font-display); font-weight:800; font-size:21px; line-height:1.2; letter-spacing:-.01em;}
+.pg-hero-lead-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13px; color:rgba(255,255,255,.85);}
+.pg-hero-lead .pg-status-tag{background:rgba(255,255,255,.14); color:#fff;}
+.pg-hero-lead .pg-status-tag:before{background:#9FE0BC;}
+.pg-hero-lead details{margin-top:6px;}
+.pg-hero-lead summary{cursor:pointer; font-size:12.5px; font-weight:700; color:#CFEFDC; list-style:none; display:inline-flex; align-items:center; gap:6px;}
+.pg-hero-lead summary::-webkit-details-marker{display:none;}
+.pg-hero-lead summary:after{content:'+'; font-size:14px; line-height:1;}
+.pg-hero-lead details[open] summary:after{content:'\2013';}
+.pg-hero-lead details p{font-size:13.5px; line-height:1.6; color:rgba(255,255,255,.9); margin:8px 0 0;}
+.pg-hero-lead-btn{
+  align-self:flex-start; margin-top:4px; font-family:var(--font-body); font-size:12px; font-weight:700; color:#123D28;
+  background:#fff; border:none; border-radius:999px; padding:6px 12px; cursor:pointer;
 }
-.pg-tier.is-lead .pg-tier-band{background:var(--bespoke-bg);}
-.pg-tier-label{font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft);}
-.pg-tier-body{padding:16px 16px 18px; display:flex; flex-direction:column; gap:14px;}
-.pg-tier-name{font-family:var(--font-display); font-weight:800; font-size:18px; line-height:1.25; color:var(--ink); margin:0; overflow-wrap:break-word;}
-.pg-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
-.pg-facts{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
-.pg-fact{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-width:0;}
-.pg-fact-k{font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);}
-.pg-fact-v{font-size:13px; font-weight:600; color:var(--ink); margin-top:2px; overflow-wrap:break-word;}
-.pg-status{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-soft);}
-.pg-status select{
-  font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:5px 8px; border-radius:8px;
-  border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink); cursor:pointer;
+.pg-hero-lead-btn:hover{background:#E6F4EC;}
+
+/* the three picks as tabs */
+.pg-tabs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;}
+.pg-tab{
+  position:relative; text-align:left; font-family:inherit; cursor:pointer; background:#fff; border:1px solid var(--line);
+  border-radius:14px; padding:14px 16px 14px; display:flex; flex-direction:column; gap:6px; box-shadow:var(--shadow);
+  transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
-.pg-sec-k{font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--bespoke); margin:0 0 4px;}
-.pg-sec-v{font-size:13.5px; line-height:1.6; color:var(--ink); margin:0; white-space:pre-wrap; overflow-wrap:break-word;}
-.pg-sec-empty{font-size:13px; color:var(--ink-faint); font-style:italic; margin:0;}
-.pg-note{
-  position:relative; background:#FBF7EC; border:1px solid #EADFC4; border-radius:10px; padding:12px 14px 12px;
-  font-size:14px; line-height:1.6; color:#3E3523; white-space:pre-wrap; overflow-wrap:break-word;
+.pg-tab:hover{border-color:var(--line-strong); transform:translateY(-1px);}
+.pg-tab.is-active{border-color:var(--bespoke); box-shadow:0 0 0 3px rgba(30,107,69,.14), var(--shadow);}
+.pg-tab.is-active:after{
+  content:''; position:absolute; left:50%; bottom:-8px; width:14px; height:14px; background:#fff; transform:translateX(-50%) rotate(45deg);
+  border-right:1px solid var(--bespoke); border-bottom:1px solid var(--bespoke);
 }
-.pg-note-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;}
-.pg-note-count{font-size:11px; color:var(--ink-faint);}
+.pg-tab-top{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+.pg-tab-price{font-family:var(--font-display); font-weight:800; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+.pg-tab-star{font-size:11px; font-weight:800; color:var(--bespoke); white-space:nowrap;}
+.pg-tab-name{font-family:var(--font-display); font-weight:800; font-size:15.5px; line-height:1.25; color:var(--ink);}
+.pg-tab.is-empty .pg-tab-name{color:var(--ink-faint); font-weight:600; font-style:italic;}
+.pg-tab-meta{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft);}
+.pg-tab-size{display:inline-flex; align-items:center; gap:6px;}
+.pg-tab-size svg{width:16px; height:16px; color:var(--bespoke);}
+
+/* one pick, open */
+.pg-pick{background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); overflow:hidden;}
+.pg-pick-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; padding:22px 26px 18px; border-bottom:1px solid var(--line);}
+.pg-pick-name{font-family:var(--font-display); font-weight:800; font-size:clamp(20px, 2.6vw, 26px); letter-spacing:-.015em; line-height:1.2; color:var(--ink); margin:10px 0 0;}
+.pg-tags{display:flex; gap:6px; flex-wrap:wrap;}
+.pg-status-ctl{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+.pg-status-ctl select{
+  appearance:none; -webkit-appearance:none; font-family:var(--font-body); font-size:13px; font-weight:700; letter-spacing:0; text-transform:none;
+  color:var(--st); background:var(--st-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235B6560' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 11px center / 10px 6px;
+  border:1px solid transparent; border-radius:999px; padding:7px 30px 7px 14px; cursor:pointer;
+}
+.pg-status-ctl select:focus{outline:none; border-color:var(--st); box-shadow:0 0 0 3px var(--st-bg);}
+.pg-pick-grid{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);}
+.pg-pick-story{padding:22px 26px 6px; display:flex; flex-direction:column; gap:20px; min-width:0;}
+.pg-pick-rail{padding:22px 24px; background:#FAFBFA; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:18px; min-width:0;}
+.pg-lede{font-size:16px; line-height:1.65; color:var(--ink); margin:0; max-width:68ch;}
+.pg-body{font-size:14.5px; line-height:1.7; color:var(--ink); margin:0; max-width:68ch; white-space:pre-wrap; overflow-wrap:break-word;}
+.pg-why-them{border-left:3px solid var(--mimeo); padding-left:16px;}
+.pg-size-card{display:flex; gap:14px; align-items:flex-start; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 16px;}
+.pg-size-icon{flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--mimeo-ink); color:var(--bespoke); display:flex; align-items:center; justify-content:center;}
+.pg-size-icon svg{width:22px; height:22px;}
+.pg-size-def{font-size:12.5px; color:var(--ink-faint); margin:6px 0 0; line-height:1.5;}
+.pg-stat-v{font-family:var(--font-display); font-weight:800; font-size:22px; letter-spacing:-.01em; color:var(--ink); line-height:1.2;}
+.pg-stat-sub{font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin-top:3px;}
+.pg-rail-text{font-size:13.5px; line-height:1.6; color:var(--ink); margin:0; white-space:pre-wrap; overflow-wrap:break-word;}
+.pg-risk{background:#FDF5EC; border:1px solid #F1DEC6; border-radius:12px; padding:12px 14px;}
+.pg-risk .pg-k{color:#9A5512;}
+.pg-risk p{font-size:13.5px; line-height:1.6; color:#5E3A12; margin:0;}
+
+/* the handwritten inside note */
+.pg-note-wrap{padding:6px 26px 24px;}
+.pg-note-bar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
+.pg-note-bar .pg-k{margin:0;}
+.pg-note-tools{display:flex; align-items:center; gap:10px;}
+.pg-note-count{font-size:12px; color:var(--ink-faint);}
 .pg-note-count.is-over{color:var(--warn); font-weight:700;}
-.pg-risk{background:#FDF5EC; border:1px solid #F1DEC6; border-radius:10px; padding:10px 12px;}
-.pg-risk .pg-sec-k{color:var(--warn);}
-.pg-tier-empty{font-size:13px; color:var(--ink-faint); line-height:1.6; margin:0;}
-.pg-size-why{font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin:6px 0 0;}
-.pg-send{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:22px; align-items:start;}
-.pg-panel{background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px; min-width:0;}
-.pg-panel-title{font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--ink); margin:0;}
-.pg-msg{border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--paper);}
-.pg-msg-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;}
-.pg-msg-subject{font-size:12.5px; font-weight:700; color:var(--ink); margin:0 0 4px;}
-.pg-checklist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
-.pg-checklist label{display:flex; gap:10px; align-items:flex-start; cursor:pointer;}
-.pg-checklist input{margin-top:3px; width:16px; height:16px; accent-color:var(--bespoke); flex:0 0 auto; cursor:pointer;}
-.pg-checklist .pg-ck-h{font-size:13px; font-weight:700; color:var(--ink);}
-.pg-checklist .pg-ck-b{font-size:12.5px; line-height:1.5; color:var(--ink-soft);}
+.pg-handnote{
+  position:relative; margin:0; padding:22px 26px 22px 30px; border-radius:6px 14px 14px 6px;
+  background:#FFFCF3 repeating-linear-gradient(180deg, transparent 0, transparent 31px, rgba(124,152,199,.18) 31px, rgba(124,152,199,.18) 32px);
+  border:1px solid #EFE4C8; border-left:4px solid #E8B4A8; box-shadow:0 10px 24px -18px rgba(70,50,10,.45);
+  font-family:'Kalam', 'Segoe Print', 'Bradley Hand', cursive; font-size:20px; line-height:32px; color:#26324A; white-space:pre-wrap;
+}
+.pg-also{display:flex; gap:12px; align-items:baseline; padding:14px 26px 18px; border-top:1px dashed var(--line); background:#FCFCFB;}
+.pg-also .pg-k{margin:0; flex:0 0 auto;}
+.pg-also p{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0;}
+.pg-pick-empty{padding:40px 26px; text-align:center; color:var(--ink-faint); font-size:14px;}
+
+/* sections below the picks */
+.pg-section-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:0 0 12px;}
+.pg-section-title{font-family:var(--font-display); font-weight:800; font-size:18px; letter-spacing:-.01em; color:var(--ink); margin:0;}
+.pg-section-sub{font-size:13px; color:var(--ink-soft); margin:0;}
+.pg-card{background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:20px 22px;}
+.pg-send-grid{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:16px; align-items:start;}
+.pg-timeline{list-style:none; margin:0; padding:0; position:relative;}
+.pg-timeline li{position:relative; display:grid; grid-template-columns:32px minmax(0,1fr); gap:14px; padding-bottom:20px;}
+.pg-timeline li:last-child{padding-bottom:0;}
+.pg-timeline li:not(:last-child):before{content:''; position:absolute; left:15px; top:32px; bottom:0; width:2px; background:var(--line);}
+.pg-step-dot{
+  width:32px; height:32px; border-radius:50%; background:var(--mimeo-ink); color:var(--bespoke-dark); display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:800; font-size:13px; position:relative; z-index:1;
+}
+.pg-step-title{font-family:var(--font-display); font-weight:800; font-size:14.5px; color:var(--ink); margin:5px 0 8px; display:flex; align-items:center; gap:8px;}
+.pg-opt{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--paper); border:1px solid var(--line); border-radius:999px; padding:1px 7px;}
+.pg-ship{font-size:14px; color:var(--ink); margin:0 0 4px;}
+.pg-ship-why{font-size:13px; line-height:1.6; color:var(--ink-soft); margin:0;}
+.pg-msg{border:1px solid var(--line); border-radius:12px; background:var(--paper); overflow:hidden;}
+.pg-msg-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 14px; border-bottom:1px solid var(--line); background:#fff;}
+.pg-msg-subject{font-size:13px; color:var(--ink); margin:0; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.pg-msg-subject span{color:var(--ink-faint); font-weight:600; margin-right:6px;}
+.pg-msg-body{font-size:14px; line-height:1.65; color:var(--ink); margin:0; padding:12px 14px; white-space:pre-wrap;}
+.pg-progress{height:6px; background:var(--line); border-radius:999px; overflow:hidden; margin:4px 0 16px;}
+.pg-progress span{display:block; height:100%; background:var(--bespoke); border-radius:999px; transition:width .25s ease;}
+.pg-checklist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px;}
+.pg-checklist label{display:flex; gap:12px; align-items:flex-start; cursor:pointer; padding:8px 8px; border-radius:10px;}
+.pg-checklist label:hover{background:var(--paper);}
+.pg-checklist input{margin-top:2px; width:17px; height:17px; accent-color:var(--bespoke); flex:0 0 auto; cursor:pointer;}
+.pg-ck-h{display:block; font-size:13.5px; font-weight:700; color:var(--ink);}
+.pg-ck-b{display:block; font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin-top:1px;}
 .pg-checklist .is-done .pg-ck-h{color:var(--ink-faint); text-decoration:line-through;}
-.pg-research details{border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); box-shadow:var(--shadow); margin-bottom:10px;}
-.pg-research summary{cursor:pointer; padding:12px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink);}
-.pg-research ul{margin:0; padding:0 16px 14px 34px;}
-.pg-research li{font-size:13px; line-height:1.55; color:var(--ink); margin:6px 0;}
-.pg-research .pg-src{color:var(--ink-faint); font-size:12px;}
-.pg-research .pg-prompt{font-weight:700; color:var(--ink-soft);}
-.pg-foot{font-size:12px; color:var(--ink-faint); margin:8px 0 0;}
+.pg-checklist .is-done .pg-ck-b{display:none;}
+.pg-signals{font-size:15.5px; line-height:1.7; color:var(--ink); margin:0; max-width:80ch;}
+.pg-research-groups{display:flex; flex-direction:column; gap:8px; margin-top:16px;}
+.pg-research-groups details{border:1px solid var(--line); border-radius:12px; background:var(--paper);}
+.pg-research-groups summary{cursor:pointer; padding:11px 14px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); display:flex; justify-content:space-between;}
+.pg-research-groups summary span{color:var(--ink-faint); font-weight:600;}
+.pg-research-groups ul{margin:0; padding:0 16px 14px 32px;}
+.pg-research-groups li{font-size:13.5px; line-height:1.6; color:var(--ink); margin:8px 0;}
+.pg-src{color:var(--ink-faint); font-size:12px;}
+.pg-prompt{font-weight:700; color:var(--ink-soft);}
+.pg-notes-view{font-size:14.5px; line-height:1.7; color:var(--ink); white-space:pre-wrap; margin:0;}
+.pg-notes-empty{font-size:14px; color:var(--ink-faint); font-style:italic; margin:0;}
+.pg-foot{font-size:12px; color:var(--ink-faint); margin:0; text-align:center;}
 .pg-foot code{font-family:var(--font-mono); font-size:11.5px;}
+
+@media (max-width:860px){
+  .pg-hero, .pg-pick-grid, .pg-send-grid{grid-template-columns:1fr;}
+  .pg-pick-rail{border-left:none; border-top:1px solid var(--line);}
+  .pg-tabs{grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(220px, 78%); overflow-x:auto; padding-bottom:10px; scroll-snap-type:x mandatory;}
+  .pg-tab{scroll-snap-align:start;}
+  .pg-tab.is-active:after{display:none;}
+}
 @media (max-width:600px){
-  .pg-tiers{grid-template-columns:1fr;}
-  .pg-lead{padding:12px 14px;}
+  #pgDetailOverlay .cv-detail-scroll{padding:18px 16px 48px;}
+  .pg-inner{gap:22px;}
+  .pg-pick-head, .pg-pick-story, .pg-note-wrap, .pg-also{padding-left:18px; padding-right:18px;}
+  .pg-pick-rail{padding:18px;}
+  .pg-handnote{font-size:18px; padding:18px 18px 18px 22px;}
+  .pg-card{padding:16px;}
+  .pg-also{flex-direction:column; gap:4px;}
 }
 .launcher-card .lc-soon-badge{
   display:inline-flex; align-items:center; font-family:var(--font-display); font-weight:700; font-size:10.5px;
@@ -2985,6 +3092,8 @@ function pgOpen(id){
   pgActiveId = id;
   try{ localStorage.setItem(PG_ACTIVE_KEY, id); }catch(e){}
   pgEditing = null;
+  pgNotesDraft = null;
+  pgTab = null;
   pgRender();
 }
 async function pgBack(){
@@ -2995,193 +3104,285 @@ async function pgBack(){
   else coBackToProspects();
 }
 
-function pgText(v, empty){
-  return v && String(v).trim() ? '<p class="pg-sec-v">' + esc(String(v).trim()) + '</p>' : '<p class="pg-sec-empty">' + esc(empty || 'Nothing yet.') + '</p>';
+// ---------- Physical Good page: rendering ----------
+// Layout: hero (who + lead pick) -> the three picks as tabs -> the open pick -> send plan + checklist
+// -> research -> notes. All clicks go through one delegated listener (pgBindBody), so re-rendering
+// never needs re-binding and an open Notes draft survives a tab switch or a status change.
+let pgTab = null;          // which price point is open
+let pgNotesDraft = null;   // unsaved Notes text while editing
+
+const PG_STATUS_CLASS = { 'Idea':'s-idea', 'Approved':'s-approved', 'Ordered':'s-ordered', 'Sent':'s-sent', 'Delivered':'s-delivered', 'Not sending':'s-off' };
+const PG_SIZE_ICONS = {
+  small:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"></rect><path d="M3.5 7l8.5 6 8.5-6"></path></svg>',
+  medium: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><path d="M4 7.5l8 4.5 8-4.5"></path><path d="M12 12v9"></path></svg>',
+  large:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="9" width="11" height="11" rx="1.5"></rect><rect x="13.5" y="4" width="8" height="16" rx="1.5"></rect><path d="M6 9V6.5h4V9"></path><path d="M2.5 14h11"></path></svg>',
+};
+
+function pgStatusTag(status){
+  const s = status || 'Idea';
+  return '<span class="pg-status-tag ' + (PG_STATUS_CLASS[s] || 's-idea') + '">' + esc(s) + '</span>';
 }
-function pgSection(title, v){
-  if(!v || !String(v).trim()) return '';
-  return '<div><p class="pg-sec-k">' + esc(title) + '</p>' + pgText(v) + '</div>';
+// "$25-40 (plus about $70-110 ...)" -> ["$25-40", "plus about $70-110 ..."]; "A; B" -> ["A", "B"].
+function pgSplit(v){
+  const s = String(v || '').trim();
+  const paren = s.match(/^([^()]+?)\s*\((.+)\)\s*$/);
+  if(paren) return [paren[1].trim(), paren[2].trim()];
+  const semi = s.indexOf('; ');
+  if(semi > 0) return [s.slice(0, semi).trim(), s.slice(semi + 2).trim()];
+  return [s, ''];
+}
+// The skill often opens sizeWhy with "Small:" or "Large on purpose:"; the heading already says it.
+function pgSizeWhy(t){
+  return String(t.sizeWhy || '').trim().replace(/^(small|medium|large)\b[^:.]{0,30}:\s*/i, '').replace(/^./, c=> c.toUpperCase());
+}
+function pgFirstTier(pg){
+  if(pg.leadTier && pg.tiers && pg.tiers[pg.leadTier] && pg.tiers[pg.leadTier].name) return pg.leadTier;
+  const t = PG_TIERS.find(t=> pg.tiers && pg.tiers[t.key] && pg.tiers[t.key].name);
+  return t ? t.key : 'low';
 }
 
-// Read-only: the picks come from the skill. Only the status is set here.
-function pgTierHtml(pg, t){
-  const tier = (pg.tiers && pg.tiers[t.key]) || {};
-  const isLead = pg.leadTier===t.key;
-  const band = '<div class="pg-tier-band"><span class="pg-tier-label">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
-    + (isLead ? '<span class="pg-pill">&#9733; Lead</span>' : '') + '</div>';
-  if(!tier.name){
-    return '<div class="pg-tier">' + band + '<div class="pg-tier-body"><p class="pg-tier-empty">No pick at this price.</p></div></div>';
+function pgHeroHtml(pg){
+  const [who, where] = pgSplit(pg.contact);
+  const lead = pg.tiers && pg.tiers[pg.leadTier];
+  let html = '<section class="pg-hero"><div class="pg-hero-main">'
+    + '<p class="pg-k">Prospect</p>'
+    + '<h1 class="pg-hero-title">' + esc(pg.company || pg.name || 'Untitled') + '</h1>'
+    + (who ? '<p class="pg-hero-sub">' + esc(who) + '</p>' : '')
+    + (where ? '<p class="pg-hero-loc">' + esc(where) + '</p>' : '<div style="height:14px"></div>')
+    + '<div class="pg-chips">'
+      + (pg.stage ? '<span class="pg-pill is-plain">Stage: ' + esc(pg.stage) + '</span>' : '')
+      + '<span class="pg-pill is-plain">' + (pg.sender ? 'Sent by ' + esc(pg.sender) : 'Lincko send') + '</span>'
+      + (pg.publishedAt ? '<span class="pg-pill is-plain">Published ' + esc(cvFmtDate(pg.publishedAt)) + '</span>' : '')
+    + '</div></div>';
+  if(lead && lead.name){
+    html += '<div class="pg-hero-lead">'
+      + '<p class="pg-k">&#9733; Lead with</p>'
+      + '<div class="pg-hero-lead-name">' + esc(lead.name) + '</div>'
+      + '<div class="pg-hero-lead-meta">' + esc(pgTierDef(pg.leadTier).label) + ' &middot; ' + esc(pgSplit(lead.cost)[0] || '') + ' ' + pgStatusTag(lead.status) + '</div>'
+      + (pg.leadReason ? '<details><summary>Why lead with this</summary><p>' + esc(pg.leadReason.trim()) + '</p></details>' : '')
+      + (pgTab!==pg.leadTier ? '<button type="button" class="pg-hero-lead-btn" data-pg-tab="' + escAttr(pg.leadTier) + '">Open this pick</button>' : '')
+    + '</div>';
   }
-  const words = pgWordCount(tier.insideNote);
-  const status = tier.status || 'Idea';
-  return '<div class="pg-tier' + (isLead?' is-lead':'') + '">' + band + '<div class="pg-tier-body">'
-    + '<div><h3 class="pg-tier-name">' + esc(tier.name) + '</h3><div class="pg-tags">'
-      + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original' : '">Catalog') + '</span>'
-      + (tier.size ? '<span class="pg-pill is-plain" title="' + escAttr(PG_SIZES[tier.size] || '') + '">' + esc(tier.size) + '</span>' : '')
-      + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit</span>' : '')
-    + '</div>'
-    + (tier.sizeWhy && tier.sizeWhy.trim() ? '<p class="pg-size-why"><b>Why ' + esc(tier.size || 'this size') + ':</b> ' + esc(tier.sizeWhy.trim()) + '</p>' : '')
-    + '</div>'
-    + '<div class="pg-facts">'
-      + '<div class="pg-fact"><div class="pg-fact-k">Cost</div><div class="pg-fact-v">' + esc(tier.cost || '-') + '</div></div>'
-      + '<div class="pg-fact"><div class="pg-fact-k">Lead time</div><div class="pg-fact-v">' + esc(tier.leadTime || '-') + '</div></div>'
-    + '</div>'
-    + '<label class="pg-status">Status <select data-pg-status="' + escAttr(t.key) + '">'
-      + PG_STATUSES.map(s=> '<option' + (s===status?' selected':'') + '>' + esc(s) + '</option>').join('')
-    + '</select></label>'
-    + pgSection('What it is', tier.what)
-    + pgSection('Why them', tier.whyThem)
-    + (tier.insideNote
-        ? '<div><div class="pg-note-head"><p class="pg-sec-k" style="margin:0;">Inside note</p>'
-            + '<span style="display:flex; align-items:center; gap:8px;"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' words</span>'
-            + '<button type="button" class="btn small" data-pg-copy="' + escAttr(t.key) + '">Copy</button></span></div>'
-            + '<div class="pg-note">' + esc(tier.insideNote.trim()) + '</div></div>'
-        : '')
-    + pgSection('Cost / sourcing', tier.sourcing)
-    + pgSection('Runner-up', tier.runnerUp)
-    + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-sec-k">Risk / gap</p><p class="pg-sec-v">' + esc(tier.riskGap.trim()) + '</p></div>' : '')
-  + '</div></div>';
+  return html + '</section>';
 }
 
-// The send plan for the lead pick (from the skill) beside the tool's package checklist (ticked here).
-function pgMsgHtml(label, msg){
-  const text = typeof msg==='string' ? msg : (msg && msg.text) || '';
-  const subject = typeof msg==='string' ? '' : (msg && msg.subject) || '';
-  if(!text.trim()) return '';
-  const full = (subject ? 'Subject: ' + subject + '\n\n' : '') + text.trim();
-  return '<div class="pg-msg"><div class="pg-msg-head"><p class="pg-sec-k" style="margin:0;">' + esc(label) + '</p>'
-      + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(full) + '">Copy</button></div>'
-    + (subject ? '<p class="pg-msg-subject">' + esc(subject) + '</p>' : '')
-    + '<p class="pg-sec-v">' + esc(text.trim()) + '</p></div>';
+function pgTabsHtml(pg){
+  return '<div class="pg-tabs" role="tablist" aria-label="Price points">' + PG_TIERS.map(t=>{
+    const tier = (pg.tiers && pg.tiers[t.key]) || {};
+    const active = pgTab===t.key;
+    if(!tier.name){
+      return '<button type="button" class="pg-tab is-empty' + (active?' is-active':'') + '" role="tab" aria-selected="' + active + '" data-pg-tab="' + t.key + '">'
+        + '<span class="pg-tab-top"><span class="pg-tab-price">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span></span>'
+        + '<span class="pg-tab-name">No pick at this price</span></button>';
+    }
+    return '<button type="button" class="pg-tab' + (active?' is-active':'') + '" role="tab" aria-selected="' + active + '" data-pg-tab="' + t.key + '">'
+      + '<span class="pg-tab-top"><span class="pg-tab-price">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
+        + (pg.leadTier===t.key ? '<span class="pg-tab-star">&#9733; Lead</span>' : '') + '</span>'
+      + '<span class="pg-tab-name">' + esc(tier.name) + '</span>'
+      + '<span class="pg-tab-meta"><span class="pg-tab-size">' + (PG_SIZE_ICONS[tier.size] || '') + esc((tier.size || '') + (tier.size ? ' · ' : '') + pgSplit(tier.cost)[0]) + '</span>'
+        + pgStatusTag(tier.status) + '</span>'
+    + '</button>';
+  }).join('') + '</div>';
+}
+
+function pgPickHtml(pg){
+  const t = pgTierDef(pgTab);
+  const tier = (pg.tiers && pg.tiers[pgTab]) || {};
+  if(!tier.name){
+    return '<article class="pg-pick"><div class="pg-pick-empty">No pick at ' + esc(t.label.toLowerCase()) + ' (' + esc(t.cap.toLowerCase()) + ') in this run.</div></article>';
+  }
+  const status = tier.status || 'Idea';
+  const [costMain, costSub] = pgSplit(tier.cost);
+  const [leadMain, leadSub] = pgSplit(tier.leadTime);
+  const words = pgWordCount(tier.insideNote);
+  const sizeWhy = pgSizeWhy(tier);
+  let html = '<article class="pg-pick" role="tabpanel">'
+    + '<header class="pg-pick-head"><div style="min-width:0;">'
+      + '<div class="pg-tags">'
+        + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original idea' : '">From the catalog') + '</span>'
+        + (tier.size ? '<span class="pg-pill is-plain">' + (PG_SIZE_ICONS[tier.size] || '') + esc(tier.size) + '</span>' : '')
+        + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit at this price</span>' : '')
+      + '</div>'
+      + '<h2 class="pg-pick-name">' + esc(tier.name) + '</h2></div>'
+      + '<label class="pg-status-ctl ' + (PG_STATUS_CLASS[status] || 's-idea') + '">Status <select data-pg-status="' + escAttr(pgTab) + '">'
+        + PG_STATUSES.map(s=> '<option' + (s===status?' selected':'') + '>' + esc(s) + '</option>').join('')
+      + '</select></label>'
+    + '</header>'
+    + '<div class="pg-pick-grid"><div class="pg-pick-story">'
+      + (tier.what ? '<section><p class="pg-k">What it is</p><p class="pg-lede">' + esc(tier.what.trim()) + '</p></section>' : '')
+      + (tier.whyThem ? '<section class="pg-why-them"><p class="pg-k">Why them</p><p class="pg-body">' + esc(tier.whyThem.trim()) + '</p></section>' : '')
+      + (tier.size ? '<section class="pg-size-card"><span class="pg-size-icon">' + (PG_SIZE_ICONS[tier.size] || '') + '</span><div>'
+          + '<p class="pg-k">Why ' + esc(tier.size) + '</p>'
+          + (sizeWhy ? '<p class="pg-body" style="font-size:14px;">' + esc(sizeWhy) + '</p>' : '')
+          + (PG_SIZES[tier.size] ? '<p class="pg-size-def">' + esc(tier.size.charAt(0).toUpperCase() + tier.size.slice(1)) + ' in the tool: ' + esc(PG_SIZES[tier.size]) + '</p>' : '')
+        + '</div></section>' : '')
+    + '</div><aside class="pg-pick-rail">'
+      + '<div><p class="pg-k">Cost</p><div class="pg-stat-v">' + esc(costMain || '-') + '</div>' + (costSub ? '<div class="pg-stat-sub">' + esc(costSub) + '</div>' : '') + '</div>'
+      + (tier.leadTime ? '<div><p class="pg-k">Lead time</p><p class="pg-rail-text" style="font-weight:700;">' + esc(leadMain) + '</p>' + (leadSub ? '<div class="pg-stat-sub">' + esc(leadSub) + '</div>' : '') + '</div>' : '')
+      + (tier.sourcing ? '<div><p class="pg-k">Where to get it</p><p class="pg-rail-text">' + esc(tier.sourcing.trim()) + '</p></div>' : '')
+      + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-k">Check before buying</p><p>' + esc(tier.riskGap.trim()) + '</p></div>' : '')
+    + '</aside></div>';
+  if(tier.insideNote){
+    html += '<section class="pg-note-wrap"><div class="pg-note-bar"><p class="pg-k">Inside note</p>'
+      + '<div class="pg-note-tools"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' / ' + PG_NOTE_WORDS + ' words</span>'
+      + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(tier.insideNote.trim()) + '">Copy</button></div></div>'
+      + '<blockquote class="pg-handnote">' + esc(tier.insideNote.trim()) + '</blockquote></section>';
+  }
+  if(tier.runnerUp){
+    html += '<footer class="pg-also"><p class="pg-k">Also considered</p><p>' + esc(tier.runnerUp.trim()) + '</p></footer>';
+  }
+  return html + '</article>';
+}
+
+function pgMsgHtml(subject, text){
+  if(!text || !String(text).trim()) return '';
+  const full = (subject ? 'Subject: ' + subject + '\n\n' : '') + String(text).trim();
+  return '<div class="pg-msg"><div class="pg-msg-head"><p class="pg-msg-subject">' + (subject ? '<span>Subject</span>' + esc(subject) : '<span>Post</span>') + '</p>'
+    + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(full) + '">Copy</button></div>'
+    + '<p class="pg-msg-body">' + esc(String(text).trim()) + '</p></div>';
 }
 function pgSendHtml(pg){
   const s = pg.send || {};
   const lead = pg.tiers && pg.tiers[pg.leadTier];
-  const hasPlan = !!(s.method || s.timing || (s.followup && s.followup.text));
   const ticks = pg.checklist || {};
   const done = PG_CHECKLIST.filter(c=> ticks[c.key]).length;
-  let plan = '<div class="pg-panel"><h3 class="pg-panel-title">Send plan' + (lead && lead.name ? ': ' + esc(lead.name) : '') + '</h3>';
-  if(hasPlan){
-    plan += '<div class="pg-facts">'
-        + '<div class="pg-fact"><div class="pg-fact-k">Method</div><div class="pg-fact-v">' + esc(PG_SEND_METHODS[s.method] || s.method || '-') + '</div></div>'
-        + '<div class="pg-fact"><div class="pg-fact-k">Timing</div><div class="pg-fact-v">' + esc(s.timing || '-') + '</div></div>'
-      + '</div>'
-      + (s.methodWhy ? '<p class="pg-sec-v" style="color:var(--ink-soft); font-size:12.5px;">' + esc(s.methodWhy) + '</p>' : '')
-      + pgMsgHtml('01 Before landing', s.beforeLanding)
-      + pgMsgHtml('04 Follow-up, once tracking shows delivered', s.followup)
-      + pgMsgHtml('03 Public posting', s.publicPosting);
-  } else {
-    plan += '<p class="pg-tier-empty">No send plan in this run. Runs from the updated skill include the method, timing and the messages around the send.</p>';
-  }
-  plan += '</div>';
-  const checklist = '<div class="pg-panel"><h3 class="pg-panel-title">Package checklist (' + done + ' of ' + PG_CHECKLIST.length + ')</h3><ul class="pg-checklist">'
-    + PG_CHECKLIST.map(c=> '<li' + (ticks[c.key] ? ' class="is-done"' : '') + '><label><input type="checkbox" data-pg-check="' + c.key + '"' + (ticks[c.key] ? ' checked' : '') + '>'
-        + '<span><span class="pg-ck-h">' + esc(c.h) + '</span><br><span class="pg-ck-b">' + esc(c.b) + '</span></span></label></li>').join('')
+  const bl = s.beforeLanding || {}, fu = s.followup || {};
+  let steps = '';
+  let n = 0;
+  if(bl.text) steps += '<li><span class="pg-step-dot">' + (++n) + '</span><div><h3 class="pg-step-title">Before it lands <span class="pg-opt">Optional</span></h3>' + pgMsgHtml(bl.subject, bl.text) + '</div></li>';
+  if(s.method || s.timing) steps += '<li><span class="pg-step-dot">' + (++n) + '</span><div><h3 class="pg-step-title">Ship it</h3>'
+      + '<p class="pg-ship"><b>' + esc(PG_SEND_METHODS[s.method] || s.method || '') + '</b>' + (s.timing ? ' &middot; ' + esc(s.timing) : '') + '</p>'
+      + (s.methodWhy ? '<p class="pg-ship-why">' + esc(s.methodWhy) + '</p>' : '') + '</div></li>';
+  if(fu.text) steps += '<li><span class="pg-step-dot">' + (++n) + '</span><div><h3 class="pg-step-title">Once tracking shows delivered</h3>' + pgMsgHtml(fu.subject, fu.text) + '</div></li>';
+  if(s.publicPosting) steps += '<li><span class="pg-step-dot">' + (++n) + '</span><div><h3 class="pg-step-title">Public post <span class="pg-opt">Optional</span></h3>' + pgMsgHtml('', s.publicPosting) + '</div></li>';
+  const plan = steps
+    ? '<ol class="pg-timeline">' + steps + '</ol>'
+    : '<p class="pg-notes-empty">No send plan in this run. Runs from the updated skill include the method, timing and the messages around the send.</p>';
+  const checklist = '<div class="pg-card"><div class="pg-section-head" style="margin-bottom:4px;"><h3 class="pg-step-title" style="margin:0;">Package checklist</h3><span class="pg-section-sub">' + done + ' of ' + PG_CHECKLIST.length + '</span></div>'
+    + '<div class="pg-progress"><span style="width:' + Math.round(done / PG_CHECKLIST.length * 100) + '%"></span></div>'
+    + '<ul class="pg-checklist">' + PG_CHECKLIST.map(c=> '<li' + (ticks[c.key] ? ' class="is-done"' : '') + '><label><input type="checkbox" data-pg-check="' + c.key + '"' + (ticks[c.key] ? ' checked' : '') + '>'
+        + '<span><span class="pg-ck-h">' + esc(c.h) + '</span><span class="pg-ck-b">' + esc(c.b) + '</span></span></label></li>').join('')
     + '</ul></div>';
-  return '<div class="pg-send">' + plan + checklist + '</div>';
+  return '<section><div class="pg-section-head"><h2 class="pg-section-title">Send plan</h2>'
+      + '<p class="pg-section-sub">' + (lead && lead.name ? 'For the lead pick: ' + esc(lead.name) : 'For the lead pick') + '</p></div>'
+    + '<div class="pg-send-grid"><div class="pg-card">' + plan + '</div>' + checklist + '</div></section>';
 }
 
 function pgResearchHtml(pg){
   const lines = Array.isArray(pg.research) ? pg.research : [];
-  if(!lines.length) return '';
-  let html = '<div class="outline-section pg-research"><div class="outline-head"><h2 class="outline-title">Research behind the picks</h2></div>';
-  PG_RESEARCH_GROUPS.forEach(g=>{
-    const rows = lines.filter(l=> l.group===g.key);
-    if(!rows.length) return;
-    html += '<details' + (g.key==='personal' ? ' open' : '') + '><summary>' + esc(g.label) + ' (' + rows.length + ')</summary><ul>'
-      + rows.map(l=> '<li><span class="pg-prompt">' + esc(PG_PROMPT_LABELS[l.prompt] || l.prompt || '') + ':</span> ' + esc(l.text || '')
-          + (l.source ? ' <span class="pg-src">(' + esc(l.source) + ')</span>' : '') + '</li>').join('')
-      + '</ul></details>';
-  });
-  return html + '</div>';
+  if(!(pg.summary && pg.summary.trim()) && !lines.length) return '';
+  let html = '<section><div class="pg-section-head"><h2 class="pg-section-title">Research behind the picks</h2>'
+    + (lines.length ? '<p class="pg-section-sub">' + lines.length + ' lines, each with its source</p>' : '') + '</div><div class="pg-card">';
+  if(pg.summary && pg.summary.trim()) html += '<p class="pg-k">Signals that hold up</p><p class="pg-signals">' + esc(pg.summary.trim()) + '</p>';
+  if(lines.length){
+    html += '<div class="pg-research-groups">';
+    PG_RESEARCH_GROUPS.forEach(g=>{
+      const rows = lines.filter(l=> l.group===g.key);
+      if(!rows.length) return;
+      html += '<details><summary>' + esc(g.label) + '<span>' + rows.length + '</span></summary><ul>'
+        + rows.map(l=> '<li><span class="pg-prompt">' + esc(PG_PROMPT_LABELS[l.prompt] || l.prompt || '') + ':</span> ' + esc(l.text || '')
+            + (l.source ? ' <span class="pg-src">(' + esc(l.source) + ')</span>' : '') + '</li>').join('')
+        + '</ul></details>';
+    });
+    html += '</div>';
+  }
+  return html + '</div></section>';
 }
 
 function pgNotesHtml(pg){
   const editing = pgEditing==='notes';
-  return '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Notes</h2>'
-      + '<div class="outline-head-actions">' + (editing
+  const text = editing && pgNotesDraft!==null ? pgNotesDraft : (pg.notes || '');
+  return '<section><div class="pg-section-head"><h2 class="pg-section-title">Notes</h2><div class="outline-head-actions">'
+      + (editing
           ? '<button type="button" class="btn small" data-pg-cancel>Cancel</button><button type="button" class="btn small primary" data-pg-save>Save</button>'
-          : '<button type="button" class="btn small" data-pg-edit>Edit</button>') + '</div></div>'
+          : '<button type="button" class="btn small" data-pg-edit>Edit</button>')
+    + '</div></div><div class="pg-card">'
     + (editing
-        ? '<textarea class="outline-textarea" id="pgNotesTextarea" spellcheck="true" placeholder="Address confirmed, what happened after the send, anything else…">' + esc(pg.notes || '') + '</textarea>'
-        : '<div class="outline-view">' + (pg.notes && pg.notes.trim() ? '<div style="white-space:pre-wrap;">' + esc(pg.notes.trim()) + '</div>' : '<p class="outline-empty">No notes yet. Click Edit to add some.</p>') + '</div>')
-  + '</div>';
+        ? '<textarea class="outline-textarea" id="pgNotesTextarea" spellcheck="true" style="box-shadow:none;" placeholder="Address confirmed, what happened after the send, anything else…">' + esc(text) + '</textarea>'
+        : (pg.notes && pg.notes.trim() ? '<p class="pg-notes-view">' + esc(pg.notes.trim()) + '</p>' : '<p class="pg-notes-empty">No notes yet. Address confirmed, tracking number, what happened after it landed.</p>'))
+  + '</div></section>';
 }
 
 function pgRender(){
   const pg = pgActive();
   if(!pg) return;
+  const ta = document.getElementById('pgNotesTextarea');
+  if(ta) pgNotesDraft = ta.value;
+  if(!pgTab || !PG_TIERS.some(t=> t.key===pgTab)) pgTab = pgFirstTier(pg);
   const prospect = coProspects.find(p=> p.id===pg.prospectId);
   document.getElementById('pgBackLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : 'Creative Outreach');
-  document.getElementById('pgDetailTitle').textContent = 'Physical Good' + (pg.company ? ': ' + pg.company : '');
-  document.getElementById('pgMeta').innerHTML = [
-    pg.contact ? esc(pg.contact) : '',
-    pg.stage ? '<span class="pg-pill is-plain">Stage: ' + esc(pg.stage) + '</span>' : '',
-    pg.sender ? 'Sent by ' + esc(pg.sender) : '',
-  ].filter(Boolean).join(' &middot; ');
+  document.getElementById('pgDetailTitle').textContent = 'Physical Good';
+  document.getElementById('pgMeta').innerHTML = '';
 
-  const leadTier = pg.tiers && pg.tiers[pg.leadTier];
-  let html = '';
-  if(leadTier && leadTier.name){
-    html += '<div class="pg-lead"><div class="pg-lead-body"><div class="pg-lead-label">Lead with</div>'
-      + '<div class="pg-lead-pick">' + esc(pgTierDef(pg.leadTier).label) + ': ' + esc(leadTier.name) + '</div>'
-      + (pg.leadReason ? '<p class="pg-lead-reason">' + esc(pg.leadReason.trim()) + '</p>' : '')
-      + '</div></div>';
-  }
-  html += '<div class="pg-tiers">' + PG_TIERS.map(t=> pgTierHtml(pg, t)).join('') + '</div>';
-  html += pgSendHtml(pg);
-  if(pg.summary && pg.summary.trim()){
-    html += '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Signals that hold up</h2></div>'
-      + '<div class="outline-view"><div style="white-space:pre-wrap;">' + esc(pg.summary.trim()) + '</div></div></div>';
-  }
-  html += pgResearchHtml(pg);
-  html += pgNotesHtml(pg);
-  html += '<p class="pg-foot">' + (pg.publishedAt ? 'Published by the /physical-goods skill on ' + esc(cvFmtDate(pg.publishedAt)) + ' &middot; ' : '')
-    + (pg.slug ? '<code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code> &middot; ' : '')
-    + 'To change a pick, re-run the skill and publish again. Statuses and notes are kept.</p>';
+  document.getElementById('pgBody').innerHTML =
+      pgHeroHtml(pg)
+    + '<div>' + pgTabsHtml(pg) + '<div style="height:14px"></div>' + pgPickHtml(pg) + '</div>'
+    + pgSendHtml(pg)
+    + pgResearchHtml(pg)
+    + pgNotesHtml(pg)
+    + '<p class="pg-foot">' + (pg.slug ? 'Source: <code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code> &middot; ' : '')
+      + 'To change a pick, re-run /physical-goods and publish again. Statuses, checklist ticks and notes are kept.</p>';
 
+  const nta = document.getElementById('pgNotesTextarea');
+  if(nta) requestAnimationFrame(()=> outlineAutoGrow(nta));
+  // On phones the tabs scroll sideways: keep the open one in view without moving the page vertically.
+  const tabs = document.querySelector('#pgBody .pg-tabs');
+  const active = tabs && tabs.querySelector('.pg-tab.is-active');
+  if(active && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = Math.max(0, active.offsetLeft - tabs.offsetLeft - 16);
+}
+
+// One listener set for the page body, attached once at startup.
+function pgBindBody(){
   const body = document.getElementById('pgBody');
-  body.innerHTML = html;
-
-  const notesTa = document.getElementById('pgNotesTextarea');
-  if(notesTa){
-    notesTa.addEventListener('input', ()=> outlineAutoGrow(notesTa));
-    requestAnimationFrame(()=>{ outlineAutoGrow(notesTa); notesTa.focus(); });
-  }
-  body.querySelectorAll('[data-pg-edit]').forEach(btn=> btn.addEventListener('click', ()=>{ pgEditing = 'notes'; pgRender(); }));
-  body.querySelectorAll('[data-pg-cancel]').forEach(btn=> btn.addEventListener('click', ()=>{ pgEditing = null; pgRender(); }));
-  body.querySelectorAll('[data-pg-save]').forEach(btn=> btn.addEventListener('click', async ()=>{
-    pg.notes = document.getElementById('pgNotesTextarea').value;
-    pgEditing = null;
-    pgRender();
-    await pgSave(pg, { notes: pg.notes });
-  }));
-  body.querySelectorAll('[data-pg-status]').forEach(sel=> sel.addEventListener('change', ()=>{
-    const key = sel.dataset.pgStatus;
-    pg.tiers[key].status = sel.value;
-    pgSave(pg, { ['tiers.' + key + '.status']: sel.value });
-  }));
-  body.querySelectorAll('[data-pg-check]').forEach(box=> box.addEventListener('change', ()=>{
-    const key = box.dataset.pgCheck;
-    pg.checklist = pg.checklist || {};
-    pg.checklist[key] = box.checked;
-    box.closest('li').classList.toggle('is-done', box.checked);
-    const title = box.closest('.pg-panel').querySelector('.pg-panel-title');
-    title.textContent = 'Package checklist (' + PG_CHECKLIST.filter(c=> pg.checklist[c.key]).length + ' of ' + PG_CHECKLIST.length + ')';
-    pgSave(pg, { ['checklist.' + key]: box.checked });
-  }));
-  body.querySelectorAll('[data-pg-copy-text]').forEach(btn=> btn.addEventListener('click', async ()=>{
-    try{
-      await navigator.clipboard.writeText(btn.dataset.pgCopyText);
-      btn.textContent = 'Copied'; setTimeout(()=>{ btn.textContent = 'Copy'; }, 1400);
-    }catch(e){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the text and copy it by hand.'); }
-  }));
-  body.querySelectorAll('[data-pg-copy]').forEach(btn=> btn.addEventListener('click', async ()=>{
-    try{
-      await navigator.clipboard.writeText(pg.tiers[btn.dataset.pgCopy].insideNote.trim());
-      btn.textContent = 'Copied'; setTimeout(()=>{ btn.textContent = 'Copy'; }, 1400);
-    }catch(e){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the note and copy it by hand.'); }
-  }));
+  body.addEventListener('click', async (e)=>{
+    const pg = pgActive();
+    if(!pg) return;
+    const tab = e.target.closest('[data-pg-tab]');
+    if(tab){ pgTab = tab.dataset.pgTab; pgRender(); return; }
+    const copy = e.target.closest('[data-pg-copy-text]');
+    if(copy){
+      try{
+        await navigator.clipboard.writeText(copy.dataset.pgCopyText);
+        copy.textContent = 'Copied'; setTimeout(()=>{ copy.textContent = 'Copy'; }, 1400);
+      }catch(err){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the text and copy it by hand.'); }
+      return;
+    }
+    if(e.target.closest('[data-pg-edit]')){
+      pgEditing = 'notes'; pgNotesDraft = pg.notes || ''; pgRender();
+      const ta = document.getElementById('pgNotesTextarea');
+      if(ta) ta.focus();
+      return;
+    }
+    if(e.target.closest('[data-pg-cancel]')){ pgEditing = null; pgNotesDraft = null; pgRender(); return; }
+    if(e.target.closest('[data-pg-save]')){
+      pg.notes = document.getElementById('pgNotesTextarea').value;
+      pgEditing = null; pgNotesDraft = null;
+      pgRender();
+      await pgSave(pg, { notes: pg.notes });
+    }
+  });
+  body.addEventListener('change', (e)=>{
+    const pg = pgActive();
+    if(!pg) return;
+    const sel = e.target.closest('[data-pg-status]');
+    if(sel){
+      const key = sel.dataset.pgStatus;
+      pg.tiers[key].status = sel.value;
+      pgRender();
+      pgSave(pg, { ['tiers.' + key + '.status']: sel.value });
+      return;
+    }
+    const box = e.target.closest('[data-pg-check]');
+    if(box){
+      pg.checklist = pg.checklist || {};
+      pg.checklist[box.dataset.pgCheck] = box.checked;
+      pgRender();
+      pgSave(pg, { ['checklist.' + box.dataset.pgCheck]: box.checked });
+    }
+  });
+  body.addEventListener('input', (e)=>{
+    if(e.target.id==='pgNotesTextarea'){ pgNotesDraft = e.target.value; outlineAutoGrow(e.target); }
+  });
 }
 
 // Cine Vlogs have a permanent Thumbnail section pinned to the top of the shot table.
@@ -3828,6 +4029,7 @@ function switchTab(tab){
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
   document.getElementById('coBackToProspectsLink').addEventListener('click', coBackToProspects);
   document.getElementById('pgBackLink').addEventListener('click', pgBack);
+  pgBindBody();
   document.getElementById('coProspectRenameBtn').addEventListener('click', ()=>{ if(coActiveProspectId) coRenameProspect(coActiveProspectId); });
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
