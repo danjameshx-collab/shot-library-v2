@@ -339,7 +339,7 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 }
 /* ---------- physical good page (Creative Outreach -> prospect -> Physical Good) ---------- */
 #pgDetailOverlay .cv-detail-scroll{background:#F6F8F7; padding:28px 24px 64px;}
-.pg-inner{max-width:1120px; margin:0 auto; display:flex; flex-direction:column; gap:28px;}
+.pg-inner{max-width:1440px; margin:0 auto; display:flex; flex-direction:column; gap:28px;}
 .pg-k{font-family:var(--font-display); font-weight:800; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 6px;}
 .pg-pill{
   display:inline-flex; align-items:center; gap:5px; font-family:var(--font-display); font-weight:700; font-size:11px;
@@ -369,7 +369,6 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-hero-title{font-family:var(--font-display); font-weight:800; font-size:clamp(26px, 4vw, 36px); letter-spacing:-.02em; line-height:1.1; color:var(--ink); margin:2px 0 8px;}
 .pg-hero-sub{font-size:15px; color:var(--ink); margin:0;}
 .pg-hero-loc{font-size:13.5px; color:var(--ink-soft); margin:3px 0 14px;}
-.pg-chips{display:flex; gap:8px; flex-wrap:wrap;}
 .pg-hero-lead{
   position:relative; background:linear-gradient(155deg, #1E6B45, #123D28); color:#fff; border-radius:18px;
   padding:20px 22px; box-shadow:0 18px 40px -22px rgba(18,61,40,.7); display:flex; flex-direction:column; gap:6px;
@@ -391,27 +390,32 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 }
 .pg-hero-lead-btn:hover{background:#E6F4EC;}
 
-/* the three picks as tabs */
-.pg-tabs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;}
-.pg-tab{
-  position:relative; text-align:left; font-family:inherit; cursor:pointer; background:#fff; border:1px solid var(--line);
-  border-radius:14px; padding:14px 16px 14px; display:flex; flex-direction:column; gap:6px; box-shadow:var(--shadow);
-  transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+/* the three picks, one under another: header, tag row, then 9 sections */
+.pg-boxes{display:flex; flex-direction:column; gap:20px;}
+.pg-box{
+  min-width:0; scroll-margin-top:16px;
+  background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); overflow:hidden;
 }
-.pg-tab:hover{border-color:var(--line-strong); transform:translateY(-1px);}
-.pg-tab.is-active{border-color:var(--bespoke); box-shadow:0 0 0 3px rgba(30,107,69,.14), var(--shadow);}
-.pg-tab.is-active:after{
-  content:''; position:absolute; left:50%; bottom:-8px; width:14px; height:14px; background:#fff; transform:translateX(-50%) rotate(45deg);
-  border-right:1px solid var(--bespoke); border-bottom:1px solid var(--bespoke);
-}
-.pg-tab-top{display:flex; justify-content:space-between; align-items:center; gap:8px;}
-.pg-tab-price{font-family:var(--font-display); font-weight:800; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+.pg-box.is-lead{border-color:var(--bespoke); box-shadow:0 0 0 3px rgba(30,107,69,.12), var(--shadow);}
+.pg-box-head{padding:18px 20px 4px; min-width:0;}
+.pg-box-tier{display:flex; justify-content:space-between; align-items:center; gap:8px; margin:0 0 8px; font-family:var(--font-display); font-weight:800; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+.pg-box-name{font-family:var(--font-display); font-weight:800; font-size:19px; line-height:1.25; letter-spacing:-.01em; color:var(--ink); margin:0;}
+.pg-box.is-empty .pg-box-name{color:var(--ink-faint); font-weight:600; font-style:italic;}
+.pg-box-tags{display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:12px 20px 16px; border-bottom:1px solid var(--line); min-width:0;}
+.pg-box-tags .pg-status-ctl{margin-left:auto;}
+.pg-box-sec{padding:14px 20px 16px; border-bottom:1px solid var(--line); min-width:0;}
+.pg-box-sec:last-child{border-bottom:none;}
+.pg-box-sec .pg-body{font-size:14px; line-height:1.65;}
+.pg-box-none{margin:0; color:var(--ink-faint);}
+/* One reading style inside the pick boxes: every heading and every line of text in the same
+   font, size and colour (headings bold so they can still be found). Dan: "way easier to read". */
+/* (sits below as #pgBody rules so it wins over the larger-type pass) */
+.pg-box .pg-handnote{font-size:17px; line-height:28px; padding:14px 16px 14px 20px;
+  background:#FFFCF3 repeating-linear-gradient(180deg, transparent 0, transparent 27px, rgba(124,152,199,.18) 27px, rgba(124,152,199,.18) 28px);}
+.pg-box .pg-note-tools{justify-content:space-between; margin-top:10px;}
+.pg-also-text{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0;}
+.pg-send-stack{display:flex; flex-direction:column; gap:16px;}
 .pg-tab-star{font-size:11px; font-weight:800; color:var(--bespoke); white-space:nowrap;}
-.pg-tab-name{font-family:var(--font-display); font-weight:800; font-size:15.5px; line-height:1.25; color:var(--ink);}
-.pg-tab.is-empty .pg-tab-name{color:var(--ink-faint); font-weight:600; font-style:italic;}
-.pg-tab-meta{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft);}
-.pg-tab-size{display:inline-flex; align-items:center; gap:6px;}
-.pg-tab-size svg{width:16px; height:16px; color:var(--bespoke);}
 
 /* one pick, open */
 .pg-pick{background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); overflow:hidden;}
@@ -430,7 +434,6 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-pick-rail{padding:22px 24px; background:#FAFBFA; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:18px; min-width:0;}
 .pg-lede{font-size:16px; line-height:1.65; color:var(--ink); margin:0; max-width:68ch;}
 .pg-body{font-size:14.5px; line-height:1.7; color:var(--ink); margin:0; max-width:68ch; white-space:pre-wrap; overflow-wrap:break-word;}
-.pg-why-them{border-left:3px solid var(--mimeo); padding-left:16px;}
 .pg-size-card{display:flex; gap:14px; align-items:flex-start; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 16px;}
 .pg-size-icon{flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--mimeo-ink); color:var(--bespoke); display:flex; align-items:center; justify-content:center;}
 .pg-size-icon svg{width:22px; height:22px;}
@@ -507,12 +510,77 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-foot{font-size:12px; color:var(--ink-faint); margin:0; text-align:center;}
 .pg-foot code{font-family:var(--font-mono); font-size:11.5px;}
 
+/* larger type across the Physical Good page, and text runs the full width of each box.
+   Scoped to #pgBody because .pg-k, .pg-pill and the section styles are shared with the movie Research panel. */
+#pgBody .pg-lede, #pgBody .pg-body{max-width:none;}
+#pgBody .pg-k{font-size:12.5px; margin-bottom:8px;}
+#pgBody .pg-pill{font-size:13px; padding:5px 12px;}
+#pgBody .pg-pill svg{width:15px; height:15px;}
+#pgBody .pg-status-tag{font-size:13.5px;}
+#pgBody .pg-hero-title{font-size:clamp(30px, 4.5vw, 42px);}
+#pgBody .pg-hero-sub{font-size:18px;}
+#pgBody .pg-hero-loc{font-size:16px;}
+#pgBody .pg-hero-lead-name{font-size:24px;}
+#pgBody .pg-hero-lead-meta{font-size:15px;}
+#pgBody .pg-hero-lead summary{font-size:15px;}
+#pgBody .pg-hero-lead details p{font-size:16px;}
+#pgBody .pg-hero-lead-btn{font-size:14px; padding:8px 16px;}
+#pgBody .pg-box-head{padding:22px 26px 6px;}
+#pgBody .pg-box-tier{font-size:12.5px;}
+#pgBody .pg-tab-star{font-size:13px;}
+#pgBody .pg-box-name{font-size:clamp(22px, 2.4vw, 28px);}
+#pgBody .pg-box-alias{font-size:16px; color:var(--ink-soft); margin:4px 0 0;}
+#pgBody .pg-hero-lead-alias{font-size:15px; color:rgba(255,255,255,.75); margin-top:-2px;}
+#pgBody .pg-box-tags{padding:14px 26px 18px; gap:8px;}
+#pgBody .pg-status-ctl select{font-size:15px; padding:8px 34px 8px 16px;}
+#pgBody .pg-box-sec{padding:18px 26px 20px;}
+#pgBody .pg-box-sec .pg-body{font-size:17px; line-height:1.65;}
+#pgBody .pg-size-def{font-size:15px; margin-top:8px;}
+#pgBody .pg-stat-v{font-size:30px;}
+#pgBody .pg-stat-sub{font-size:15px;}
+#pgBody .pg-rail-text{font-size:17px;}
+#pgBody .pg-risk p{font-size:17px; line-height:1.6;}
+#pgBody .pg-also-text{font-size:17px; line-height:1.65;}
+#pgBody .pg-box .pg-handnote{font-size:22px; line-height:36px; padding:16px 22px 16px 26px;
+  background:#FFFCF3 repeating-linear-gradient(180deg, transparent 0, transparent 35px, rgba(124,152,199,.18) 35px, rgba(124,152,199,.18) 36px);}
+#pgBody .pg-note-count{font-size:14px;}
+#pgBody .pg-section-title{font-size:24px;}
+#pgBody .pg-section-sub{font-size:15px;}
+#pgBody .pg-card{padding:24px 26px;}
+#pgBody .pg-step-dot{width:36px; height:36px; font-size:15px;}
+#pgBody .pg-timeline li{grid-template-columns:36px minmax(0,1fr);}
+#pgBody .pg-timeline li:not(:last-child):before{left:17px; top:36px;}
+#pgBody .pg-step-title{font-size:18px;}
+#pgBody .pg-opt{font-size:12px;}
+#pgBody .pg-ship{font-size:17px;}
+#pgBody .pg-ship-why{font-size:16px;}
+#pgBody .pg-msg-subject{font-size:15px;}
+#pgBody .pg-msg-body{font-size:17px; line-height:1.65; padding:14px 16px;}
+#pgBody .pg-ck-h{font-size:17px;}
+#pgBody .pg-ck-b{font-size:15px;}
+#pgBody .pg-checklist input{width:20px; height:20px;}
+#pgBody .pg-signals{font-size:18px; max-width:none;}
+#pgBody .pg-research-groups summary{font-size:16px; padding:14px 16px;}
+#pgBody .pg-research-groups li{font-size:16px;}
+#pgBody .pg-src{font-size:14px;}
+#pgBody .pg-notes-view{font-size:17px;}
+#pgBody .pg-notes-empty{font-size:16px;}
+#pgBody .pg-foot{font-size:13.5px;}
+/* One reading style inside the pick boxes: every heading and every line of text in the same font,
+   size (the page's 17px) and colour; headings bold so they can still be found. Dan: "way easier to read". */
+#pgBody .pg-box-sec .pg-k,
+#pgBody .pg-box-sec .pg-body, #pgBody .pg-box-sec .pg-size-def, #pgBody .pg-box-sec .pg-also-text,
+#pgBody .pg-box-sec .pg-stat-v, #pgBody .pg-box-sec .pg-stat-sub, #pgBody .pg-box-sec .pg-rail-text,
+#pgBody .pg-box-sec .pg-risk p, #pgBody .pg-box-sec .pg-box-none{
+  font-family:var(--font-body); font-size:17px; line-height:1.65; color:var(--ink);
+  font-weight:400; letter-spacing:0; text-transform:none; max-width:none;
+}
+#pgBody .pg-box-sec .pg-k{font-weight:700; margin:0 0 4px;}
+#pgBody .pg-box-sec .pg-size-def, #pgBody .pg-box-sec .pg-stat-sub{margin-top:6px;}
+
 @media (max-width:860px){
   .pg-hero, .pg-pick-grid, .pg-send-grid{grid-template-columns:1fr;}
   .pg-pick-rail{border-left:none; border-top:1px solid var(--line);}
-  .pg-tabs{grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(220px, 78%); overflow-x:auto; padding-bottom:10px; scroll-snap-type:x mandatory;}
-  .pg-tab{scroll-snap-align:start;}
-  .pg-tab.is-active:after{display:none;}
 }
 @media (max-width:600px){
   #pgDetailOverlay .cv-detail-scroll{padding:18px 16px 48px;}
@@ -522,6 +590,10 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   .pg-handnote{font-size:18px; padding:18px 18px 18px 22px;}
   .pg-card{padding:16px;}
   .pg-also{flex-direction:column; gap:4px;}
+  #pgBody .pg-box-head, #pgBody .pg-box-tags, #pgBody .pg-box-sec{padding-left:18px; padding-right:18px;}
+  #pgBody .pg-card{padding:18px;}
+  #pgBody .pg-box .pg-handnote{font-size:19px; line-height:32px; padding:14px 16px 14px 20px;
+    background:#FFFCF3 repeating-linear-gradient(180deg, transparent 0, transparent 31px, rgba(124,152,199,.18) 31px, rgba(124,152,199,.18) 32px);}
 }
 .launcher-card .lc-soon-badge{
   display:inline-flex; align-items:center; font-family:var(--font-display); font-weight:700; font-size:10.5px;
@@ -628,14 +700,41 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 /* Creative Outreach Movie: Research section (pushed from the Super Loom build, read-only) */
 .cv-research{margin-top:36px; padding-top:30px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:20px;}
 .cv-research[hidden]{display:none;}
-.cvr-grid2{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:16px; align-items:start;}
 .cvr-person{font-family:var(--font-display); font-weight:800; font-size:19px; letter-spacing:-.01em; color:var(--ink); margin:0;}
 .cvr-person-sub{font-size:13.5px; color:var(--ink-soft); margin:2px 0 12px;}
-.cvr-text{font-size:14.5px; line-height:1.7; color:var(--ink); margin:0; max-width:80ch;}
+.cvr-text{font-size:14.5px; line-height:1.7; color:var(--ink); margin:0;}
 .cvr-text + .pg-k{margin-top:16px;}
+/* plain-English helper text: what each block is and why it matters */
+.cvr-explain{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0 0 10px;}
+.pg-k + .cvr-explain{margin-top:-2px;}
+.cvr-tests{background:#FAFBFA; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:0 0 6px;}
+.cvr-tests p{font-size:13.5px; line-height:1.6; color:var(--ink); margin:0 0 6px;}
+.cvr-tests ul{margin:0; padding-left:20px;}
+.cvr-tests li{font-size:13.5px; line-height:1.6; color:var(--ink); margin:3px 0;}
+.cvr-words-k{font-size:11px; font-weight:700; letter-spacing:.04em; color:var(--ink-faint); margin:4px 0 2px;}
+/* "Start here" guide and the plain-English layer on each item */
+.cvr-start{border-left:4px solid var(--bespoke);}
+.cvr-start-grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px 32px; margin-top:6px;}
+.cvr-start-grid h4{font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--ink); margin:0 0 4px;}
+.cvr-start-grid p{font-size:14px; line-height:1.65; color:var(--ink); margin:0;}
+.cvr-start-how{margin-top:20px; padding-top:16px; border-top:1px solid var(--line);}
+.cvr-start-how h4{font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--ink); margin:0 0 6px;}
+.cvr-start-how ol{margin:0; padding-left:20px;}
+.cvr-start-how li{font-size:14px; line-height:1.65; color:var(--ink); margin:2px 0;}
+.cvr-gloss{margin-top:16px;}
+.cvr-gloss dl{display:grid; grid-template-columns:minmax(140px, max-content) minmax(0,1fr); gap:8px 18px; margin:0; padding:4px 16px 14px;}
+.cvr-gloss dt{font-size:13.5px; font-weight:700; color:var(--ink);}
+.cvr-gloss dd{font-size:13.5px; line-height:1.55; color:var(--ink-soft); margin:0;}
+.cvr-plain{font-size:15.5px; line-height:1.65; color:var(--ink); margin:6px 0 10px;}
+.cvr-inmovie{font-size:14px; line-height:1.6; color:var(--ink); background:var(--bespoke-bg); border-radius:10px; padding:10px 12px; margin:0 0 10px;}
+.cvr-signal.is-context .cvr-inmovie{background:#F3F4F3; color:var(--ink-soft);}
+.cvr-raw{font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin:0 0 10px;}
+.cvr-raw b{color:var(--ink-faint); font-weight:700;}
+.cvr-quote-ctx{font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin:0 0 8px;}
+@media (max-width:760px){ .cvr-start-grid{grid-template-columns:1fr;} .cvr-gloss dl{grid-template-columns:1fr; gap:2px 0;} .cvr-gloss dd{margin-bottom:8px;} }
 .cvr-off{background:#FDF3F2; border-color:#F2D4D1;}
 .cvr-off .pg-k{color:#A0443F;}
-.cvr-off .cvr-text{color:#5E2420; font-size:13.5px;}
+.cvr-off .cvr-text{color:#5E2420;}
 .cvr-signal{display:grid; grid-template-columns:34px minmax(0,1fr); gap:14px; padding:18px 0; border-top:1px solid var(--line);}
 .cvr-signal:first-of-type{border-top:none; padding-top:4px;}
 .cvr-rank{width:34px; height:34px; border-radius:50%; background:var(--bespoke); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:13px;}
@@ -661,7 +760,6 @@ a.cvr-src:hover{border-color:var(--bespoke);}
 .cvr-sources a{color:var(--ink); font-weight:600; text-decoration:none;}
 .cvr-sources a:hover{color:var(--bespoke); text-decoration:underline;}
 .cvr-sources span{font-size:12px; color:var(--ink-faint);}
-@media (max-width:860px){ .cvr-grid2{grid-template-columns:1fr;} }
 .shot-table-actions{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
 .shot-table-actions-left, .shot-table-actions-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 @media (max-width:600px){
@@ -3154,7 +3252,6 @@ function pgOpen(id){
   try{ localStorage.setItem(PG_ACTIVE_KEY, id); }catch(e){}
   pgEditing = null;
   pgNotesDraft = null;
-  pgTab = null;
   pgRender();
 }
 async function pgBack(){
@@ -3169,7 +3266,6 @@ async function pgBack(){
 // Layout: hero (who + lead pick) -> the three picks as tabs -> the open pick -> send plan + checklist
 // -> research -> notes. All clicks go through one delegated listener (pgBindBody), so re-rendering
 // never needs re-binding and an open Notes draft survives a tab switch or a status change.
-let pgTab = null;          // which price point is open
 let pgNotesDraft = null;   // unsaved Notes text while editing
 
 const PG_STATUS_CLASS = { 'Idea':'s-idea', 'Approved':'s-approved', 'Ordered':'s-ordered', 'Sent':'s-sent', 'Delivered':'s-delivered', 'Not sending':'s-off' };
@@ -3196,12 +3292,6 @@ function pgSplit(v){
 function pgSizeWhy(t){
   return String(t.sizeWhy || '').trim().replace(/^(small|medium|large)\b[^:.]{0,30}:\s*/i, '').replace(/^./, c=> c.toUpperCase());
 }
-function pgFirstTier(pg){
-  if(pg.leadTier && pg.tiers && pg.tiers[pg.leadTier] && pg.tiers[pg.leadTier].name) return pg.leadTier;
-  const t = PG_TIERS.find(t=> pg.tiers && pg.tiers[t.key] && pg.tiers[t.key].name);
-  return t ? t.key : 'low';
-}
-
 function pgHeroHtml(pg){
   const [who, where] = pgSplit(pg.contact);
   const lead = pg.tiers && pg.tiers[pg.leadTier];
@@ -3209,90 +3299,68 @@ function pgHeroHtml(pg){
     + '<p class="pg-k">Prospect</p>'
     + '<h1 class="pg-hero-title">' + esc(pg.company || pg.name || 'Untitled') + '</h1>'
     + (who ? '<p class="pg-hero-sub">' + esc(who) + '</p>' : '')
-    + (where ? '<p class="pg-hero-loc">' + esc(where) + '</p>' : '<div style="height:14px"></div>')
-    + '<div class="pg-chips">'
-      + (pg.stage ? '<span class="pg-pill is-plain">Stage: ' + esc(pg.stage) + '</span>' : '')
-      + '<span class="pg-pill is-plain">' + (pg.sender ? 'Sent by ' + esc(pg.sender) : 'Lincko send') + '</span>'
-      + (pg.publishedAt ? '<span class="pg-pill is-plain">Published ' + esc(cvFmtDate(pg.publishedAt)) + '</span>' : '')
-    + '</div></div>';
+    + (where ? '<p class="pg-hero-loc">' + esc(where) + '</p>' : '')
+    + '</div>';
   if(lead && lead.name){
     html += '<div class="pg-hero-lead">'
       + '<p class="pg-k">&#9733; Lead with</p>'
-      + '<div class="pg-hero-lead-name">' + esc(lead.name) + '</div>'
+      + '<div class="pg-hero-lead-name">' + esc(lead.good || lead.name) + '</div>'
+      + (lead.good ? '<div class="pg-hero-lead-alias">' + esc(lead.name) + '</div>' : '')
       + '<div class="pg-hero-lead-meta">' + esc(pgTierDef(pg.leadTier).label) + ' &middot; ' + esc(pgSplit(lead.cost)[0] || '') + ' ' + pgStatusTag(lead.status) + '</div>'
       + (pg.leadReason ? '<details><summary>Why lead with this</summary><p>' + esc(pg.leadReason.trim()) + '</p></details>' : '')
-      + (pgTab!==pg.leadTier ? '<button type="button" class="pg-hero-lead-btn" data-pg-tab="' + escAttr(pg.leadTier) + '">Open this pick</button>' : '')
+      + '<button type="button" class="pg-hero-lead-btn" data-pg-jump="' + escAttr(pg.leadTier) + '">See this pick</button>'
     + '</div>';
   }
   return html + '</section>';
 }
 
-function pgTabsHtml(pg){
-  return '<div class="pg-tabs" role="tablist" aria-label="Price points">' + PG_TIERS.map(t=>{
-    const tier = (pg.tiers && pg.tiers[t.key]) || {};
-    const active = pgTab===t.key;
-    if(!tier.name){
-      return '<button type="button" class="pg-tab is-empty' + (active?' is-active':'') + '" role="tab" aria-selected="' + active + '" data-pg-tab="' + t.key + '">'
-        + '<span class="pg-tab-top"><span class="pg-tab-price">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span></span>'
-        + '<span class="pg-tab-name">No pick at this price</span></button>';
-    }
-    return '<button type="button" class="pg-tab' + (active?' is-active':'') + '" role="tab" aria-selected="' + active + '" data-pg-tab="' + t.key + '">'
-      + '<span class="pg-tab-top"><span class="pg-tab-price">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
-        + (pg.leadTier===t.key ? '<span class="pg-tab-star">&#9733; Lead</span>' : '') + '</span>'
-      + '<span class="pg-tab-name">' + esc(tier.name) + '</span>'
-      + '<span class="pg-tab-meta"><span class="pg-tab-size">' + (PG_SIZE_ICONS[tier.size] || '') + esc((tier.size || '') + (tier.size ? ' · ' : '') + pgSplit(tier.cost)[0]) + '</span>'
-        + pgStatusTag(tier.status) + '</span>'
-    + '</button>';
-  }).join('') + '</div>';
+// The three picks, one box per price point, stacked in a single column. Every box has the same
+// sections in the same order; an empty one shows a dash.
+function pgBoxesHtml(pg){
+  return '<div class="pg-boxes">' + PG_TIERS.map(t=> pgBoxHtml(pg, t)).join('') + '</div>';
 }
-
-function pgPickHtml(pg){
-  const t = pgTierDef(pgTab);
-  const tier = (pg.tiers && pg.tiers[pgTab]) || {};
+function pgBoxHtml(pg, t){
+  const tier = (pg.tiers && pg.tiers[t.key]) || {};
+  const isLead = pg.leadTier===t.key && !!tier.name;
+  const head = '<header class="pg-box-head"><p class="pg-box-tier"><span>' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
+      + (isLead ? '<span class="pg-tab-star">&#9733; Lead</span>' : '') + '</p>'
+    + '<h2 class="pg-box-name">' + esc(tier.good || tier.name || 'No pick at this price') + '</h2>'
+    + (tier.good && tier.name ? '<p class="pg-box-alias">' + esc(tier.name) + '</p>' : '') + '</header>';
   if(!tier.name){
-    return '<article class="pg-pick"><div class="pg-pick-empty">No pick at ' + esc(t.label.toLowerCase()) + ' (' + esc(t.cap.toLowerCase()) + ') in this run.</div></article>';
+    return '<article class="pg-box is-empty" id="pg-box-' + t.key + '">' + head
+      + '<div class="pg-pick-empty">No pick at ' + esc(t.label.toLowerCase()) + ' (' + esc(t.cap.toLowerCase()) + ') in this run.</div></article>';
   }
   const status = tier.status || 'Idea';
   const [costMain, costSub] = pgSplit(tier.cost);
   const [leadMain, leadSub] = pgSplit(tier.leadTime);
   const words = pgWordCount(tier.insideNote);
   const sizeWhy = pgSizeWhy(tier);
-  let html = '<article class="pg-pick" role="tabpanel">'
-    + '<header class="pg-pick-head"><div style="min-width:0;">'
-      + '<div class="pg-tags">'
-        + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original idea' : '">From the catalog') + '</span>'
-        + (tier.size ? '<span class="pg-pill is-plain">' + (PG_SIZE_ICONS[tier.size] || '') + esc(tier.size) + '</span>' : '')
-        + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit at this price</span>' : '')
-      + '</div>'
-      + '<h2 class="pg-pick-name">' + esc(tier.name) + '</h2></div>'
-      + '<label class="pg-status-ctl ' + (PG_STATUS_CLASS[status] || 's-idea') + '">Status <select data-pg-status="' + escAttr(pgTab) + '">'
+  const txt = s=> s && String(s).trim() ? '<p class="pg-body">' + esc(String(s).trim()) + '</p>' : '';
+  const sec = (label, inner)=> '<section class="pg-box-sec"><p class="pg-k">' + label + '</p>' + (inner || '<p class="pg-box-none">-</p>') + '</section>';
+  return '<article class="pg-box' + (isLead ? ' is-lead' : '') + '" id="pg-box-' + t.key + '">' + head
+    + '<div class="pg-box-tags">'
+      + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original idea' : '">From the catalog') + '</span>'
+      + (tier.size ? '<span class="pg-pill is-plain">' + (PG_SIZE_ICONS[tier.size] || '') + esc(tier.size) + '</span>' : '')
+      + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit</span>' : '')
+      + '<label class="pg-status-ctl ' + (PG_STATUS_CLASS[status] || 's-idea') + '"><select aria-label="Status" data-pg-status="' + escAttr(t.key) + '">'
         + PG_STATUSES.map(s=> '<option' + (s===status?' selected':'') + '>' + esc(s) + '</option>').join('')
       + '</select></label>'
-    + '</header>'
-    + '<div class="pg-pick-grid"><div class="pg-pick-story">'
-      + (tier.what ? '<section><p class="pg-k">What it is</p><p class="pg-lede">' + esc(tier.what.trim()) + '</p></section>' : '')
-      + (tier.whyThem ? '<section class="pg-why-them"><p class="pg-k">Why them</p><p class="pg-body">' + esc(tier.whyThem.trim()) + '</p></section>' : '')
-      + (tier.size ? '<section class="pg-size-card"><span class="pg-size-icon">' + (PG_SIZE_ICONS[tier.size] || '') + '</span><div>'
-          + '<p class="pg-k">Why ' + esc(tier.size) + '</p>'
-          + (sizeWhy ? '<p class="pg-body" style="font-size:14px;">' + esc(sizeWhy) + '</p>' : '')
-          + (PG_SIZES[tier.size] ? '<p class="pg-size-def">' + esc(tier.size.charAt(0).toUpperCase() + tier.size.slice(1)) + ' in the tool: ' + esc(PG_SIZES[tier.size]) + '</p>' : '')
-        + '</div></section>' : '')
-    + '</div><aside class="pg-pick-rail">'
-      + '<div><p class="pg-k">Cost</p><div class="pg-stat-v">' + esc(costMain || '-') + '</div>' + (costSub ? '<div class="pg-stat-sub">' + esc(costSub) + '</div>' : '') + '</div>'
-      + (tier.leadTime ? '<div><p class="pg-k">Lead time</p><p class="pg-rail-text" style="font-weight:700;">' + esc(leadMain) + '</p>' + (leadSub ? '<div class="pg-stat-sub">' + esc(leadSub) + '</div>' : '') + '</div>' : '')
-      + (tier.sourcing ? '<div><p class="pg-k">Where to get it</p><p class="pg-rail-text">' + esc(tier.sourcing.trim()) + '</p></div>' : '')
-      + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-k">Check before buying</p><p>' + esc(tier.riskGap.trim()) + '</p></div>' : '')
-    + '</aside></div>';
-  if(tier.insideNote){
-    html += '<section class="pg-note-wrap"><div class="pg-note-bar"><p class="pg-k">Inside note</p>'
-      + '<div class="pg-note-tools"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' / ' + PG_NOTE_WORDS + ' words</span>'
-      + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(tier.insideNote.trim()) + '">Copy</button></div></div>'
-      + '<blockquote class="pg-handnote">' + esc(tier.insideNote.trim()) + '</blockquote></section>';
-  }
-  if(tier.runnerUp){
-    html += '<footer class="pg-also"><p class="pg-k">Also considered</p><p>' + esc(tier.runnerUp.trim()) + '</p></footer>';
-  }
-  return html + '</article>';
+    + '</div>'
+    + sec('What it is', txt(tier.what))
+    + sec('Why them', tier.whyThem && tier.whyThem.trim() ? '<p class="pg-body">' + esc(tier.whyThem.trim()) + '</p>' : '')
+    + sec('Why ' + esc(tier.size || 'this size'), (sizeWhy ? txt(sizeWhy) : '')
+        + (PG_SIZES[tier.size] ? '<p class="pg-size-def">' + esc(PG_SIZES[tier.size]) + '</p>' : ''))
+    + sec('Also considered', tier.runnerUp && tier.runnerUp.trim() ? '<p class="pg-also-text">' + esc(tier.runnerUp.trim()) + '</p>' : '')
+    + sec('Cost', '<div class="pg-stat-v">' + esc(costMain || '-') + '</div>' + (costSub ? '<div class="pg-stat-sub">' + esc(costSub) + '</div>' : ''))
+    + sec('Lead time', tier.leadTime ? '<p class="pg-rail-text">' + esc(leadMain) + '</p>' + (leadSub ? '<div class="pg-stat-sub">' + esc(leadSub) + '</div>' : '') : '')
+    + sec('Where to get it', txt(tier.sourcing))
+    + sec('Check before buying', tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p>' + esc(tier.riskGap.trim()) + '</p></div>' : '')
+    + sec('Inside note', tier.insideNote && tier.insideNote.trim()
+        ? '<blockquote class="pg-handnote">' + esc(tier.insideNote.trim()) + '</blockquote>'
+          + '<div class="pg-note-tools"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' / ' + PG_NOTE_WORDS + ' words</span>'
+          + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(tier.insideNote.trim()) + '">Copy</button></div>'
+        : '')
+  + '</article>';
 }
 
 function pgMsgHtml(subject, text){
@@ -3325,8 +3393,8 @@ function pgSendHtml(pg){
         + '<span><span class="pg-ck-h">' + esc(c.h) + '</span><span class="pg-ck-b">' + esc(c.b) + '</span></span></label></li>').join('')
     + '</ul></div>';
   return '<section><div class="pg-section-head"><h2 class="pg-section-title">Send plan</h2>'
-      + '<p class="pg-section-sub">' + (lead && lead.name ? 'For the lead pick: ' + esc(lead.name) : 'For the lead pick') + '</p></div>'
-    + '<div class="pg-send-grid"><div class="pg-card">' + plan + '</div>' + checklist + '</div></section>';
+      + '<p class="pg-section-sub">' + (lead && lead.name ? 'For the lead pick: ' + esc(lead.good || lead.name) : 'For the lead pick') + '</p></div>'
+    + '<div class="pg-send-stack"><div class="pg-card">' + plan + '</div>' + checklist + '</div></section>';
 }
 
 function pgResearchHtml(pg){
@@ -3369,7 +3437,6 @@ function pgRender(){
   if(!pg) return;
   const ta = document.getElementById('pgNotesTextarea');
   if(ta) pgNotesDraft = ta.value;
-  if(!pgTab || !PG_TIERS.some(t=> t.key===pgTab)) pgTab = pgFirstTier(pg);
   const prospect = coProspects.find(p=> p.id===pg.prospectId);
   document.getElementById('pgBackLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : 'Creative Outreach');
   document.getElementById('pgDetailTitle').textContent = 'Physical Good';
@@ -3377,7 +3444,7 @@ function pgRender(){
 
   document.getElementById('pgBody').innerHTML =
       pgHeroHtml(pg)
-    + '<div>' + pgTabsHtml(pg) + '<div style="height:14px"></div>' + pgPickHtml(pg) + '</div>'
+    + pgBoxesHtml(pg)
     + pgSendHtml(pg)
     + pgResearchHtml(pg)
     + pgNotesHtml(pg)
@@ -3386,10 +3453,6 @@ function pgRender(){
 
   const nta = document.getElementById('pgNotesTextarea');
   if(nta) requestAnimationFrame(()=> outlineAutoGrow(nta));
-  // On phones the tabs scroll sideways: keep the open one in view without moving the page vertically.
-  const tabs = document.querySelector('#pgBody .pg-tabs');
-  const active = tabs && tabs.querySelector('.pg-tab.is-active');
-  if(active && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = Math.max(0, active.offsetLeft - tabs.offsetLeft - 16);
 }
 
 // One listener set for the page body, attached once at startup.
@@ -3398,8 +3461,12 @@ function pgBindBody(){
   body.addEventListener('click', async (e)=>{
     const pg = pgActive();
     if(!pg) return;
-    const tab = e.target.closest('[data-pg-tab]');
-    if(tab){ pgTab = tab.dataset.pgTab; pgRender(); return; }
+    const jump = e.target.closest('[data-pg-jump]');
+    if(jump){
+      const box = document.getElementById('pg-box-' + jump.dataset.pgJump);
+      if(box) box.scrollIntoView({ behavior:'smooth', block:'start' });
+      return;
+    }
     const copy = e.target.closest('[data-pg-copy-text]');
     if(copy){
       try{
@@ -3514,30 +3581,89 @@ function cvrSrcChips(ids, byId){
   }).join('');
   return chips ? '<div class="cvr-srcs">' + chips + '</div>' : '';
 }
+// The research uses the Super Loom's internal kind names; show them in plain English.
+const CVR_KIND_LABELS = {
+  'idiolect-phrase': 'A phrase he always uses',
+  'recurring-moment': 'A story he tells again and again',
+  'cause-or-side-project': 'A cause he puts his name behind',
+  'media-reference': 'A book, film or show he keeps mentioning',
+  'heritage-place': 'A place that means a lot to him',
+  'sport-or-team': 'A sport or team he loves',
+  'serious-hobby': 'A serious hobby',
+  'cited-person': 'A person he often talks about',
+};
+const CVR_TESTS = [
+  ['they_care', 'He cares about it'],
+  ['almost_nobody_knows', 'Few people know it'],
+  ['converts_to_action', 'We can build from it'],
+];
+function cvrKindLabel(k){
+  if(CVR_KIND_LABELS[k]) return CVR_KIND_LABELS[k];
+  const t = String(k || '').replace(/-/g, ' ');
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+// Internal flags in the build's text, reworded for reading.
+function cvrPlain(t){
+  return String(t || '')
+    .replace(/NEEDS HUMAN:\s*/g, 'Still to confirm: ')
+    .replace(/\bRule 4:\s*/g, 'The big gesture: ')
+    .replace(/\bCold-open\b/g, 'Opening-scene').replace(/\bcold open\b/gi, 'opening scene')
+    .replace(/\bCTA\b/g, 'the ask')
+    .replace(/\bwhale\b/g, 'big-account prospect');
+}
 function cvrSignalHtml(sig, n, byId){
   const c = sig.criteria || {};
-  const crit = [['they_care', 'They care'], ['almost_nobody_knows', 'Almost nobody knows'], ['converts_to_action', 'Converts to action']]
-    .map(([k, label])=> '<span' + (c[k] ? '' : ' class="is-no"') + '>' + (c[k] ? '&check; ' : '') + esc(label) + '</span>').join('');
+  const crit = CVR_TESTS.map(([k, label])=> '<span' + (c[k] ? '' : ' class="is-no"') + '>' + (c[k] ? '&check; ' : '&times; ') + esc(label) + '</span>').join('');
   const usable = c.they_care && c.almost_nobody_knows && c.converts_to_action;
   const passages = (sig.passages || []).filter(x=> x.passage).slice(0, 3).map(x=>
     '<p class="cvr-passage"><i>&ldquo;' + esc(x.passage) + '&rdquo;</i> ' + esc(cvrShortTitle((byId[x.id] || {}).title || x.id)) + '</p>').join('');
+  const hasPlain = !!(sig.plainAbout || sig.plainInMovie);
+  let body = '';
+  if(hasPlain){
+    body += (sig.plainAbout ? '<p class="cvr-plain">' + esc(sig.plainAbout) + '</p>' : '')
+      + (sig.plainInMovie ? '<p class="cvr-inmovie"><b>' + (usable ? 'In the video: ' : 'In the video: ') + '</b>' + esc(sig.plainInMovie) + '</p>' : '')
+      + '<p class="cvr-raw"><b>The research note, as written:</b> ' + esc(cvrPlain(sig.text)) + '</p>';
+  } else {
+    body += '<p class="cvr-signal-text">' + esc(cvrPlain(sig.text)) + '</p>'
+      + (sig.action ? '<p class="cvr-enables"><b>' + (usable ? 'How the movie uses it:' : 'Why we are not using it:') + '</b> ' + esc(cvrPlain(sig.action)) + '</p>' : '');
+  }
   return '<div class="cvr-signal' + (usable ? '' : ' is-context') + '"><span class="cvr-rank">' + n + '</span><div style="min-width:0;">'
-    + '<div class="pg-tags"><span class="pg-pill is-plain">' + esc((sig.kind || '').replace(/-/g, ' ')) + '</span></div>'
-    + '<p class="cvr-signal-text">' + esc(sig.text) + '</p>'
-    + (sig.action ? '<p class="cvr-enables"><b>Enables:</b> ' + esc(sig.action) + '</p>' : '')
+    + '<div class="pg-tags"><span class="pg-pill is-plain">' + esc(cvrKindLabel(sig.kind)) + '</span></div>'
+    + body
     + '<div class="cvr-crit">' + crit + '</div>'
-    + (passages || cvrSrcChips(sig.sources, byId))
+    + (passages ? '<p class="cvr-words-k">His exact words, and the interview they come from:</p>' + passages : cvrSrcChips(sig.sources, byId))
   + '</div></div>';
+}
+function cvrStartHtml(r){
+  const st = (r.plain && r.plain.start) || {};
+  if(!st.what_is_this && !st.who) return '';
+  const block = (h, t)=> t ? '<div><h4>' + esc(h) + '</h4><p>' + esc(t) + '</p></div>' : '';
+  const gloss = (r.plain.glossary || []);
+  return '<div class="pg-card cvr-start"><p class="pg-k">Start here</p>'
+    + '<p class="cvr-explain">If you have never seen one of these before, read this box first. It explains what the video is, who it is for, and how to use the rest of the page.</p>'
+    + '<div class="cvr-start-grid">'
+      + block('What this page is', st.what_is_this)
+      + block('Who the video is for', st.who)
+      + block('What his company does', st.company)
+      + block('Why we want him as a client', st.why_him)
+    + '</div>'
+    + (st.the_movie ? '<div class="cvr-start-how"><h4>What the video is</h4><p class="cvr-text" style="font-size:14px;">' + esc(st.the_movie) + '</p></div>' : '')
+    + ((st.how_to_use || []).length ? '<div class="cvr-start-how"><h4>How to use this page</h4><ol>' + st.how_to_use.map(x=> '<li>' + esc(x) + '</li>').join('') + '</ol></div>' : '')
+    + (gloss.length ? '<div class="pg-research-groups cvr-gloss"><details><summary>Names and terms you will see on this page<span>' + gloss.length + '</span></summary><dl>'
+        + gloss.map(g=> '<dt>' + esc(g.term) + '</dt><dd>' + esc(g.means) + '</dd>').join('') + '</dl></details></div>' : '')
+  + '</div>';
 }
 function cvRenderResearch(rec){
   const el = document.getElementById('cvResearchSection');
   if(cvMode!=='outreach' || !rec){ el.hidden = true; el.innerHTML = ''; return; }
   el.hidden = false;
   const r = rec.research;
-  const head = (sub)=> '<div class="pg-section-head"><h2 class="pg-section-title" style="font-size:20px;">Research</h2>' + (sub ? '<p class="pg-section-sub">' + sub + '</p>' : '') + '</div>';
+  const first = ((r && r.person && r.person.name) || 'him').split(' ')[0];
+  const head = (sub)=> '<div><div class="pg-section-head" style="margin-bottom:4px;"><h2 class="pg-section-title" style="font-size:20px;">Research</h2>' + (sub ? '<p class="pg-section-sub">' + sub + '</p>' : '') + '</div>'
+    + '<p class="cvr-explain">Everything we learned about ' + esc(first) + ' before making this movie, and how each piece is used in it. Read top to bottom: who he is, the idea, what never to mention, then the personal details the movie is built on.</p></div>';
   if(!r){
-    el.innerHTML = head('') + '<div class="pg-card"><p class="pg-notes-empty">No research on this movie yet. Push it from the Super Loom build on your machine:</p>'
-      + '<p class="cvr-text" style="margin-top:8px;"><code style="font-family:var(--font-mono); font-size:12.5px;">python push_to_shots.py --build &lt;slug&gt; --research-only</code></p></div>';
+    el.innerHTML = head('') + '<div class="pg-card"><p class="pg-notes-empty">No research on this movie yet. It is sent here from the Super Loom build on your computer, by running:</p>'
+      + '<p class="cvr-text" style="margin-top:8px;"><code style="font-family:var(--font-mono); font-size:12.5px;">python push_to_shots.py --build &lt;build name&gt; --research-only</code></p></div>';
     return;
   }
   const byId = {};
@@ -3546,46 +3672,78 @@ function cvRenderResearch(rec){
   const usable = signals.filter(x=> x.criteria && x.criteria.they_care && x.criteria.almost_nobody_knows && x.criteria.converts_to_action);
   const context = signals.filter(x=> !usable.includes(x));
   const person = r.person || {};
-  const sub = [r.score ? 'Research score ' + esc(r.score) : '', (r.sources || []).length + ' sources',
-               r.pushedAt ? 'pushed ' + esc(cvFmtDate(r.pushedAt)) : '', r.build ? 'build <code style="font-family:var(--font-mono); font-size:11.5px;">' + esc(r.build) + '</code>' : '']
-              .filter(Boolean).join(' &middot; ');
+  const scoreParts = String(r.score || '').split('/');
+  const sub = [r.score ? esc(scoreParts[0]) + ' of ' + esc(scoreParts[1] || '') + ' research quality checks passed' : '',
+               'from ' + (r.sources || []).length + ' podcasts, interviews and articles',
+               r.pushedAt ? 'updated ' + esc(cvFmtDate(r.pushedAt)) : ''].filter(Boolean).join(' &middot; ');
   let html = head(sub);
+  const ps = (r.plain && r.plain.sections) || {};
+  html += cvrStartHtml(r);
 
-  html += '<div class="cvr-grid2"><div class="pg-card">'
+  // 1. who he is
+  html += '<div class="pg-card"><p class="pg-k">Who he is</p>'
       + '<p class="cvr-person">' + esc(person.name || '') + '</p>'
       + '<p class="cvr-person-sub">' + esc([person.title, person.company].filter(Boolean).join(', ')) + (person.location ? '<br>' + esc(person.location) : '') + '</p>'
       + (r.oneLiner ? '<p class="cvr-text">' + esc(r.oneLiner) + '</p>' : '')
-    + '</div>'
-    + (r.excluded ? '<div class="pg-card cvr-off"><p class="pg-k">Off limits</p><p class="cvr-text">' + esc(r.excluded) + '</p></div>' : '<div></div>')
-  + '</div>';
+    + '</div>';
 
-  if(r.premise || r.connection || r.enables){
+  // 2. the idea
+  if(r.premise || r.connection || r.rule4){
     html += '<div class="pg-card">'
-      + (r.premise ? '<p class="pg-k">The concept</p><p class="cvr-text">' + esc(r.premise) + '</p>' : '')
-      + (r.connection ? '<p class="pg-k">Connection to the offer</p><p class="cvr-text">' + esc(r.connection) + '</p>' : '')
-      + (r.rule4 ? '<p class="pg-k">The one thing a competitor would never do</p><p class="cvr-text">' + esc(r.rule4) + '</p>' : '')
+      + (r.premise ? '<p class="pg-k">The idea behind the movie</p><p class="cvr-explain">' + esc(ps.idea || 'What the movie is, in one paragraph, and why it fits him.') + '</p><p class="cvr-text">' + esc(cvrPlain(r.premise)) + '</p>' : '')
+      + (r.connection ? '<p class="pg-k" style="margin-top:18px;">Why this leads to a deal</p><p class="cvr-explain">' + esc(ps.deal || 'How the movie connects to what Lincko is selling him.') + '</p><p class="cvr-text">' + esc(cvrPlain(r.connection)) + '</p>' : '')
+      + (r.rule4 ? '<p class="pg-k" style="margin-top:18px;">The big gesture</p><p class="cvr-explain">' + esc(ps.gesture || 'The one thing we do that no other company pitching him would bother to do. It proves the movie was made only for him.') + '</p><p class="cvr-text">' + esc(cvrPlain(r.rule4)) + '</p>' : '')
     + '</div>';
   }
+
+  // 3. off limits
+  if(r.excluded){
+    html += '<div class="pg-card cvr-off"><p class="pg-k">Off limits: never use these</p>'
+      + '<p class="cvr-explain" style="color:#7A3A35;">Things he has talked about in public that are too personal for a stranger to bring up. Keep them out of the movie, the messages and any gift.</p>'
+      + (ps.off_limits ? '<p class="cvr-text" style="margin-bottom:10px;"><b>Why:</b> ' + esc(ps.off_limits) + '</p><p class="cvr-raw"><b>The research note, as written:</b> ' + esc(cvrPlain(r.excluded)) + '</p>'
+                       : '<p class="cvr-text">' + esc(cvrPlain(r.excluded)) + '</p>')
+      + '</div>';
+  }
+
+  // 4. what the movie is built on
   if(usable.length){
-    html += '<div><div class="pg-section-head"><h3 class="pg-section-title" style="font-size:16px;">Signals the movie is built on</h3><p class="pg-section-sub">Pass all three criteria</p></div>'
-      + '<div class="pg-card">' + usable.map((x, i)=> cvrSignalHtml(x, i + 1, byId)).join('') + '</div></div>';
+    html += '<div><div class="pg-section-head" style="margin-bottom:4px;"><h3 class="pg-section-title" style="font-size:16px;">What the movie is built on</h3><p class="pg-section-sub">' + usable.length + ' personal details</p></div>'
+      + '<p class="cvr-explain">We went through his interviews looking for personal things he keeps coming back to. A video built around something a person genuinely cares about feels made for them, not mass-produced. Each numbered item below is one of those things, and how the movie uses it.</p>'
+      + '<div class="pg-card">'
+        + '<div class="cvr-tests"><p><b>Every item here passed three tests:</b></p><ul>'
+          + '<li><b>He cares about it:</b> he brings it up himself, in more than one interview.</li>'
+          + '<li><b>Few people know it:</b> it is not on his LinkedIn or the company website, so using it shows real homework, not a quick search.</li>'
+          + '<li><b>We can build from it:</b> it turns into something real in the movie: a scene, a prop or a line.</li>'
+        + '</ul></div>'
+        + usable.map((x, i)=> cvrSignalHtml(x, i + 1, byId)).join('')
+      + '</div></div>';
   }
+
+  // 5. his own words
   if(r.quotes && r.quotes.length){
-    html += '<div><div class="pg-section-head"><h3 class="pg-section-title" style="font-size:16px;">In his own words</h3><p class="pg-section-sub">' + r.quotes.length + ' direct quotes</p></div>'
-      + '<div class="cvr-quotes">' + r.quotes.map(q=> '<blockquote class="cvr-quote"><p>' + esc(q.text) + '</p>' + cvrSrcChips([q.source], byId) + '</blockquote>').join('') + '</div></div>';
+    html += '<div><div class="pg-section-head" style="margin-bottom:4px;"><h3 class="pg-section-title" style="font-size:16px;">In his own words</h3><p class="pg-section-sub">' + r.quotes.length + ' quotes</p></div>'
+      + '<p class="cvr-explain">Things he has said in interviews, word for word. Useful for matching how he talks. Quotes about anything in Off limits are here for background only.</p>'
+      + '<div class="cvr-quotes">' + r.quotes.map(q=> '<blockquote class="cvr-quote"><p>' + esc(q.text) + '</p>' + (q.context ? '<p class="cvr-quote-ctx">' + esc(q.context) + '</p>' : '') + cvrSrcChips([q.source], byId) + '</blockquote>').join('') + '</div></div>';
   }
-  const fold = (label, count, inner, open)=> '<details' + (open ? ' open' : '') + '><summary>' + esc(label) + '<span>' + count + '</span></summary>' + inner + '</details>';
+
+  // 6. everything else, folded away
+  const fold = (label, count, inner)=> '<details><summary>' + esc(label) + '<span>' + count + '</span></summary>' + inner + '</details>';
   const list = (rows)=> '<ul class="cvr-list">' + rows.map(x=> '<li>' + esc(x.text) + cvrSrcChips(x.sources, byId) + '</li>').join('') + '</ul>';
+  const SOURCE_KINDS = { podcast:'Podcast', article:'Article', video:'Video', page:'Web page', profile:'Profile', comments:'Comments' };
   let folds = '';
-  if(context.length) folds += fold('Context only: signals that do not convert', context.length,
-    '<div style="padding:0 16px 8px;">' + context.map((x, i)=> cvrSignalHtml(x, usable.length + i + 1, byId)).join('') + '</div>');
-  if((r.professional || []).length) folds += fold('Layer 1: professional', r.professional.length, list(r.professional));
-  if((r.personal || []).length) folds += fold('Layer 2: personal', r.personal.length, list(r.personal));
-  if((r.sources || []).length) folds += fold('Sources', r.sources.length, '<ul class="cvr-sources">' + r.sources.map(s=>
+  if(context.length) folds += fold('Things we know but are not using', context.length,
+    '<div style="padding:0 16px 8px;"><p class="cvr-explain" style="margin-top:4px;">These are real, and he cares about them, but each one failed at least one of the three tests (the failed test is crossed out). Usually it is too personal, or there is nothing we could build from it. Background only.</p>'
+      + context.map((x, i)=> cvrSignalHtml(x, usable.length + i + 1, byId)).join('') + '</div>');
+  if((r.professional || []).length) folds += fold('His work and company', r.professional.length,
+    '<p class="cvr-explain" style="padding:0 16px; margin-top:4px;">Facts about his job, his company and how they sell. Each links to where it came from.</p>' + list(r.professional));
+  if((r.personal || []).length) folds += fold('His life outside work', r.personal.length,
+    '<p class="cvr-explain" style="padding:0 16px; margin-top:4px;">His background and the stories he tells about himself. Each links to where it came from.</p>' + list(r.personal));
+  if((r.sources || []).length) folds += fold('Where all of this came from', r.sources.length, '<ul class="cvr-sources">' + r.sources.map(s=>
       '<li>' + (s.url ? '<a href="' + escAttr(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' : esc(s.title))
-      + '<span>' + esc([s.kind, s.published].filter(Boolean).join(' · ')) + '</span></li>').join('') + '</ul>');
-  if(folds) html += '<div class="pg-card"><p class="pg-k">The full research</p><div class="pg-research-groups" style="margin-top:6px;">' + folds + '</div></div>';
+      + '<span>' + esc([SOURCE_KINDS[s.kind] || s.kind, s.published].filter(Boolean).join(' · ')) + '</span></li>').join('') + '</ul>');
+  if(folds) html += '<div class="pg-card"><p class="pg-k">Everything else we found</p><p class="cvr-explain">The full research, folded away. Click a heading to open it.</p><div class="pg-research-groups" style="margin-top:6px;">' + folds + '</div></div>';
   el.innerHTML = html;
+
 }
 
 /* ---------- Creative Outreach Movie: jump tabs ---------- */
