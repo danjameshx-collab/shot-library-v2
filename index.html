@@ -625,6 +625,43 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .cv-jump-dot{width:8px; height:8px; border-radius:50%; background:var(--dot, var(--mimeo)); flex:0 0 auto;}
 .cv-jump-tab.is-active .cv-jump-dot{background:#fff;}
 .cv-jump-sep{flex:0 0 1px; align-self:stretch; background:var(--line); margin:6px 4px;}
+/* Creative Outreach Movie: Research section (pushed from the Super Loom build, read-only) */
+.cv-research{margin-top:36px; padding-top:30px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:20px;}
+.cv-research[hidden]{display:none;}
+.cvr-grid2{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:16px; align-items:start;}
+.cvr-person{font-family:var(--font-display); font-weight:800; font-size:19px; letter-spacing:-.01em; color:var(--ink); margin:0;}
+.cvr-person-sub{font-size:13.5px; color:var(--ink-soft); margin:2px 0 12px;}
+.cvr-text{font-size:14.5px; line-height:1.7; color:var(--ink); margin:0; max-width:80ch;}
+.cvr-text + .pg-k{margin-top:16px;}
+.cvr-off{background:#FDF3F2; border-color:#F2D4D1;}
+.cvr-off .pg-k{color:#A0443F;}
+.cvr-off .cvr-text{color:#5E2420; font-size:13.5px;}
+.cvr-signal{display:grid; grid-template-columns:34px minmax(0,1fr); gap:14px; padding:18px 0; border-top:1px solid var(--line);}
+.cvr-signal:first-of-type{border-top:none; padding-top:4px;}
+.cvr-rank{width:34px; height:34px; border-radius:50%; background:var(--bespoke); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:13px;}
+.cvr-signal.is-context .cvr-rank{background:var(--line); color:var(--ink-soft);}
+.cvr-signal-text{font-size:15px; font-weight:600; line-height:1.55; color:var(--ink); margin:6px 0 8px;}
+.cvr-enables{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0 0 10px;}
+.cvr-enables b{color:var(--bespoke-dark);}
+.cvr-crit{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
+.cvr-crit span{font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px; background:var(--mimeo-ink); color:var(--bespoke-dark);}
+.cvr-crit span.is-no{background:#F3F4F3; color:var(--ink-faint); text-decoration:line-through;}
+.cvr-passage{font-size:13px; line-height:1.55; color:var(--ink-soft); border-left:2px solid var(--line-strong); padding-left:10px; margin:6px 0 0;}
+.cvr-passage i{color:var(--ink);}
+.cvr-srcs{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.cvr-src{display:inline-block; max-width:280px; font-size:11.5px; font-weight:600; color:var(--bespoke); background:#fff; border:1px solid var(--line); border-radius:999px; padding:2px 9px; text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:middle;}
+a.cvr-src:hover{border-color:var(--bespoke);}
+.cvr-quotes{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;}
+.cvr-quote{position:relative; margin:0; background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 18px 14px 44px; box-shadow:var(--shadow);}
+.cvr-quote:before{content:'\201C'; position:absolute; left:14px; top:6px; font-family:Georgia, serif; font-size:44px; line-height:1; color:var(--mimeo);}
+.cvr-quote p{font-size:15px; line-height:1.55; color:var(--ink); margin:0 0 10px;}
+.cvr-list li{font-size:14px; line-height:1.65;}
+.cvr-list .cvr-srcs{margin-top:4px;}
+.cvr-sources li{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;}
+.cvr-sources a{color:var(--ink); font-weight:600; text-decoration:none;}
+.cvr-sources a:hover{color:var(--bespoke); text-decoration:underline;}
+.cvr-sources span{font-size:12px; color:var(--ink-faint);}
+@media (max-width:860px){ .cvr-grid2{grid-template-columns:1fr;} }
 .shot-table-actions{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
 .shot-table-actions-left, .shot-table-actions-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 @media (max-width:600px){
@@ -1356,6 +1393,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
           <button type="button" class="btn small" data-cv-shot-action="mark-all-undone">Unmark All</button>
         </div>
       </div>
+      <section class="cv-research" id="cvResearchSection" hidden></section>
     </div>
   </div>
 </div>
@@ -3458,11 +3496,100 @@ function cvRenderDetail(){
   }
   cvWireRows();
   cvWireDragAndDrop();
+  cvRenderResearch(rec);
   cvRenderJumpNav(rec);
 }
 
+/* ---------- Creative Outreach Movie: Research ---------- */
+// The core research behind the movie, pushed from the Super Loom build by push_to_shots.py
+// (the `research` field). Read-only here: the build on Dan's machine is the source of truth.
+function cvrShortTitle(t){ return String(t || '').split(' - ')[0].split(': ')[0].slice(0, 60); }
+function cvrSrcChips(ids, byId){
+  const chips = (ids || []).map(id=>{
+    const s = byId[id] || { title: id, url:'' };
+    const label = esc(cvrShortTitle(s.title));
+    return s.url
+      ? '<a class="cvr-src" href="' + escAttr(s.url) + '" target="_blank" rel="noopener" title="' + escAttr(s.title) + '">' + label + '</a>'
+      : '<span class="cvr-src" title="' + escAttr(s.title) + '">' + label + '</span>';
+  }).join('');
+  return chips ? '<div class="cvr-srcs">' + chips + '</div>' : '';
+}
+function cvrSignalHtml(sig, n, byId){
+  const c = sig.criteria || {};
+  const crit = [['they_care', 'They care'], ['almost_nobody_knows', 'Almost nobody knows'], ['converts_to_action', 'Converts to action']]
+    .map(([k, label])=> '<span' + (c[k] ? '' : ' class="is-no"') + '>' + (c[k] ? '&check; ' : '') + esc(label) + '</span>').join('');
+  const usable = c.they_care && c.almost_nobody_knows && c.converts_to_action;
+  const passages = (sig.passages || []).filter(x=> x.passage).slice(0, 3).map(x=>
+    '<p class="cvr-passage"><i>&ldquo;' + esc(x.passage) + '&rdquo;</i> ' + esc(cvrShortTitle((byId[x.id] || {}).title || x.id)) + '</p>').join('');
+  return '<div class="cvr-signal' + (usable ? '' : ' is-context') + '"><span class="cvr-rank">' + n + '</span><div style="min-width:0;">'
+    + '<div class="pg-tags"><span class="pg-pill is-plain">' + esc((sig.kind || '').replace(/-/g, ' ')) + '</span></div>'
+    + '<p class="cvr-signal-text">' + esc(sig.text) + '</p>'
+    + (sig.action ? '<p class="cvr-enables"><b>Enables:</b> ' + esc(sig.action) + '</p>' : '')
+    + '<div class="cvr-crit">' + crit + '</div>'
+    + (passages || cvrSrcChips(sig.sources, byId))
+  + '</div></div>';
+}
+function cvRenderResearch(rec){
+  const el = document.getElementById('cvResearchSection');
+  if(cvMode!=='outreach' || !rec){ el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false;
+  const r = rec.research;
+  const head = (sub)=> '<div class="pg-section-head"><h2 class="pg-section-title" style="font-size:20px;">Research</h2>' + (sub ? '<p class="pg-section-sub">' + sub + '</p>' : '') + '</div>';
+  if(!r){
+    el.innerHTML = head('') + '<div class="pg-card"><p class="pg-notes-empty">No research on this movie yet. Push it from the Super Loom build on your machine:</p>'
+      + '<p class="cvr-text" style="margin-top:8px;"><code style="font-family:var(--font-mono); font-size:12.5px;">python push_to_shots.py --build &lt;slug&gt; --research-only</code></p></div>';
+    return;
+  }
+  const byId = {};
+  (r.sources || []).forEach(s=> { byId[s.id] = s; });
+  const signals = r.signals || [];
+  const usable = signals.filter(x=> x.criteria && x.criteria.they_care && x.criteria.almost_nobody_knows && x.criteria.converts_to_action);
+  const context = signals.filter(x=> !usable.includes(x));
+  const person = r.person || {};
+  const sub = [r.score ? 'Research score ' + esc(r.score) : '', (r.sources || []).length + ' sources',
+               r.pushedAt ? 'pushed ' + esc(cvFmtDate(r.pushedAt)) : '', r.build ? 'build <code style="font-family:var(--font-mono); font-size:11.5px;">' + esc(r.build) + '</code>' : '']
+              .filter(Boolean).join(' &middot; ');
+  let html = head(sub);
+
+  html += '<div class="cvr-grid2"><div class="pg-card">'
+      + '<p class="cvr-person">' + esc(person.name || '') + '</p>'
+      + '<p class="cvr-person-sub">' + esc([person.title, person.company].filter(Boolean).join(', ')) + (person.location ? '<br>' + esc(person.location) : '') + '</p>'
+      + (r.oneLiner ? '<p class="cvr-text">' + esc(r.oneLiner) + '</p>' : '')
+    + '</div>'
+    + (r.excluded ? '<div class="pg-card cvr-off"><p class="pg-k">Off limits</p><p class="cvr-text">' + esc(r.excluded) + '</p></div>' : '<div></div>')
+  + '</div>';
+
+  if(r.premise || r.connection || r.enables){
+    html += '<div class="pg-card">'
+      + (r.premise ? '<p class="pg-k">The concept</p><p class="cvr-text">' + esc(r.premise) + '</p>' : '')
+      + (r.connection ? '<p class="pg-k">Connection to the offer</p><p class="cvr-text">' + esc(r.connection) + '</p>' : '')
+      + (r.rule4 ? '<p class="pg-k">The one thing a competitor would never do</p><p class="cvr-text">' + esc(r.rule4) + '</p>' : '')
+    + '</div>';
+  }
+  if(usable.length){
+    html += '<div><div class="pg-section-head"><h3 class="pg-section-title" style="font-size:16px;">Signals the movie is built on</h3><p class="pg-section-sub">Pass all three criteria</p></div>'
+      + '<div class="pg-card">' + usable.map((x, i)=> cvrSignalHtml(x, i + 1, byId)).join('') + '</div></div>';
+  }
+  if(r.quotes && r.quotes.length){
+    html += '<div><div class="pg-section-head"><h3 class="pg-section-title" style="font-size:16px;">In his own words</h3><p class="pg-section-sub">' + r.quotes.length + ' direct quotes</p></div>'
+      + '<div class="cvr-quotes">' + r.quotes.map(q=> '<blockquote class="cvr-quote"><p>' + esc(q.text) + '</p>' + cvrSrcChips([q.source], byId) + '</blockquote>').join('') + '</div></div>';
+  }
+  const fold = (label, count, inner, open)=> '<details' + (open ? ' open' : '') + '><summary>' + esc(label) + '<span>' + count + '</span></summary>' + inner + '</details>';
+  const list = (rows)=> '<ul class="cvr-list">' + rows.map(x=> '<li>' + esc(x.text) + cvrSrcChips(x.sources, byId) + '</li>').join('') + '</ul>';
+  let folds = '';
+  if(context.length) folds += fold('Context only: signals that do not convert', context.length,
+    '<div style="padding:0 16px 8px;">' + context.map((x, i)=> cvrSignalHtml(x, usable.length + i + 1, byId)).join('') + '</div>');
+  if((r.professional || []).length) folds += fold('Layer 1: professional', r.professional.length, list(r.professional));
+  if((r.personal || []).length) folds += fold('Layer 2: personal', r.personal.length, list(r.personal));
+  if((r.sources || []).length) folds += fold('Sources', r.sources.length, '<ul class="cvr-sources">' + r.sources.map(s=>
+      '<li>' + (s.url ? '<a href="' + escAttr(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' : esc(s.title))
+      + '<span>' + esc([s.kind, s.published].filter(Boolean).join(' · ')) + '</span></li>').join('') + '</ul>');
+  if(folds) html += '<div class="pg-card"><p class="pg-k">The full research</p><div class="pg-research-groups" style="margin-top:6px;">' + folds + '</div></div>';
+  el.innerHTML = html;
+}
+
 /* ---------- Creative Outreach Movie: jump tabs ---------- */
-// A row of tabs under the title: the two text boxes, the shot list, then one tab per beat (section row).
+// A row of tabs under the title: Movie Outline, Dialogue, Shot List and Research.
 // Clicking scrolls the page to that part; scrolling lights up the part you're in and slides the
 // tab row so the active tab stays in view.
 let cvJumpLockUntil = 0;
@@ -3475,23 +3602,17 @@ function cvRenderJumpNav(rec){
   head.classList.toggle('has-jump', on);
   if(!on) return;
   const m = cvM();
-  const fixed = [
+  const tabs = [
     { target:'cvIdeasSection', label: m.ideasTitle.replace(/^Creative Outreach /, '') },
     { target:'cvOutlineSection', label: m.outlineTitle },
     { target:'cvShotListSection', label:'Shot List' },
+    { target:'cvResearchSection', label:'Research' },
   ];
-  const beats = (rec.shots || []).filter(r=> r.isSection && !r.locked);
   document.getElementById('cvJumpTrack').innerHTML =
-      fixed.map(t=> '<button type="button" class="cv-jump-tab" data-jump="' + escAttr(t.target) + '">' + esc(t.label) + '</button>').join('')
-    + (beats.length ? '<span class="cv-jump-sep" aria-hidden="true"></span>' : '')
-    + beats.map(b=> '<button type="button" class="cv-jump-tab" data-jump-row="' + escAttr(b.id) + '" style="--dot:' + escAttr(b.color || SECTION_COLORS[0].hex) + '">'
-        + '<span class="cv-jump-dot" aria-hidden="true"></span>' + esc(b.title || 'Untitled section') + '</button>').join('');
+    tabs.map(t=> '<button type="button" class="cv-jump-tab" data-jump="' + escAttr(t.target) + '">' + esc(t.label) + '</button>').join('');
   cvJumpSpy();
 }
-function cvJumpTargetEl(tab){
-  if(tab.dataset.jump) return document.getElementById(tab.dataset.jump);
-  return document.querySelector('#cvShotTableBody tr[data-shot-id="' + CSS.escape(tab.dataset.jumpRow) + '"]');
-}
+function cvJumpTargetEl(tab){ return document.getElementById(tab.dataset.jump); }
 function cvJumpSetActive(tab){
   const track = document.getElementById('cvJumpTrack');
   track.querySelectorAll('.cv-jump-tab').forEach(t=>{
@@ -3570,13 +3691,6 @@ function cvJumpInit(){
     requestAnimationFrame(()=>{ ticking = false; cvJumpSpy(); });
   }, { passive:true });
   window.addEventListener('resize', cvJumpFades);
-  // renaming a beat updates its tab as you type
-  document.getElementById('cvShotTableBody').addEventListener('input', (e)=>{
-    if(!e.target.classList.contains('shot-section-title-input')) return;
-    const row = e.target.closest('tr[data-shot-id]');
-    const tab = row && document.querySelector('#cvJumpTrack [data-jump-row="' + CSS.escape(row.dataset.shotId) + '"]');
-    if(tab) tab.lastChild.textContent = e.target.value || 'Untitled section';
-  });
 }
 
 let cvDragState = null;
