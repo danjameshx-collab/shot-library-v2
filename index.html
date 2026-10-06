@@ -312,7 +312,14 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   background:linear-gradient(150deg, var(--bespoke), var(--bespoke-dark)); color:#fff;
   box-shadow:0 4px 10px -3px rgba(30,107,69,.45); font-family:var(--font-display); font-weight:700; font-size:14px;
 }
+.launcher-title .logo-mark-img{
+  display:block; width:38px; height:38px; border-radius:10px; object-fit:cover;
+  border:1px solid var(--line); box-shadow:0 4px 10px -3px rgba(20,24,27,.18);
+}
 .launcher-subhead{font-size:15px; color:var(--ink-soft); margin:0 0 32px; text-align:center;}
+/* The Cine Vlog / Creative Outreach Movie launcher has no subhead, so the title carries the gap above the cards. */
+#cvLauncherOverlay .launcher-title{margin-bottom:32px;}
+@media (max-width:600px){ #cvLauncherOverlay .launcher-title{margin-bottom:24px;} }
 .launcher-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;}
 .launcher-card{
   position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
@@ -504,6 +511,37 @@ table.shot-table tbody tr.drag-over-bottom{box-shadow:inset 0 -3px 0 0 var(--mim
 .shot-music-box::placeholder{color:var(--ink-faint);}
 .shot-music-box:hover{border-color:var(--line-strong);}
 .shot-music-box:focus{outline:none; border-color:var(--mimeo); background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+
+/* ---------- shot table: dialogue box (blue, so it never reads as a song) ---------- */
+.shot-dialogue-btn{
+  width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line-strong); background:var(--paper-raised);
+  color:var(--ink-faint); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;
+  transition:background-color .18s ease, border-color .18s ease, color .18s ease, transform .12s ease;
+}
+.shot-dialogue-btn svg{width:13px; height:13px;}
+.shot-dialogue-btn:hover{border-color:#2B6CB0; color:#fff; background:#2B6CB0; transform:scale(1.1);}
+.shot-dialogue-btn.is-open{border-color:#2B6CB0; color:#fff; background:#2B6CB0;}
+.shot-dialogue-btn.has-dialogue:not(.is-open){border-color:#2B6CB0; color:#2B6CB0; background:var(--paper-raised);}
+
+.shot-dialogue-heading{
+  margin:10px 0 6px; font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:#2B6CB0;
+}
+/* Creative Outreach Movie rows open on DIALOGUE, then SCENE (the in-frame description). */
+.shot-scene-heading{
+  margin:10px 0 6px; font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-soft);
+}
+/* The first heading in the cell sits flush with the top, level with the Location dropdown.
+   Must come after .shot-scene-heading / .shot-dialogue-heading so it wins. */
+.shot-dialogue-heading.shot-dialogue-heading-first, .shot-scene-heading.shot-scene-heading-first{margin-top:0; line-height:1.2;}
+.shot-dialogue-box{
+  margin-top:0; width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:9px;
+  background:#EAF1FA; font-size:12.5px; line-height:1.5; padding:7px 10px; color:var(--ink);
+}
+.shot-dialogue-box::placeholder{color:var(--ink-faint);}
+.shot-dialogue-box:hover{border-color:var(--line-strong);}
+.shot-dialogue-box:focus{outline:none; border-color:#2B6CB0; background-color:var(--paper-raised); box-shadow:0 0 0 3px rgba(43,108,176,.15);}
 
 /* ---------- shot table: completed row treatment ---------- */
 table.shot-table tbody tr.shot-row-done,
@@ -964,9 +1002,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <div class="cv-launcher-overlay tab-page active" id="cvLauncherOverlay">
   <div class="launcher-inner">
     <div class="launcher-header">
-      <button type="button" class="back-link" id="cvBackToLibraryLink">&larr; Shots</button>
-      <h1 class="launcher-title"><span class="logo-mark" id="cvLauncherMark">CV</span><span id="cvLauncherTitle">Cine Vlogs</span></h1>
-      <p class="launcher-subhead" id="cvLauncherSubhead">Create A New Cine Vlog or Browse Previous Cine Vlogs</p>
+      <h1 class="launcher-title"><img class="logo-mark-img" id="cvLauncherMark" src="brand-logo.png" alt="Lincko"><span id="cvLauncherTitle">Cine Vlogs</span></h1>
     </div>
     <div class="launcher-grid" id="cvLauncherGrid"></div>
   </div>
@@ -986,7 +1022,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
     <div class="cv-detail-scroll">
       <div class="outline-section">
         <div class="outline-head">
-          <h2 class="outline-title">Ideas</h2>
+          <h2 class="outline-title" id="ideasTitle">Ideas</h2>
           <div class="outline-head-actions">
             <button type="button" class="btn small" id="ideasEditBtn">Edit</button>
             <button type="button" class="btn small" id="ideasCancelBtn" style="display:none;">Cancel</button>
@@ -994,11 +1030,18 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
           </div>
         </div>
         <div class="outline-view" id="ideasView"></div>
+        <div class="outline-edit-toolbar" id="ideasEditToolbar" style="display:none;">
+          <button type="button" data-outline-prefix="">Bullet</button>
+          <button type="button" data-outline-prefix="#">Heading 1</button>
+          <button type="button" data-outline-prefix="##">Heading 2</button>
+          <button type="button" data-outline-prefix="###">Heading 3</button>
+        </div>
         <textarea class="outline-textarea" id="ideasTextarea" style="display:none;" placeholder="Start typing your ideas…" spellcheck="false"></textarea>
+        <p class="outline-hint" id="ideasHint" style="display:none;">Click a button above to style the line your cursor is on &middot; everything else is a bullet &middot; don't forget to hit <kbd>Save</kbd></p>
       </div>
       <div class="outline-section">
         <div class="outline-head">
-          <h2 class="outline-title">Script Outline</h2>
+          <h2 class="outline-title" id="outlineTitle">Script Outline</h2>
           <div class="outline-head-actions">
             <button type="button" class="btn small" id="outlineEditBtn">Edit</button>
             <button type="button" class="btn small" id="outlineCancelBtn" style="display:none;">Cancel</button>
@@ -1725,8 +1768,15 @@ function toggleEffectsFullscreen(){
 // records are told apart by their `kind` field (missing kind = Cine Vlog).
 const CV_COLLECTION = 'cineVlogs';
 const CV_MODES = {
-  cine:     { singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId' },
-  outreach: { singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId' },
+  cine:     { singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId',
+              ideasTitle:'Ideas', ideasPlaceholder:'Start typing your ideas…', ideasEmpty:'No ideas yet — click Edit to add some.',
+              outlineTitle:'Script Outline', outlinePlaceholder:'Start typing your outline…', outlineEmpty:'No outline yet — click Edit to add one.',
+              thumbnailSection:true, ideasFormatted:false },
+  // Outreach: the first box describes the movie (no dialogue), the second holds only what is said, and there is no Thumbnail section.
+  outreach: { singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId',
+              ideasTitle:'Creative Outreach Movie Outline', ideasPlaceholder:'Describe everything that happens in the movie…', ideasEmpty:'No movie outline yet — click Edit to add one.',
+              outlineTitle:'Dialogue', outlinePlaceholder:'Everything that is said, by section…', outlineEmpty:'No dialogue yet — click Edit to add it.',
+              thumbnailSection:false, ideasFormatted:true },
 };
 let cvMode = 'cine';
 function cvM(){ return CV_MODES[cvMode]; }
@@ -1734,7 +1784,8 @@ const CV_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 const CV_PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 const CV_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline class="shot-done-check-path" points="4 12.5 9.5 18 20 5"></polyline></svg>';
 const CV_MUSIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
-const CV_GRIP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>';
+const CV_MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10v1a7 7 0 0 0 14 0v-1"></path><path d="M12 18v4"></path><path d="M8 22h8"></path></svg>';
+const CV_GRIP_SVG ='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>';
 const SECTION_COLORS = [
   {name:'Green', hex:'#2F8F5B'},
   {name:'Teal', hex:'#1D8A99'},
@@ -1991,16 +2042,20 @@ function outlineParseLine(line){
   if(trimmed.startsWith('# ')) return {type:'h1', text: trimmed.slice(2).trim()};
   return {type:'bullet', text: trimmed};
 }
-function outlineRenderView(text){
-  const view = document.getElementById('outlineView');
+// Shared by the Script Outline / Dialogue box and the Ideas / Movie Outline box:
+// '# ', '## ', '### ' lines are headings, every other line is a bullet.
+function outlineBlocksHtml(text, emptyMsg){
   const raw = (text || '').trim();
-  const empty = '<p class="outline-empty">No outline yet — click Edit to add one.</p>';
-  if(!raw){ view.innerHTML = empty; return; }
+  const empty = '<p class="outline-empty">' + esc(emptyMsg) + '</p>';
+  if(!raw) return empty;
   const html = raw.split(/\r?\n/).map(outlineParseLine).filter(b=> b.text).map(b=>{
     if(b.type==='bullet') return '<div class="outline-block-bullet">' + esc(b.text) + '</div>';
     return '<' + b.type + ' class="outline-block-' + b.type + '">' + esc(b.text) + '</' + b.type + '>';
   }).join('');
-  view.innerHTML = html || empty;
+  return html || empty;
+}
+function outlineRenderView(text){
+  document.getElementById('outlineView').innerHTML = outlineBlocksHtml(text, cvM().outlineEmpty);
 }
 function outlineAutoGrow(ta){
   ta.style.height = 'auto';
@@ -2057,8 +2112,14 @@ function ideasGetText(rec){
 }
 function ideasRenderView(text){
   const view = document.getElementById('ideasView');
+  if(cvM().ideasFormatted){
+    // Creative Outreach Movie Outline: headings and bullets, same as the Dialogue box.
+    view.innerHTML = outlineBlocksHtml(text, cvM().ideasEmpty);
+    return;
+  }
+  // Cine Vlogs: plain text, as typed.
   const raw = (text || '').trim();
-  const empty = '<p class="outline-empty">No ideas yet — click Edit to add some.</p>';
+  const empty = '<p class="outline-empty">' + esc(cvM().ideasEmpty) + '</p>';
   view.innerHTML = raw ? '<div style="white-space:pre-wrap;">' + esc(raw) + '</div>' : empty;
 }
 function ideasSetMode(mode){
@@ -2066,6 +2127,9 @@ function ideasSetMode(mode){
   const isEdit = mode==='edit';
   document.getElementById('ideasView').style.display = isEdit ? 'none' : 'block';
   document.getElementById('ideasTextarea').style.display = isEdit ? 'block' : 'none';
+  const showTools = isEdit && !!cvM().ideasFormatted;
+  document.getElementById('ideasEditToolbar').style.display = showTools ? 'flex' : 'none';
+  document.getElementById('ideasHint').style.display = showTools ? 'block' : 'none';
   document.getElementById('ideasEditBtn').style.display = isEdit ? 'none' : 'inline-block';
   document.getElementById('ideasSaveBtn').style.display = isEdit ? 'inline-block' : 'none';
   document.getElementById('ideasCancelBtn').style.display = isEdit ? 'inline-block' : 'none';
@@ -2106,6 +2170,10 @@ function ideasInit(){
   document.getElementById('ideasEditBtn').addEventListener('click', ideasEnterEdit);
   document.getElementById('ideasSaveBtn').addEventListener('click', ideasSave);
   document.getElementById('ideasCancelBtn').addEventListener('click', ideasCancelEdit);
+  document.getElementById('ideasEditToolbar').querySelectorAll('button[data-outline-prefix]').forEach(btn=>{
+    btn.addEventListener('mousedown', e=> e.preventDefault());
+    btn.addEventListener('click', ()=>{ outlineApplyPrefix(btn.dataset.outlinePrefix, 'ideasTextarea'); ideasDirty = true; });
+  });
   window.addEventListener('beforeunload', (e)=>{
     if(ideasMode==='edit' && ideasDirty){ e.preventDefault(); e.returnValue = ''; }
   });
@@ -2118,8 +2186,8 @@ function outlineCurrentLineRange(ta){
   if(lineEnd===-1) lineEnd = val.length;
   return {lineStart, lineEnd};
 }
-function outlineApplyPrefix(prefix){
-  const ta = document.getElementById('outlineTextarea');
+function outlineApplyPrefix(prefix, textareaId){
+  const ta = document.getElementById(textareaId || 'outlineTextarea');
   const {lineStart, lineEnd} = outlineCurrentLineRange(ta);
   const line = ta.value.slice(lineStart, lineEnd);
   const stripped = line.replace(/^(#{1,3})\s+/, '');
@@ -2127,7 +2195,7 @@ function outlineApplyPrefix(prefix){
   ta.focus();
   ta.setRangeText(newLine, lineStart, lineEnd, 'end');
   outlineAutoGrow(ta);
-  outlineDirty = true;
+  if(ta.id === 'outlineTextarea') outlineDirty = true;
 }
 function outlineInit(){
   const ta = document.getElementById('outlineTextarea');
@@ -2173,10 +2241,12 @@ const cvLoading = { cine:false, outreach:false };
 
 function cvApplyModeLabels(){
   const m = cvM();
-  document.getElementById('cvLauncherMark').textContent = m.mark;
   document.getElementById('cvLauncherTitle').textContent = m.plural;
-  document.getElementById('cvLauncherSubhead').textContent = 'Create A New ' + m.singular + ' or Browse Previous ' + m.plural;
   document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + esc(m.plural);
+  document.getElementById('ideasTitle').textContent = m.ideasTitle;
+  document.getElementById('ideasTextarea').placeholder = m.ideasPlaceholder;
+  document.getElementById('outlineTitle').textContent = m.outlineTitle;
+  document.getElementById('outlineTextarea').placeholder = m.outlinePlaceholder;
 }
 function cvSetMode(mode){
   if(mode===cvMode) return;
@@ -2212,7 +2282,14 @@ function cvShotRowHtml(row, num, sectionColor){
   const style = sectioned ? ' style="--sec-color:' + escAttr(sectionColor) + '"' : '';
   const hasMusic = !!(row.music && row.music.trim());
   const musicVisible = (row.musicOpen !== undefined) ? !!row.musicOpen : hasMusic;
-  return '<tr data-shot-id="' + escAttr(row.id) + '"' + cls + style + '>'
+  // Creative Outreach Movies: Dialogue is mandatory - the cell is always DIALOGUE then SCENE, no mic toggle.
+  // Cine Vlogs: Dialogue is optional - the mic button opens it under the description box.
+  const dialogueMandatory = cvMode === 'outreach';
+  const hasDialogue = !!(row.dialogue && row.dialogue.trim());
+  const dialogueVisible = !dialogueMandatory && ((row.dialogueOpen !== undefined) ? !!row.dialogueOpen : hasDialogue);
+  const dialogueBoxHtml = '<textarea class="shot-dialogue-box" data-field="dialogue" placeholder="The line spoken over this shot…" spellcheck="false">' + esc(row.dialogue || '') + '</textarea>';
+  const descBoxHtml = '<textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea>';
+  return '<tr data-shot-id="'+ escAttr(row.id) + '"' + cls + style + '>'
     + '<td class="col-num"><div class="shot-num-cell">'
         + '<button type="button" class="shot-num-badge" data-shot-duplicate title="Duplicate this shot">' + num + '</button>'
         + '<button type="button" class="shot-drag-handle" data-shot-drag-handle draggable="true" title="Drag to reorder" aria-label="Drag to reorder">' + CV_GRIP_SVG + '</button>'
@@ -2220,12 +2297,17 @@ function cvShotRowHtml(row, num, sectionColor){
     + '<td class="col-type" data-label="Shot / Sequence">' + shotTypeStackHtml(row) + '</td>'
     + '<td class="col-location" data-label="Location">' + lcSelectHtml('location', row.location, 'Select location…') + '</td>'
     + '<td class="col-desc" data-label="Description">'
-        + '<textarea data-field="description" placeholder="What happens in frame…" spellcheck="false">' + esc(row.description || '• ') + '</textarea>'
+        + (dialogueMandatory
+            ? '<h3 class="shot-dialogue-heading shot-dialogue-heading-first">Dialogue</h3>' + dialogueBoxHtml
+              + '<h3 class="shot-scene-heading">Scene</h3>' + descBoxHtml
+            : '<h3 class="shot-scene-heading shot-scene-heading-first">Scene</h3>' + descBoxHtml
+              + (dialogueVisible ? '<h3 class="shot-dialogue-heading">Dialogue</h3>' + dialogueBoxHtml : ''))
         + (musicVisible ? '<h3 class="shot-music-heading">Songs</h3><textarea class="shot-music-box" data-field="music" placeholder="Add a song…" spellcheck="false">' + esc(row.music || '• ') + '</textarea>' : '')
       + '</td>'
     + '<td class="col-del"><div class="shot-row-actions">'
         + '<button type="button" class="shot-done-btn' + (done ? ' is-done' : '') + '" data-shot-done title="' + (done ? 'Mark as not done' : 'Mark as done') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
         + '<button type="button" class="shot-del-btn" data-shot-remove title="Remove shot">&times;</button>'
+        + (!dialogueMandatory ? '<button type="button" class="shot-dialogue-btn' + (hasDialogue ? ' has-dialogue' : '') + (dialogueVisible ? ' is-open' : '') + '" data-shot-dialogue title="' + (dialogueVisible ? 'Hide dialogue' : 'Add dialogue') + '" aria-pressed="' + (dialogueVisible ? 'true' : 'false') + '">' + CV_MIC_SVG + '</button>' : '')
         + '<button type="button" class="shot-music-btn' + (hasMusic ? ' has-music' : '') + (musicVisible ? ' is-open' : '') + '" data-shot-music title="' + (musicVisible ? 'Hide song' : 'Add a song') + '" aria-pressed="' + (musicVisible ? 'true' : 'false') + '">' + CV_MUSIC_SVG + '</button>'
       + '</div></td>'
   + '</tr>';
@@ -2371,10 +2453,18 @@ function cvBackToLauncher(){
   cvRenderLauncher();
 }
 
-// Every Cine Vlog / Creative Outreach Movie has a permanent Thumbnail section pinned to the top of the shot table.
+// Cine Vlogs have a permanent Thumbnail section pinned to the top of the shot table.
+// Creative Outreach Movies do not (CV_MODES[...].thumbnailSection).
 const CV_THUMBNAIL_SECTION = { id:'section-thumbnail', isSection:true, locked:true, title:'THUMBNAIL', color:'#E8731C' };
 function cvEnsureThumbnailSection(rec){
   const idx = rec.shots.findIndex(s=> s.id===CV_THUMBNAIL_SECTION.id);
+  if(!cvM().thumbnailSection){
+    // Creative Outreach Movies have no Thumbnail section: drop the locked divider from
+    // records made before this changed. Rows under it are kept. Cine Vlogs keep theirs.
+    if(idx === -1) return false;
+    rec.shots.splice(idx, 1);
+    return true;
+  }
   if(idx === 0) return false;
   if(idx > 0) rec.shots.splice(idx, 1);
   rec.shots.unshift({ ...CV_THUMBNAIL_SECTION });
@@ -2684,6 +2774,9 @@ function cvWireRows(){
     const musicBtn = tr.querySelector('[data-shot-music]');
     if(musicBtn) musicBtn.addEventListener('click', ()=> cvToggleMusicBox(id));
 
+    const dialogueBtn = tr.querySelector('[data-shot-dialogue]');
+    if(dialogueBtn) dialogueBtn.addEventListener('click', ()=> cvToggleDialogueBox(id));
+
     tr.querySelectorAll('[data-section-color]').forEach(sw=>{
       sw.addEventListener('click', ()=> cvSetSectionColor(id, sw.dataset.sectionColor));
     });
@@ -2755,6 +2848,8 @@ async function cvDuplicateRow(shotId){
   if(idx === -1) return;
   const original = rec.shots[idx];
   const copy = Object.assign({}, original, { id: cvUid(), shotTypes: cvShotTypesOf(original).slice() });
+  // A duplicate is Dan's own row, not the packet's: drop the push stamps so a re-push never mistakes it for the original.
+  delete copy.sourceKey; delete copy.sourceHash;
   rec.shots.splice(idx + 1, 0, copy);
   rec.updatedAt = Date.now();
   cvRenderDetail();
@@ -2824,6 +2919,24 @@ async function cvToggleMusicBox(shotId){
   if(row.musicOpen){
     const tr = document.querySelector('tr[data-shot-id="' + CSS.escape(shotId) + '"]');
     const box = tr && tr.querySelector('.shot-music-box');
+    if(box) box.focus();
+  }
+}
+
+async function cvToggleDialogueBox(shotId){
+  const rec = cvLibrary.find(r=> r.id===cvActiveId);
+  if(!rec) return;
+  const row = rec.shots.find(s=> s.id===shotId);
+  if(!row) return;
+  const hasDialogue = !!(row.dialogue && row.dialogue.trim());
+  const currentlyVisible = (row.dialogueOpen !== undefined) ? !!row.dialogueOpen : hasDialogue;
+  row.dialogueOpen = !currentlyVisible;
+  rec.updatedAt = Date.now();
+  cvRenderDetail();
+  await cvSaveRecord(rec);
+  if(row.dialogueOpen){
+    const tr = document.querySelector('tr[data-shot-id="' + CSS.escape(shotId) + '"]');
+    const box = tr && tr.querySelector('.shot-dialogue-box');
     if(box) box.focus();
   }
 }
@@ -2970,7 +3083,6 @@ function switchTab(tab){
   document.querySelectorAll('.top-tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
   });
-  document.getElementById('cvBackToLibraryLink').addEventListener('click', ()=> switchTab('library'));
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
