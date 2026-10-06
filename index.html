@@ -317,9 +317,27 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   border:1px solid var(--line); box-shadow:0 4px 10px -3px rgba(20,24,27,.18);
 }
 .launcher-subhead{font-size:15px; color:var(--ink-soft); margin:0 0 32px; text-align:center;}
-/* The Cine Vlog / Creative Outreach Movie launcher has no subhead, so the title carries the gap above the cards. */
-#cvLauncherOverlay .launcher-title{margin-bottom:32px;}
-@media (max-width:600px){ #cvLauncherOverlay .launcher-title{margin-bottom:24px;} }
+/* The Cine Vlog and Creative Outreach launchers have no subhead, so the title carries the gap above the cards. */
+#cvLauncherOverlay .launcher-title, #coProspectsOverlay .launcher-title, #coProspectOverlay .launcher-title{margin-bottom:32px;}
+@media (max-width:600px){ #cvLauncherOverlay .launcher-title, #coProspectsOverlay .launcher-title, #coProspectOverlay .launcher-title{margin-bottom:24px;} }
+/* Prospect page: rename sits beside the prospect name. */
+#coProspectOverlay .launcher-title .lc-icon-btn{
+  width:30px; height:30px; border-radius:8px; border:none; background:transparent; color:var(--ink-faint);
+  cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background-color .15s ease, color .15s ease;
+}
+#coProspectOverlay .launcher-title .lc-icon-btn:hover{background:var(--mimeo-ink); color:var(--bespoke);}
+#coProspectOverlay .launcher-title .lc-icon-btn svg{width:16px; height:16px;}
+/* Prospect item types that are not built yet. */
+.launcher-card.is-soon{opacity:.55; cursor:default; border-style:dashed;}
+.launcher-card.is-soon:hover{border-color:var(--line); box-shadow:var(--shadow); transform:none;}
+.launcher-card .lc-type{
+  font-family:var(--font-display); font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--bespoke-dark); margin:0 0 6px;
+}
+.launcher-card .lc-soon-badge{
+  display:inline-flex; align-items:center; font-family:var(--font-display); font-weight:700; font-size:10.5px;
+  letter-spacing:.02em; color:var(--ink-soft); background:var(--mimeo-ink); border-radius:20px; padding:3px 9px; white-space:nowrap;
+}
 .launcher-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;}
 .launcher-card{
   position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
@@ -863,7 +881,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 <body>
 
 <div class="top-tabs" id="topTabs">
-  <button type="button" class="top-tab-btn" data-tab="outreach">Creative Outreach Movie</button>
+  <button type="button" class="top-tab-btn" data-tab="outreach">Creative Outreach</button>
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
@@ -1005,6 +1023,28 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       <h1 class="launcher-title"><img class="logo-mark-img" id="cvLauncherMark" src="brand-logo.png" alt="Lincko"><span id="cvLauncherTitle">Cine Vlogs</span></h1>
     </div>
     <div class="launcher-grid" id="cvLauncherGrid"></div>
+  </div>
+</div>
+
+<!-- Creative Outreach: prospects list, then one prospect's Movie / Physical Good / Strategy Doc. -->
+<div class="cv-launcher-overlay tab-page" id="coProspectsOverlay">
+  <div class="launcher-inner">
+    <div class="launcher-header">
+      <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span>Creative Outreach</span></h1>
+    </div>
+    <div class="launcher-grid" id="coProspectsGrid"></div>
+  </div>
+</div>
+
+<div class="cv-launcher-overlay tab-page" id="coProspectOverlay">
+  <div class="launcher-inner">
+    <div class="launcher-header">
+      <button type="button" class="back-link" id="coBackToProspectsLink">&larr; Creative Outreach</button>
+      <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span id="coProspectTitle">Prospect</span>
+        <button type="button" class="lc-icon-btn" id="coProspectRenameBtn" title="Rename this prospect" aria-label="Rename this prospect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+      </h1>
+    </div>
+    <div class="launcher-grid" id="coProspectItemsGrid"></div>
   </div>
 </div>
 
@@ -1764,8 +1804,9 @@ function toggleEffectsFullscreen(){
 }
 
 /* ================= CINE VLOGS ================= */
-// The Cine Vlogs and Creative Outreach Movie tabs share one UI and one Firestore collection;
+// Cine Vlogs and Creative Outreach Movies share one editor UI and one Firestore collection;
 // records are told apart by their `kind` field (missing kind = Cine Vlog).
+// Creative Outreach Movies sit under a prospect (see CREATIVE OUTREACH PROSPECTS) via `prospectId`.
 const CV_COLLECTION = 'cineVlogs';
 const CV_MODES = {
   cine:     { singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId',
@@ -2242,7 +2283,8 @@ const cvLoading = { cine:false, outreach:false };
 function cvApplyModeLabels(){
   const m = cvM();
   document.getElementById('cvLauncherTitle').textContent = m.plural;
-  document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + esc(m.plural);
+  const prospect = cvMode==='outreach' ? coProspects.find(p=> p.id===coActiveProspectId) : null;
+  document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : m.plural);
   document.getElementById('ideasTitle').textContent = m.ideasTitle;
   document.getElementById('ideasTextarea').placeholder = m.ideasPlaceholder;
   document.getElementById('outlineTitle').textContent = m.outlineTitle;
@@ -2262,11 +2304,16 @@ async function cvLoadMode(mode){
   if(cvLoaded[mode] || cvLoading[mode] || mode!==cvMode) return;
   cvLoading[mode] = true;
   const lib = await cvFetchLibrary();
+  if(mode==='outreach') await coLoadProspects(lib);
   cvLoading[mode] = false;
   cvLoaded[mode] = true;
   let savedId = null;
   try{ savedId = localStorage.getItem(CV_MODES[mode].storageKey); }catch(e){}
   const activeId = savedId && lib.some(r=> r.id===savedId) ? savedId : null;
+  if(mode==='outreach' && activeId){
+    const movie = lib.find(r=> r.id===activeId);
+    if(movie.prospectId) coActiveProspectId = movie.prospectId;
+  }
   if(mode===cvMode){ cvLibrary = lib; cvActiveId = activeId; }
   else cvStash[mode] = { library: lib, activeId };
   if(cvCurrentTab===mode) switchTab(mode);
@@ -2431,7 +2478,8 @@ async function cvDelete(id){
   }
   cvLibrary = cvLibrary.filter(r=> r.id!==id);
   if(cvActiveId===id){ cvActiveId=null; cvBackToLauncher(); }
-  cvRenderLauncher();
+  else if(cvMode==='outreach') coRenderProspect();
+  if(cvMode!=='outreach') cvRenderLauncher();
 }
 
 function cvOpen(id){
@@ -2439,7 +2487,14 @@ function cvOpen(id){
   if(!rec) return;
   cvActiveId = id;
   try{ localStorage.setItem(cvM().storageKey, id); }catch(e){}
+  if(cvMode==='outreach' && rec.prospectId){
+    coActiveProspectId = rec.prospectId;
+    try{ localStorage.setItem(CO_ACTIVE_PROSPECT_KEY, rec.prospectId); }catch(e){}
+  }
+  cvApplyModeLabels();
   document.getElementById('cvLauncherOverlay').classList.remove('active');
+  document.getElementById('coProspectsOverlay').classList.remove('active');
+  document.getElementById('coProspectOverlay').classList.remove('active');
   document.getElementById('cvDetailOverlay').classList.add('active');
   cvRenderDetail();
 }
@@ -2449,8 +2504,242 @@ function cvBackToLauncher(){
   cvActiveId = null;
   try{ localStorage.removeItem(cvM().storageKey); }catch(e){}
   document.getElementById('cvDetailOverlay').classList.remove('active');
+  // Creative Outreach Movies go back to their prospect, not to a flat list of movies.
+  if(cvMode==='outreach'){
+    if(coProspects.some(p=> p.id===coActiveProspectId)) coOpenProspect(coActiveProspectId);
+    else coBackToProspects();
+    return;
+  }
   document.getElementById('cvLauncherOverlay').classList.add('active');
   cvRenderLauncher();
+}
+
+/* ================= CREATIVE OUTREACH PROSPECTS ================= */
+// A prospect groups everything made for one outreach target: one Creative Outreach Movie
+// (a `cineVlogs` record with kind 'outreach' and this prospect's id), plus a Physical Good
+// and a Strategy Doc, which are placeholders for now.
+const CO_PROSPECTS_COLLECTION = 'coProspects';
+const CO_ACTIVE_PROSPECT_KEY = 'lcActiveCoProspectId';
+let coProspects = [];
+let coActiveProspectId = null;
+try{ coActiveProspectId = localStorage.getItem(CO_ACTIVE_PROSPECT_KEY); }catch(e){}
+
+// The outreach movie list lives in cvLibrary while the Creative Outreach tab is showing, else in the stash.
+function coMovies(){ return cvMode==='outreach' ? cvLibrary : cvStash.outreach.library; }
+function coMovieFor(prospectId){ return coMovies().find(r=> r.prospectId===prospectId) || null; }
+
+// Loads prospects, then gives every outreach movie that has no prospect yet its own prospect (named after the movie).
+async function coLoadProspects(movies){
+  try{
+    const snap = await getDocs(collection(db, CO_PROSPECTS_COLLECTION));
+    coProspects = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+  }catch(e){
+    console.error('Failed to load prospects from Firebase:', e);
+    await lcAlert('Connection error', 'Could not load your prospects from the database. Check your connection and try again.');
+    coProspects = [];
+    return;
+  }
+  for(const movie of movies){
+    if(movie.prospectId && coProspects.some(p=> p.id===movie.prospectId)) continue;
+    const p = { name: movie.name || 'Untitled Prospect', updatedAt: movie.updatedAt || Date.now(), completed: !!movie.completed };
+    try{
+      const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
+      p.id = ref.id;
+      await updateDoc(doc(db, CV_COLLECTION, movie.id), { prospectId: p.id });
+      movie.prospectId = p.id;
+      coProspects.push(p);
+    }catch(e){
+      console.error('Failed to create a prospect for "' + movie.name + '":', e);
+    }
+  }
+  if(coActiveProspectId && !coProspects.some(p=> p.id===coActiveProspectId)) coActiveProspectId = null;
+}
+async function coSaveProspect(p){
+  try{
+    await updateDoc(doc(db, CO_PROSPECTS_COLLECTION, p.id), { name: p.name, updatedAt: p.updatedAt, completed: !!p.completed });
+  }catch(e){
+    console.error('Failed to save prospect to Firebase:', e);
+    await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
+  }
+}
+function coTouchProspect(prospectId){
+  const p = coProspects.find(x=> x.id===prospectId);
+  if(!p) return;
+  p.updatedAt = Date.now();
+  coSaveProspect(p);
+}
+
+function coRenderProspects(){
+  const grid = document.getElementById('coProspectsGrid');
+  if(!cvLoaded.outreach){ grid.innerHTML = '<div class="launcher-empty">Loading prospects…</div>'; return; }
+  let html = '<button type="button" class="launcher-card new" id="coCreateProspectBtn"><span class="plus">+</span><span class="label">Create Prospect</span></button>';
+  const sorted = coProspects.slice().sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
+  if(!sorted.length){
+    html += '<div class="launcher-empty">No prospects yet - create your first one to get started.</div>';
+  }
+  sorted.forEach(p=>{
+    const done = !!p.completed;
+    const movie = coMovieFor(p.id);
+    const shotCount = movie ? (movie.shots||[]).filter(s=> !s.isSection).length : 0;
+    const meta = 'Updated ' + cvFmtDate(p.updatedAt) + ' · ' + (movie ? 'Movie, ' + shotCount + ' shot' + (shotCount===1?'':'s') : 'No movie yet');
+    html += '<div class="launcher-card' + (done ? ' is-complete' : '') + '" data-prospect-id="' + escAttr(p.id) + '">'
+      + '<button type="button" class="lc-complete-btn' + (done ? ' is-complete' : '') + '" data-complete-id="' + escAttr(p.id) + '" title="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-label="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
+      + '<h3 class="lc-name">' + esc(p.name || 'Untitled Prospect') + '</h3>'
+      + '<p class="lc-meta">' + esc(meta) + '</p>'
+      + '<div class="lc-footer">'
+        + (done ? '<span class="lc-complete-badge">' + CV_CHECK_SVG + 'Completed</span>' : '<span></span>')
+        + '<div class="lc-actions">'
+          + '<button type="button" class="lc-icon-btn lc-rename" data-rename-id="' + escAttr(p.id) + '" title="Rename this prospect" aria-label="Rename">' + CV_PENCIL_SVG + '</button>'
+          + '<button type="button" class="lc-icon-btn lc-delete" data-delete-id="' + escAttr(p.id) + '" title="Delete this prospect" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  });
+  grid.innerHTML = html;
+
+  grid.querySelectorAll('.launcher-card[data-prospect-id]').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.lc-icon-btn') || e.target.closest('.lc-complete-btn')) return;
+      coOpenProspect(card.dataset.prospectId);
+    });
+  });
+  grid.querySelectorAll('.lc-rename').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coRenameProspect(btn.dataset.renameId); }));
+  grid.querySelectorAll('.lc-delete').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coDeleteProspect(btn.dataset.deleteId); }));
+  grid.querySelectorAll('.lc-complete-btn').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coToggleProspectComplete(btn.dataset.completeId); }));
+  document.getElementById('coCreateProspectBtn').addEventListener('click', coCreateProspect);
+}
+
+function coRenderProspect(){
+  const p = coProspects.find(x=> x.id===coActiveProspectId);
+  if(!p) return;
+  document.getElementById('coProspectTitle').textContent = p.name || 'Untitled Prospect';
+  const movie = coMovieFor(p.id);
+  let html = '';
+  if(movie){
+    const shotCount = (movie.shots||[]).filter(s=> !s.isSection).length;
+    html += '<div class="launcher-card' + (movie.completed ? ' is-complete' : '') + '" data-co-movie-id="' + escAttr(movie.id) + '">'
+      + '<p class="lc-type">Creative Outreach Movie</p>'
+      + '<h3 class="lc-name">' + esc(movie.name || 'Untitled Creative Outreach Movie') + '</h3>'
+      + '<p class="lc-meta">Updated ' + cvFmtDate(movie.updatedAt) + ' · ' + shotCount + ' shot' + (shotCount===1?'':'s') + '</p>'
+      + '<div class="lc-footer">'
+        + (movie.completed ? '<span class="lc-complete-badge">' + CV_CHECK_SVG + 'Completed</span>' : '<span></span>')
+        + '<div class="lc-actions">'
+          + '<button type="button" class="lc-icon-btn lc-delete" data-delete-movie-id="' + escAttr(movie.id) + '" title="Delete this Creative Outreach Movie" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  } else {
+    html += '<button type="button" class="launcher-card new" id="coCreateMovieBtn"><span class="plus">+</span><span class="label">Create Creative Outreach Movie</span></button>';
+  }
+  ['Physical Good', 'Strategy Doc'].forEach(label=>{
+    html += '<div class="launcher-card is-soon" aria-disabled="true">'
+      + '<p class="lc-type">' + esc(label) + '</p>'
+      + '<h3 class="lc-name">Create ' + esc(label) + '</h3>'
+      + '<div class="lc-footer"><span class="lc-soon-badge">Coming soon</span><span></span></div>'
+    + '</div>';
+  });
+  const grid = document.getElementById('coProspectItemsGrid');
+  grid.innerHTML = html;
+  const movieCard = grid.querySelector('[data-co-movie-id]');
+  if(movieCard) movieCard.addEventListener('click', (e)=>{
+    if(e.target.closest('.lc-icon-btn')) return;
+    cvOpen(movieCard.dataset.coMovieId);
+  });
+  const delBtn = grid.querySelector('[data-delete-movie-id]');
+  if(delBtn) delBtn.addEventListener('click', (e)=>{ e.stopPropagation(); cvDelete(delBtn.dataset.deleteMovieId); });
+  const createBtn = document.getElementById('coCreateMovieBtn');
+  if(createBtn) createBtn.addEventListener('click', coCreateMovie);
+}
+
+function coShowPage(page){
+  document.getElementById('coProspectsOverlay').classList.toggle('active', page==='list');
+  document.getElementById('coProspectOverlay').classList.toggle('active', page==='prospect');
+}
+function coOpenProspect(id){
+  if(!coProspects.some(p=> p.id===id)) return;
+  coActiveProspectId = id;
+  try{ localStorage.setItem(CO_ACTIVE_PROSPECT_KEY, id); }catch(e){}
+  coShowPage('prospect');
+  coRenderProspect();
+}
+function coBackToProspects(){
+  coActiveProspectId = null;
+  try{ localStorage.removeItem(CO_ACTIVE_PROSPECT_KEY); }catch(e){}
+  coShowPage('list');
+  coRenderProspects();
+}
+
+async function coCreateProspect(){
+  const name = await lcPrompt('Create Prospect', 'Untitled Prospect', {
+    message: 'Who is this outreach for? Use the person or company name.', confirmText: 'Create'
+  });
+  if(name === null) return;
+  const p = { name: name || 'Untitled Prospect', updatedAt: Date.now(), completed: false };
+  try{
+    const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
+    p.id = ref.id;
+    coProspects.push(p);
+    coOpenProspect(p.id);
+  }catch(e){
+    console.error('Failed to create prospect:', e);
+    await lcAlert('Connection error', 'Could not create this prospect. Check your connection and try again.');
+  }
+}
+async function coRenameProspect(id){
+  const p = coProspects.find(x=> x.id===id);
+  if(!p) return;
+  const name = await lcPrompt('Rename Prospect', p.name || '', {
+    message: 'Choose a new name for this prospect.', confirmText: 'Save'
+  });
+  if(name === null) return;
+  p.name = name || p.name;
+  p.updatedAt = Date.now();
+  coRenderProspects();
+  if(coActiveProspectId===id) coRenderProspect();
+  await coSaveProspect(p);
+}
+async function coToggleProspectComplete(id){
+  const p = coProspects.find(x=> x.id===id);
+  if(!p) return;
+  p.completed = !p.completed;
+  coRenderProspects();
+  await coSaveProspect(p);
+}
+async function coDeleteProspect(id){
+  const p = coProspects.find(x=> x.id===id);
+  if(!p) return;
+  const movie = coMovieFor(id);
+  const ok = await lcConfirm('Delete this prospect?', 'Delete "' + (p.name || 'Untitled Prospect') + '"' + (movie ? ' and its Creative Outreach Movie' : '') + '? This cannot be undone.', {
+    confirmText: 'Delete', danger: true
+  });
+  if(!ok) return;
+  try{
+    if(movie) await deleteDoc(doc(db, CV_COLLECTION, movie.id));
+    await deleteDoc(doc(db, CO_PROSPECTS_COLLECTION, id));
+  }catch(e){
+    console.error('Failed to delete prospect:', e);
+    await lcAlert('Connection error', 'Could not delete this prospect. Check your connection and try again.');
+    return;
+  }
+  if(movie) cvLibrary = cvLibrary.filter(r=> r.id!==movie.id);
+  coProspects = coProspects.filter(x=> x.id!==id);
+  if(coActiveProspectId===id) coBackToProspects();
+  else coRenderProspects();
+}
+async function coCreateMovie(){
+  const p = coProspects.find(x=> x.id===coActiveProspectId);
+  if(!p || coMovieFor(p.id)) return;
+  const rec = { kind: 'outreach', prospectId: p.id, name: p.name || 'Untitled Creative Outreach Movie', updatedAt: Date.now(), shots: [], locations: [], outlineText: '', ideasText: '' };
+  try{
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    rec.id = ref.id;
+    cvLibrary.push(rec);
+    coTouchProspect(p.id);
+    cvOpen(rec.id);
+  }catch(e){
+    console.error('Failed to create Creative Outreach Movie:', e);
+    await lcAlert('Connection error', 'Could not create this Creative Outreach Movie. Check your connection and try again.');
+  }
 }
 
 // Cine Vlogs have a permanent Thumbnail section pinned to the top of the shot table.
@@ -3019,12 +3308,20 @@ function switchTab(tab){
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
   if(tab==='thumbs') thumbsLoad();
-  const showLauncher = isCv && !cvActiveId;
+  // Cine Vlogs: launcher -> editor. Creative Outreach: prospects -> prospect -> movie editor.
+  const isCo = tab==='outreach';
   const showDetail = isCv && !!cvActiveId;
+  const showLauncher = tab==='cine' && !cvActiveId;
+  const showProspect = isCo && !cvActiveId && !!coActiveProspectId && coProspects.some(p=> p.id===coActiveProspectId);
+  const showProspects = isCo && !cvActiveId && !showProspect;
   document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
+  document.getElementById('coProspectsOverlay').classList.toggle('active', showProspects);
+  document.getElementById('coProspectOverlay').classList.toggle('active', showProspect);
   document.getElementById('cvDetailOverlay').classList.toggle('active', showDetail);
   if(showLauncher) cvRenderLauncher();
-  if(showDetail) cvRenderDetail();
+  if(showProspects) coRenderProspects();
+  if(showProspect) coRenderProspect();
+  if(showDetail){ cvApplyModeLabels(); cvRenderDetail(); }
   if(isCv) cvLoadMode(tab);
 }
 
@@ -3084,6 +3381,8 @@ function switchTab(tab){
     btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
   });
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
+  document.getElementById('coBackToProspectsLink').addEventListener('click', coBackToProspects);
+  document.getElementById('coProspectRenameBtn').addEventListener('click', ()=>{ if(coActiveProspectId) coRenameProspect(coActiveProspectId); });
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
   document.querySelectorAll('[data-cv-shot-action="add-section"]').forEach(btn=> btn.addEventListener('click', cvAddSection));
