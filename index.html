@@ -374,7 +374,7 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-fact-k{font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);}
 .pg-fact-v{font-size:13px; font-weight:600; color:var(--ink); margin-top:2px; overflow-wrap:break-word;}
 .pg-status{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-soft);}
-.pg-status select, .pg-form select{
+.pg-status select{
   font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:5px 8px; border-radius:8px;
   border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink); cursor:pointer;
 }
@@ -391,17 +391,6 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-risk{background:#FDF5EC; border:1px solid #F1DEC6; border-radius:10px; padding:10px 12px;}
 .pg-risk .pg-sec-k{color:var(--warn);}
 .pg-tier-empty{font-size:13px; color:var(--ink-faint); line-height:1.6; margin:0;}
-.pg-form{display:flex; flex-direction:column; gap:10px;}
-.pg-form label{display:flex; flex-direction:column; gap:4px; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
-.pg-form input[type=text], .pg-form textarea{
-  font-family:var(--font-body); font-size:13.5px; line-height:1.5; color:var(--ink); text-transform:none; letter-spacing:0; font-weight:400;
-  border:1px solid var(--line-strong); border-radius:8px; padding:7px 10px; background:var(--paper-raised); width:100%; box-sizing:border-box;
-}
-.pg-form textarea{resize:vertical; min-height:64px;}
-.pg-form input:focus, .pg-form textarea:focus{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
-.pg-form-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-.pg-form .pg-check{flex-direction:row; align-items:center; gap:8px; text-transform:none; letter-spacing:0; font-size:12.5px; font-weight:600; color:var(--ink);}
-.pg-form-actions{display:flex; justify-content:flex-end; gap:8px;}
 .pg-research details{border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); box-shadow:var(--shadow); margin-bottom:10px;}
 .pg-research summary{cursor:pointer; padding:12px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink);}
 .pg-research ul{margin:0; padding:0 16px 14px 34px;}
@@ -412,7 +401,6 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-foot code{font-family:var(--font-mono); font-size:11.5px;}
 @media (max-width:600px){
   .pg-tiers{grid-template-columns:1fr;}
-  .pg-form-row{grid-template-columns:1fr;}
   .pg-lead{padding:12px 14px;}
 }
 .launcher-card .lc-soon-badge{
@@ -1129,7 +1117,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   </div>
 </div>
 
-<!-- Physical Good: filled by the /physical-goods skill (scripts/bank.py publish), read and edited here. -->
+<!-- Physical Good: filled by the /physical-goods skill (scripts/bank.py publish). Read-only apart from status and notes. -->
 <div class="cv-detail-overlay tab-page" id="pgDetailOverlay">
   <div class="cv-detail-box">
     <div class="cv-detail-head">
@@ -1138,7 +1126,6 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
         <h2 id="pgDetailTitle" style="font-family:var(--font-display); font-weight:800; font-size:clamp(16px, 4.5vw, 20px); margin:2px 0 0; color:var(--ink); overflow-wrap:break-word; line-height:1.25;">Physical Good</h2>
         <div class="pg-meta" id="pgMeta"></div>
       </div>
-      <button type="button" class="btn small" id="pgEditDetailsBtn">Edit details</button>
     </div>
     <div class="cv-detail-scroll">
       <div class="pg-inner" id="pgBody"></div>
@@ -2754,7 +2741,11 @@ function coRenderProspect(){
       + '</div>'
     + '</div>';
   } else {
-    html += '<button type="button" class="launcher-card new" id="coCreatePgBtn"><span class="plus">+</span><span class="label">Create Physical Good</span></button>';
+    html += '<div class="launcher-card is-soon" aria-disabled="true">'
+      + '<p class="lc-type">Physical Good</p>'
+      + '<h3 class="lc-name">Not run yet</h3>'
+      + '<p class="lc-meta">Run /physical-goods for ' + esc(p.name || 'this prospect') + ' in Claude Code and the picks appear here.</p>'
+    + '</div>';
   }
   html += '<div class="launcher-card is-soon" aria-disabled="true">'
     + '<p class="lc-type">Strategy Doc</p>'
@@ -2770,8 +2761,6 @@ function coRenderProspect(){
   });
   const pgDelBtn = grid.querySelector('[data-delete-pg-id]');
   if(pgDelBtn) pgDelBtn.addEventListener('click', (e)=>{ e.stopPropagation(); pgDelete(pgDelBtn.dataset.deletePgId); });
-  const pgCreateBtn = document.getElementById('coCreatePgBtn');
-  if(pgCreateBtn) pgCreateBtn.addEventListener('click', pgCreate);
   const movieCard = grid.querySelector('[data-co-movie-id]');
   if(movieCard) movieCard.addEventListener('click', (e)=>{
     if(e.target.closest('.lc-icon-btn')) return;
@@ -2888,7 +2877,7 @@ async function coCreateMovie(){
 /* ================= PHYSICAL GOODS ================= */
 // One Physical Good record per prospect (kind 'physicalGood' in cineVlogs, linked by prospectId).
 // The /physical-goods skill does the research and picks, then `scripts/bank.py publish` writes
-// them here. This page is where they are read, edited and tracked through to delivery.
+// them here. This page is where they are read and tracked to delivery (status + notes only).
 const PG_KIND = 'physicalGood';
 const PG_ACTIVE_KEY = 'lcActivePgId';
 const PG_TIERS = [
@@ -2896,7 +2885,6 @@ const PG_TIERS = [
   { key:'mid',  label:'Medium',     cap:'Up to $50' },
   { key:'high', label:'High',       cap:'Over $50' },
 ];
-const PG_STAGES = ['cold', 'warm', 'stalled', 'closing', 'strategic'];
 const PG_STATUSES = ['Idea', 'Approved', 'Ordered', 'Sent', 'Delivered', 'Not sending'];
 const PG_NOTE_WORDS = 50;
 const PG_RESEARCH_GROUPS = [
@@ -2912,7 +2900,7 @@ const PG_PROMPT_LABELS = {
 let coPhysicalGoods = [];
 let pgActiveId = null;
 try{ pgActiveId = localStorage.getItem(PG_ACTIVE_KEY); }catch(e){}
-let pgEditing = null;   // null | 'details' | 'lead' | 'summary' | 'notes' | 'tier:<key>'
+let pgEditing = null;   // null | 'notes': the picks themselves are read-only here
 
 function pgTierDef(key){ return PG_TIERS.find(t=> t.key===key) || { key, label: key || '', cap:'' }; }
 function pgFor(prospectId){ return coPhysicalGoods.find(r=> r.prospectId===prospectId) || null; }
@@ -2942,22 +2930,6 @@ async function pgSave(pg, fields){
   }
 }
 
-async function pgCreate(){
-  const p = coProspects.find(x=> x.id===coActiveProspectId);
-  if(!p || pgFor(p.id)) return;
-  const rec = { kind: PG_KIND, prospectId: p.id, name: p.name || 'Untitled Prospect', company: p.name || '', contact: '', sender: '', stage: 'cold',
-                summary: '', leadTier: '', leadReason: '', tiers: {}, research: [], notes: '', updatedAt: Date.now() };
-  try{
-    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
-    rec.id = ref.id;
-    coPhysicalGoods.push(rec);
-    coTouchProspect(p.id);
-    pgOpen(rec.id);
-  }catch(e){
-    console.error('Failed to create Physical Good:', e);
-    await lcAlert('Connection error', 'Could not create this Physical Good. Check your connection and try again.');
-  }
-}
 async function pgDelete(id){
   const pg = coPhysicalGoods.find(r=> r.id===id);
   if(!pg) return;
@@ -2988,7 +2960,7 @@ function pgOpen(id){
   pgRender();
 }
 async function pgBack(){
-  if(pgEditing && !(await lcConfirm('Leave without saving?', 'You have an edit open on this page. Leave and lose it?', { confirmText:'Leave', danger:true }))) return;
+  if(pgEditing && !(await lcConfirm('Leave without saving?', 'Your notes have unsaved changes. Leave and lose them?', { confirmText:'Leave', danger:true }))) return;
   pgEditing = null;
   const prospectId = (pgActive() || {}).prospectId || coActiveProspectId;
   if(coProspects.some(p=> p.id===prospectId)) coOpenProspect(prospectId);
@@ -2998,49 +2970,19 @@ async function pgBack(){
 function pgText(v, empty){
   return v && String(v).trim() ? '<p class="pg-sec-v">' + esc(String(v).trim()) + '</p>' : '<p class="pg-sec-empty">' + esc(empty || 'Nothing yet.') + '</p>';
 }
-function pgSection(title, v, empty){
-  return '<div><p class="pg-sec-k">' + esc(title) + '</p>' + pgText(v, empty) + '</div>';
-}
-function pgField(label, name, value, multiline, rows){
-  return '<label>' + esc(label)
-    + (multiline
-        ? '<textarea name="' + escAttr(name) + '" rows="' + (rows||3) + '" spellcheck="true">' + esc(value || '') + '</textarea>'
-        : '<input type="text" name="' + escAttr(name) + '" value="' + escAttr(value || '') + '" spellcheck="false">')
-  + '</label>';
-}
-function pgFormActions(){
-  return '<div class="pg-form-actions"><button type="button" class="btn small" data-pg-cancel>Cancel</button><button type="button" class="btn small primary" data-pg-save>Save</button></div>';
+function pgSection(title, v){
+  if(!v || !String(v).trim()) return '';
+  return '<div><p class="pg-sec-k">' + esc(title) + '</p>' + pgText(v) + '</div>';
 }
 
+// Read-only: the picks come from the skill. Only the status is set here.
 function pgTierHtml(pg, t){
   const tier = (pg.tiers && pg.tiers[t.key]) || {};
   const isLead = pg.leadTier===t.key;
-  const editing = pgEditing==='tier:' + t.key;
-  let band = '<div class="pg-tier-band"><span class="pg-tier-label">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
-    + '<span style="display:flex; gap:6px; align-items:center;">'
-      + (isLead ? '<span class="pg-pill">&#9733; Lead</span>' : '')
-      + (editing ? '' : '<button type="button" class="btn small" data-pg-edit="tier:' + escAttr(t.key) + '">Edit</button>')
-    + '</span></div>';
-  if(editing){
-    return '<div class="pg-tier' + (isLead?' is-lead':'') + '">' + band + '<div class="pg-tier-body"><form class="pg-form" data-pg-form="tier:' + escAttr(t.key) + '">'
-      + pgField('Good', 'name', tier.name)
-      + '<div class="pg-form-row">'
-        + '<label>Type<select name="type"><option value="catalog"' + (tier.type!=='original'?' selected':'') + '>Catalog</option><option value="original"' + (tier.type==='original'?' selected':'') + '>Original</option></select></label>'
-        + pgField('Size', 'size', tier.size)
-      + '</div>'
-      + '<div class="pg-form-row">' + pgField('Cost', 'cost', tier.cost) + pgField('Lead time', 'leadTime', tier.leadTime) + '</div>'
-      + '<label class="pg-check"><input type="checkbox" name="noFit"' + (tier.verdict==='no-strong-fit'?' checked':'') + '> No strong fit at this price</label>'
-      + pgField('What it is', 'what', tier.what, true, 3)
-      + pgField('Why them (research line + source)', 'whyThem', tier.whyThem, true, 4)
-      + pgField('Inside note (under ' + PG_NOTE_WORDS + ' words)', 'insideNote', tier.insideNote, true, 4)
-      + pgField('Cost / sourcing', 'sourcing', tier.sourcing, true, 2)
-      + pgField('Runner-up', 'runnerUp', tier.runnerUp, true, 2)
-      + pgField('Risk / gap', 'riskGap', tier.riskGap, true, 2)
-      + pgFormActions()
-    + '</form></div></div>';
-  }
+  const band = '<div class="pg-tier-band"><span class="pg-tier-label">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
+    + (isLead ? '<span class="pg-pill">&#9733; Lead</span>' : '') + '</div>';
   if(!tier.name){
-    return '<div class="pg-tier">' + band + '<div class="pg-tier-body"><p class="pg-tier-empty">No pick at this price yet. Run <b>/physical-goods</b> for this prospect and publish, or click Edit to add one by hand.</p></div></div>';
+    return '<div class="pg-tier">' + band + '<div class="pg-tier-body"><p class="pg-tier-empty">No pick at this price.</p></div></div>';
   }
   const words = pgWordCount(tier.insideNote);
   const status = tier.status || 'Idea';
@@ -3059,25 +3001,16 @@ function pgTierHtml(pg, t){
     + '</select></label>'
     + pgSection('What it is', tier.what)
     + pgSection('Why them', tier.whyThem)
-    + '<div><div class="pg-note-head"><p class="pg-sec-k" style="margin:0;">Inside note</p>'
-      + '<span style="display:flex; align-items:center; gap:8px;"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' / ' + PG_NOTE_WORDS + ' words</span>'
-      + (tier.insideNote ? '<button type="button" class="btn small" data-pg-copy="' + escAttr(t.key) + '">Copy</button>' : '') + '</span></div>'
-      + (tier.insideNote ? '<div class="pg-note">' + esc(tier.insideNote.trim()) + '</div>' : '<p class="pg-sec-empty">No note yet.</p>')
-    + '</div>'
+    + (tier.insideNote
+        ? '<div><div class="pg-note-head"><p class="pg-sec-k" style="margin:0;">Inside note</p>'
+            + '<span style="display:flex; align-items:center; gap:8px;"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' words</span>'
+            + '<button type="button" class="btn small" data-pg-copy="' + escAttr(t.key) + '">Copy</button></span></div>'
+            + '<div class="pg-note">' + esc(tier.insideNote.trim()) + '</div></div>'
+        : '')
     + pgSection('Cost / sourcing', tier.sourcing)
     + pgSection('Runner-up', tier.runnerUp)
     + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-sec-k">Risk / gap</p><p class="pg-sec-v">' + esc(tier.riskGap.trim()) + '</p></div>' : '')
   + '</div></div>';
-}
-
-function pgBlockHtml(key, title, value, empty, rows){
-  const editing = pgEditing===key;
-  return '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">' + esc(title) + '</h2>'
-      + '<div class="outline-head-actions">' + (editing ? '' : '<button type="button" class="btn small" data-pg-edit="' + escAttr(key) + '">Edit</button>') + '</div></div>'
-    + (editing
-        ? '<form class="pg-form" data-pg-form="' + escAttr(key) + '">' + '<textarea name="value" rows="' + (rows||5) + '">' + esc(value || '') + '</textarea>' + pgFormActions() + '</form>'
-        : '<div class="outline-view">' + (value && value.trim() ? '<div style="white-space:pre-wrap;">' + esc(value.trim()) + '</div>' : '<p class="outline-empty">' + esc(empty) + '</p>') + '</div>')
-  + '</div>';
 }
 
 function pgResearchHtml(pg){
@@ -3095,6 +3028,18 @@ function pgResearchHtml(pg){
   return html + '</div>';
 }
 
+function pgNotesHtml(pg){
+  const editing = pgEditing==='notes';
+  return '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Notes</h2>'
+      + '<div class="outline-head-actions">' + (editing
+          ? '<button type="button" class="btn small" data-pg-cancel>Cancel</button><button type="button" class="btn small primary" data-pg-save>Save</button>'
+          : '<button type="button" class="btn small" data-pg-edit>Edit</button>') + '</div></div>'
+    + (editing
+        ? '<textarea class="outline-textarea" id="pgNotesTextarea" spellcheck="true" placeholder="Address confirmed, what happened after the send, anything else…">' + esc(pg.notes || '') + '</textarea>'
+        : '<div class="outline-view">' + (pg.notes && pg.notes.trim() ? '<div style="white-space:pre-wrap;">' + esc(pg.notes.trim()) + '</div>' : '<p class="outline-empty">No notes yet. Click Edit to add some.</p>') + '</div>')
+  + '</div>';
+}
+
 function pgRender(){
   const pg = pgActive();
   if(!pg) return;
@@ -3106,52 +3051,42 @@ function pgRender(){
     pg.stage ? '<span class="pg-pill is-plain">Stage: ' + esc(pg.stage) + '</span>' : '',
     pg.sender ? 'Sent by ' + esc(pg.sender) : '',
   ].filter(Boolean).join(' &middot; ');
-  document.getElementById('pgEditDetailsBtn').style.display = pgEditing==='details' ? 'none' : '';
 
-  let html = '';
-  if(pgEditing==='details'){
-    html += '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Details</h2></div><form class="pg-form" data-pg-form="details">'
-      + '<div class="pg-form-row">' + pgField('Company', 'company', pg.company) + pgField('Contact (name, title)', 'contact', pg.contact) + '</div>'
-      + '<div class="pg-form-row">' + pgField('Sender (blank = Lincko / Dan)', 'sender', pg.sender)
-        + '<label>Stage<select name="stage">' + PG_STAGES.map(s=> '<option' + (s===pg.stage?' selected':'') + '>' + s + '</option>').join('') + '</select></label></div>'
-      + pgFormActions() + '</form></div>';
-  }
-
-  // Lead with
   const leadTier = pg.tiers && pg.tiers[pg.leadTier];
-  if(pgEditing==='lead'){
-    html += '<div class="pg-lead"><form class="pg-form pg-lead-body" data-pg-form="lead">'
-      + '<label>Lead with<select name="leadTier"><option value="">Not decided</option>'
-        + PG_TIERS.map(t=> '<option value="' + t.key + '"' + (t.key===pg.leadTier?' selected':'') + '>' + esc(t.label + ' (' + t.cap + ')') + '</option>').join('')
-      + '</select></label>'
-      + pgField('Why this price point', 'leadReason', pg.leadReason, true, 3)
-      + pgFormActions() + '</form></div>';
-  } else {
+  let html = '';
+  if(leadTier && leadTier.name){
     html += '<div class="pg-lead"><div class="pg-lead-body"><div class="pg-lead-label">Lead with</div>'
-      + '<div class="pg-lead-pick">' + (leadTier && leadTier.name ? esc(pgTierDef(pg.leadTier).label) + ': ' + esc(leadTier.name) : 'Not decided yet') + '</div>'
+      + '<div class="pg-lead-pick">' + esc(pgTierDef(pg.leadTier).label) + ': ' + esc(leadTier.name) + '</div>'
       + (pg.leadReason ? '<p class="pg-lead-reason">' + esc(pg.leadReason.trim()) + '</p>' : '')
-      + '</div><button type="button" class="btn small" data-pg-edit="lead">Change</button></div>';
+      + '</div></div>';
   }
-
   html += '<div class="pg-tiers">' + PG_TIERS.map(t=> pgTierHtml(pg, t)).join('') + '</div>';
-  html += pgBlockHtml('summary', 'Signals that hold up', pg.summary, 'No summary yet. The skill fills this with the strongest signals from the research.', 5);
+  if(pg.summary && pg.summary.trim()){
+    html += '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Signals that hold up</h2></div>'
+      + '<div class="outline-view"><div style="white-space:pre-wrap;">' + esc(pg.summary.trim()) + '</div></div></div>';
+  }
   html += pgResearchHtml(pg);
-  html += pgBlockHtml('notes', 'Notes', pg.notes, 'Your notes: address confirmed, what happened after the send, anything else.', 5);
-  html += '<p class="pg-foot">' + (pg.publishedAt ? 'Published by the /physical-goods skill on ' + esc(cvFmtDate(pg.publishedAt)) : 'Created by hand')
-    + (pg.slug ? ' &middot; <code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code>' : '')
-    + (pg.publishedAt && pg.updatedAt > pg.publishedAt + 1000 ? ' &middot; edited here since' : '') + '</p>';
+  html += pgNotesHtml(pg);
+  html += '<p class="pg-foot">' + (pg.publishedAt ? 'Published by the /physical-goods skill on ' + esc(cvFmtDate(pg.publishedAt)) + ' &middot; ' : '')
+    + (pg.slug ? '<code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code> &middot; ' : '')
+    + 'To change a pick, re-run the skill and publish again. Statuses and notes are kept.</p>';
 
   const body = document.getElementById('pgBody');
   body.innerHTML = html;
 
-  body.querySelectorAll('[data-pg-edit]').forEach(btn=> btn.addEventListener('click', async ()=>{
-    if(pgEditing && pgEditing!==btn.dataset.pgEdit && !(await lcConfirm('Discard your edit?', 'You have another edit open on this page. Discard it?', { confirmText:'Discard', danger:true }))) return;
-    pgEditing = btn.dataset.pgEdit; pgRender();
-    const first = body.querySelector('[data-pg-form] input, [data-pg-form] textarea');
-    if(first) first.focus();
-  }));
+  const notesTa = document.getElementById('pgNotesTextarea');
+  if(notesTa){
+    notesTa.addEventListener('input', ()=> outlineAutoGrow(notesTa));
+    requestAnimationFrame(()=>{ outlineAutoGrow(notesTa); notesTa.focus(); });
+  }
+  body.querySelectorAll('[data-pg-edit]').forEach(btn=> btn.addEventListener('click', ()=>{ pgEditing = 'notes'; pgRender(); }));
   body.querySelectorAll('[data-pg-cancel]').forEach(btn=> btn.addEventListener('click', ()=>{ pgEditing = null; pgRender(); }));
-  body.querySelectorAll('[data-pg-save]').forEach(btn=> btn.addEventListener('click', ()=> pgSubmit(btn.closest('form'))));
+  body.querySelectorAll('[data-pg-save]').forEach(btn=> btn.addEventListener('click', async ()=>{
+    pg.notes = document.getElementById('pgNotesTextarea').value;
+    pgEditing = null;
+    pgRender();
+    await pgSave(pg, { notes: pg.notes });
+  }));
   body.querySelectorAll('[data-pg-status]').forEach(sel=> sel.addEventListener('change', ()=>{
     const key = sel.dataset.pgStatus;
     pg.tiers[key].status = sel.value;
@@ -3163,38 +3098,6 @@ function pgRender(){
       btn.textContent = 'Copied'; setTimeout(()=>{ btn.textContent = 'Copy'; }, 1400);
     }catch(e){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the note and copy it by hand.'); }
   }));
-}
-
-async function pgSubmit(form){
-  const pg = pgActive();
-  if(!pg || !form) return;
-  const key = form.dataset.pgForm;
-  const val = n=> { const el = form.elements[n]; return el ? (el.type==='checkbox' ? el.checked : el.value.trim()) : ''; };
-  let fields = {};
-  if(key==='details'){
-    fields = { company: val('company'), contact: val('contact'), sender: val('sender'), stage: val('stage') };
-    if(fields.company) fields.name = fields.company;
-  } else if(key==='lead'){
-    fields = { leadTier: val('leadTier'), leadReason: val('leadReason') };
-  } else if(key==='summary' || key==='notes'){
-    fields = { [key]: val('value') };
-  } else if(key.startsWith('tier:')){
-    const t = key.slice(5);
-    const prev = (pg.tiers && pg.tiers[t]) || {};
-    const tier = {
-      name: val('name'), type: val('type'), size: val('size'), cost: val('cost'), leadTime: val('leadTime'),
-      verdict: val('noFit') ? 'no-strong-fit' : 'pick', what: val('what'), whyThem: val('whyThem'),
-      insideNote: val('insideNote'), sourcing: val('sourcing'), runnerUp: val('runnerUp'), riskGap: val('riskGap'),
-      status: prev.status || 'Idea',
-    };
-    pg.tiers = pg.tiers || {};
-    pg.tiers[t] = tier;
-    fields = { ['tiers.' + t]: tier };
-  }
-  if(!key.startsWith('tier:')) Object.assign(pg, fields);
-  pgEditing = null;
-  pgRender();
-  await pgSave(pg, fields);
 }
 
 // Cine Vlogs have a permanent Thumbnail section pinned to the top of the shot table.
@@ -3841,7 +3744,6 @@ function switchTab(tab){
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
   document.getElementById('coBackToProspectsLink').addEventListener('click', coBackToProspects);
   document.getElementById('pgBackLink').addEventListener('click', pgBack);
-  document.getElementById('pgEditDetailsBtn').addEventListener('click', ()=>{ if(!pgEditing){ pgEditing = 'details'; pgRender(); } });
   document.getElementById('coProspectRenameBtn').addEventListener('click', ()=>{ if(coActiveProspectId) coRenameProspect(coActiveProspectId); });
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
