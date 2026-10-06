@@ -604,11 +604,33 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   background:none; border:none; padding:0; cursor:pointer; font-family:var(--font-display);
 }
 .cv-detail-scroll{flex:1 1 auto; min-height:0; overflow-y:auto; padding:20px 24px 28px;}
+/* Creative Outreach Movie: jump tabs under the title (Outline, Dialogue, Shot List, then each beat). */
+.cv-detail-head.has-jump{border-bottom:none; padding-bottom:8px;}
+.cv-jump{position:relative; flex:0 0 auto; border-bottom:1px solid var(--line); background:var(--paper-raised);}
+.cv-jump[hidden]{display:none;}
+.cv-jump:before, .cv-jump:after{content:''; position:absolute; top:0; bottom:0; width:28px; pointer-events:none; z-index:1; opacity:0; transition:opacity .15s ease;}
+.cv-jump:before{left:0; background:linear-gradient(90deg, var(--paper-raised), rgba(255,255,255,0));}
+.cv-jump:after{right:0; background:linear-gradient(270deg, var(--paper-raised), rgba(255,255,255,0));}
+.cv-jump.fade-left:before, .cv-jump.fade-right:after{opacity:1;}
+.cv-jump-track{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:2px 24px 12px; scrollbar-width:none; -ms-overflow-style:none;}
+.cv-jump-track::-webkit-scrollbar{display:none;}
+.cv-jump-tab{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; font-family:var(--font-body); font-weight:700; font-size:12.5px;
+  padding:7px 13px; border-radius:999px; border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft);
+  cursor:pointer; white-space:nowrap; transition:background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.cv-jump-tab:hover{border-color:var(--line-strong); color:var(--ink);}
+.cv-jump-tab.is-active{background:var(--bespoke); border-color:var(--bespoke); color:#fff;}
+.cv-jump-tab:focus-visible{outline:2px solid var(--bespoke); outline-offset:2px;}
+.cv-jump-dot{width:8px; height:8px; border-radius:50%; background:var(--dot, var(--mimeo)); flex:0 0 auto;}
+.cv-jump-tab.is-active .cv-jump-dot{background:#fff;}
+.cv-jump-sep{flex:0 0 1px; align-self:stretch; background:var(--line); margin:6px 4px;}
 .shot-table-actions{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
 .shot-table-actions-left, .shot-table-actions-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 @media (max-width:600px){
   .cv-detail-head{padding:16px 16px 12px; gap:10px;}
   .cv-detail-scroll{padding:16px 16px 24px;}
+  .cv-jump-track{padding:2px 16px 10px;}
 }
 @media (max-width:480px){
   .shot-table-actions-left, .shot-table-actions-right{width:100%;}
@@ -1264,8 +1286,9 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
       </button>
     </div>
+    <nav class="cv-jump" id="cvJumpNav" aria-label="Jump to a part of the movie" hidden><div class="cv-jump-track" id="cvJumpTrack"></div></nav>
     <div class="cv-detail-scroll">
-      <div class="outline-section">
+      <div class="outline-section" id="cvIdeasSection">
         <div class="outline-head">
           <h2 class="outline-title" id="ideasTitle">Ideas</h2>
           <div class="outline-head-actions">
@@ -1284,7 +1307,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
         <textarea class="outline-textarea" id="ideasTextarea" style="display:none;" placeholder="Start typing your ideas…" spellcheck="false"></textarea>
         <p class="outline-hint" id="ideasHint" style="display:none;">Click a button above to style the line your cursor is on &middot; everything else is a bullet &middot; don't forget to hit <kbd>Save</kbd></p>
       </div>
-      <div class="outline-section">
+      <div class="outline-section" id="cvOutlineSection">
         <div class="outline-head">
           <h2 class="outline-title" id="outlineTitle">Script Outline</h2>
           <div class="outline-head-actions">
@@ -1303,7 +1326,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
         <textarea class="outline-textarea" id="outlineTextarea" style="display:none;" placeholder="Start typing your outline…" spellcheck="false"></textarea>
         <p class="outline-hint" id="outlineHint" style="display:none;">Click a button above to style the line your cursor is on &middot; everything else is a bullet &middot; don't forget to hit <kbd>Save</kbd></p>
       </div>
-      <div class="shot-table-actions">
+      <div class="shot-table-actions" id="cvShotListSection">
         <div class="shot-table-actions-left">
           <button type="button" class="btn small" data-cv-shot-action="add-row">+ Add Shot Row</button>
           <button type="button" class="btn small" data-cv-shot-action="add-section">+ Add Section</button>
@@ -2851,7 +2874,7 @@ function coRenderProspect(){
     const lead = pg.tiers && pg.tiers[pg.leadTier];
     const picks = PG_TIERS.filter(t=> pg.tiers && pg.tiers[t.key] && pg.tiers[t.key].name).length;
     html += '<div class="launcher-card" data-pg-id="' + escAttr(pg.id) + '">'
-      + '<p class="lc-type">Physical Good</p>'
+      + '<p class="lc-type">Creative Physical Good</p>'
       + '<h3 class="lc-name">' + esc(lead && lead.name ? lead.name : (picks ? picks + ' picks, no lead chosen' : 'No picks yet')) + '</h3>'
       + '<p class="lc-meta">' + (lead && lead.name ? 'Lead: ' + esc(pgTierDef(pg.leadTier).label) + ' · ' : '') + picks + ' of 3 price points · Updated ' + cvFmtDate(pg.updatedAt) + '</p>'
       + '<div class="lc-footer"><span></span>'
@@ -2862,7 +2885,7 @@ function coRenderProspect(){
     + '</div>';
   } else {
     html += '<div class="launcher-card is-soon" aria-disabled="true">'
-      + '<p class="lc-type">Physical Good</p>'
+      + '<p class="lc-type">Creative Physical Good</p>'
       + '<h3 class="lc-name">Not run yet</h3>'
       + '<p class="lc-meta">Run /physical-goods for ' + esc(p.name || 'this prospect') + ' in Claude Code and the picks appear here.</p>'
     + '</div>';
@@ -3435,6 +3458,125 @@ function cvRenderDetail(){
   }
   cvWireRows();
   cvWireDragAndDrop();
+  cvRenderJumpNav(rec);
+}
+
+/* ---------- Creative Outreach Movie: jump tabs ---------- */
+// A row of tabs under the title: the two text boxes, the shot list, then one tab per beat (section row).
+// Clicking scrolls the page to that part; scrolling lights up the part you're in and slides the
+// tab row so the active tab stays in view.
+let cvJumpLockUntil = 0;
+function cvJumpScroller(){ return document.querySelector('#cvDetailOverlay .cv-detail-scroll'); }
+function cvRenderJumpNav(rec){
+  const nav = document.getElementById('cvJumpNav');
+  const head = document.querySelector('#cvDetailOverlay .cv-detail-head');
+  const on = cvMode==='outreach' && !!rec;
+  nav.hidden = !on;
+  head.classList.toggle('has-jump', on);
+  if(!on) return;
+  const m = cvM();
+  const fixed = [
+    { target:'cvIdeasSection', label: m.ideasTitle.replace(/^Creative Outreach /, '') },
+    { target:'cvOutlineSection', label: m.outlineTitle },
+    { target:'cvShotListSection', label:'Shot List' },
+  ];
+  const beats = (rec.shots || []).filter(r=> r.isSection && !r.locked);
+  document.getElementById('cvJumpTrack').innerHTML =
+      fixed.map(t=> '<button type="button" class="cv-jump-tab" data-jump="' + escAttr(t.target) + '">' + esc(t.label) + '</button>').join('')
+    + (beats.length ? '<span class="cv-jump-sep" aria-hidden="true"></span>' : '')
+    + beats.map(b=> '<button type="button" class="cv-jump-tab" data-jump-row="' + escAttr(b.id) + '" style="--dot:' + escAttr(b.color || SECTION_COLORS[0].hex) + '">'
+        + '<span class="cv-jump-dot" aria-hidden="true"></span>' + esc(b.title || 'Untitled section') + '</button>').join('');
+  cvJumpSpy();
+}
+function cvJumpTargetEl(tab){
+  if(tab.dataset.jump) return document.getElementById(tab.dataset.jump);
+  return document.querySelector('#cvShotTableBody tr[data-shot-id="' + CSS.escape(tab.dataset.jumpRow) + '"]');
+}
+function cvJumpSetActive(tab){
+  const track = document.getElementById('cvJumpTrack');
+  track.querySelectorAll('.cv-jump-tab').forEach(t=>{
+    const on = t===tab;
+    t.classList.toggle('is-active', on);
+    if(on) t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current');
+  });
+  if(tab){
+    // slide the row (never the page) so the active tab sits fully in view
+    const pad = 32;
+    const left = tab.offsetLeft - track.offsetLeft;
+    if(left < track.scrollLeft + pad || left + tab.offsetWidth > track.scrollLeft + track.clientWidth - pad){
+      track.scrollTo({ left: Math.max(0, left - pad), behavior:'smooth' });
+    }
+  }
+  cvJumpFades();
+}
+function cvJumpFades(){
+  const nav = document.getElementById('cvJumpNav'), track = document.getElementById('cvJumpTrack');
+  nav.classList.toggle('fade-left', track.scrollLeft > 4);
+  nav.classList.toggle('fade-right', track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
+}
+// Which part of the movie is at the top of the scroll area right now.
+function cvJumpSpy(){
+  if(document.getElementById('cvJumpNav').hidden || Date.now() < cvJumpLockUntil) return;
+  const sc = cvJumpScroller();
+  const line = sc.getBoundingClientRect().top + 90;
+  let current = null;
+  document.querySelectorAll('#cvJumpTrack .cv-jump-tab').forEach(tab=>{
+    const el = cvJumpTargetEl(tab);
+    if(el && el.getBoundingClientRect().top <= line) current = tab;
+  });
+  if(!current) current = document.querySelector('#cvJumpTrack .cv-jump-tab');
+  // at the very bottom, the last part is the one being read
+  if(sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 4){
+    const tabs = document.querySelectorAll('#cvJumpTrack .cv-jump-tab');
+    if(tabs.length) current = tabs[tabs.length - 1];
+  }
+  if(current && !current.classList.contains('is-active')) cvJumpSetActive(current);
+  else cvJumpFades();
+}
+function cvJumpInit(){
+  const track = document.getElementById('cvJumpTrack');
+  track.addEventListener('click', (e)=>{
+    const tab = e.target.closest('.cv-jump-tab');
+    if(!tab) return;
+    const el = cvJumpTargetEl(tab);
+    if(!el) return;
+    const sc = cvJumpScroller();
+    const want = ()=> Math.max(0, Math.min(sc.scrollHeight - sc.clientHeight,
+      el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 16));
+    cvJumpLockUntil = Date.now() + 5000;     // the spy waits until the jump has landed
+    cvJumpSetActive(tab);
+    sc.scrollTo({ top: want(), behavior:'smooth' });
+    // Rows above can still grow while the smooth scroll runs (their text boxes size to their text),
+    // which pushes the target down. Once the scroll settles, re-measure and correct.
+    let last = -1, still = 0, fixes = 0;
+    const settle = ()=>{
+      still = Math.abs(sc.scrollTop - last) < 1 ? still + 1 : 0;
+      last = sc.scrollTop;
+      if(still < 4) return requestAnimationFrame(settle);
+      if(Math.abs(sc.scrollTop - want()) > 3 && fixes < 3){
+        fixes++; still = 0;
+        sc.scrollTo({ top: want(), behavior: fixes > 1 ? 'auto' : 'smooth' });
+        return requestAnimationFrame(settle);
+      }
+      cvJumpLockUntil = 0;
+    };
+    requestAnimationFrame(settle);
+  });
+  track.addEventListener('scroll', cvJumpFades, { passive:true });
+  let ticking = false;
+  cvJumpScroller().addEventListener('scroll', ()=>{
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{ ticking = false; cvJumpSpy(); });
+  }, { passive:true });
+  window.addEventListener('resize', cvJumpFades);
+  // renaming a beat updates its tab as you type
+  document.getElementById('cvShotTableBody').addEventListener('input', (e)=>{
+    if(!e.target.classList.contains('shot-section-title-input')) return;
+    const row = e.target.closest('tr[data-shot-id]');
+    const tab = row && document.querySelector('#cvJumpTrack [data-jump-row="' + CSS.escape(row.dataset.shotId) + '"]');
+    if(tab) tab.lastChild.textContent = e.target.value || 'Untitled section';
+  });
 }
 
 let cvDragState = null;
@@ -4039,6 +4181,7 @@ function switchTab(tab){
   document.querySelectorAll('[data-cv-shot-action="mark-all-undone"]').forEach(btn=> btn.addEventListener('click', ()=> cvMarkAllRows(false)));
   outlineInit();
   ideasInit();
+  cvJumpInit();
 
   let savedTab = null;
   try{ savedTab = localStorage.getItem('lcActiveTab'); }catch(e){}
