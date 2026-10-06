@@ -391,6 +391,19 @@ body.tabs-hidden .all-shots-overlay{top:0;}
 .pg-risk{background:#FDF5EC; border:1px solid #F1DEC6; border-radius:10px; padding:10px 12px;}
 .pg-risk .pg-sec-k{color:var(--warn);}
 .pg-tier-empty{font-size:13px; color:var(--ink-faint); line-height:1.6; margin:0;}
+.pg-size-why{font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin:6px 0 0;}
+.pg-send{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:22px; align-items:start;}
+.pg-panel{background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px; min-width:0;}
+.pg-panel-title{font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--ink); margin:0;}
+.pg-msg{border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--paper);}
+.pg-msg-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;}
+.pg-msg-subject{font-size:12.5px; font-weight:700; color:var(--ink); margin:0 0 4px;}
+.pg-checklist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+.pg-checklist label{display:flex; gap:10px; align-items:flex-start; cursor:pointer;}
+.pg-checklist input{margin-top:3px; width:16px; height:16px; accent-color:var(--bespoke); flex:0 0 auto; cursor:pointer;}
+.pg-checklist .pg-ck-h{font-size:13px; font-weight:700; color:var(--ink);}
+.pg-checklist .pg-ck-b{font-size:12.5px; line-height:1.5; color:var(--ink-soft);}
+.pg-checklist .is-done .pg-ck-h{color:var(--ink-faint); text-decoration:line-through;}
 .pg-research details{border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); box-shadow:var(--shadow); margin-bottom:10px;}
 .pg-research summary{cursor:pointer; padding:12px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink);}
 .pg-research ul{margin:0; padding:0 16px 14px 34px;}
@@ -2887,6 +2900,21 @@ const PG_TIERS = [
 ];
 const PG_STATUSES = ['Idea', 'Approved', 'Ordered', 'Sent', 'Delivered', 'Not sending'];
 const PG_NOTE_WORDS = 50;
+// From the Physical Goods tool (outbound-tools/physical-goods.html: SIZES, SEND_METHODS, PACKAGE_CHECKLIST).
+const PG_SIZES = {
+  small:  'Fits in an envelope or a small padded mailer - postcards, cards, and other flat or pocket-sized items.',
+  medium: 'Ships in a standard box - mugs, books, boxed gadgets, and similar single-item sends.',
+  large:  'Bulkier sends - hampers, multi-item bundles, and anything that needs a bigger box.',
+};
+const PG_SEND_METHODS = { usps:'USPS Priority', fedex:'FedEx / UPS Express', courier:'Local courier / hand-delivered', other:'Other' };
+const PG_CHECKLIST = [
+  { key:'note',     h:'Handwritten note',              b:'A short, genuinely handwritten (or handwriting-font) note beats a printed card every time.' },
+  { key:'noPitch',  h:'No overt pitch inside the box', b:'The gift should feel like a gift, not a brochure. Save the pitch for the follow-up.' },
+  { key:'nextStep', h:'One clear next step',           b:'A single, low-friction CTA on the note: a specific date/time or a simple reply, not a hard sell.' },
+  { key:'sender',   h:'Sender identified clearly',     b:'Your name, email address, phone number, company, LinkedIn profile (shortened via Bitly), and a QR code to book a call if possible.' },
+  { key:'address',  h:'Shipping address confirmed',    b:'Verify the address (and that the recipient still works there) before you ship. Check all available sources.' },
+  { key:'tracking', h:'Tracking number logged',        b:'Log the tracking number and expected delivery date against the account so follow-up timing is exact.' },
+];
 const PG_RESEARCH_GROUPS = [
   { key:'strategic', label:'Strategic' }, { key:'business', label:'Business' },
   { key:'personal', label:'Personal' }, { key:'notes', label:'Notes' },
@@ -2989,9 +3017,11 @@ function pgTierHtml(pg, t){
   return '<div class="pg-tier' + (isLead?' is-lead':'') + '">' + band + '<div class="pg-tier-body">'
     + '<div><h3 class="pg-tier-name">' + esc(tier.name) + '</h3><div class="pg-tags">'
       + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original' : '">Catalog') + '</span>'
-      + (tier.size ? '<span class="pg-pill is-plain">' + esc(tier.size) + '</span>' : '')
+      + (tier.size ? '<span class="pg-pill is-plain" title="' + escAttr(PG_SIZES[tier.size] || '') + '">' + esc(tier.size) + '</span>' : '')
       + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit</span>' : '')
-    + '</div></div>'
+    + '</div>'
+    + (tier.sizeWhy && tier.sizeWhy.trim() ? '<p class="pg-size-why"><b>Why ' + esc(tier.size || 'this size') + ':</b> ' + esc(tier.sizeWhy.trim()) + '</p>' : '')
+    + '</div>'
     + '<div class="pg-facts">'
       + '<div class="pg-fact"><div class="pg-fact-k">Cost</div><div class="pg-fact-v">' + esc(tier.cost || '-') + '</div></div>'
       + '<div class="pg-fact"><div class="pg-fact-k">Lead time</div><div class="pg-fact-v">' + esc(tier.leadTime || '-') + '</div></div>'
@@ -3011,6 +3041,44 @@ function pgTierHtml(pg, t){
     + pgSection('Runner-up', tier.runnerUp)
     + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-sec-k">Risk / gap</p><p class="pg-sec-v">' + esc(tier.riskGap.trim()) + '</p></div>' : '')
   + '</div></div>';
+}
+
+// The send plan for the lead pick (from the skill) beside the tool's package checklist (ticked here).
+function pgMsgHtml(label, msg){
+  const text = typeof msg==='string' ? msg : (msg && msg.text) || '';
+  const subject = typeof msg==='string' ? '' : (msg && msg.subject) || '';
+  if(!text.trim()) return '';
+  const full = (subject ? 'Subject: ' + subject + '\n\n' : '') + text.trim();
+  return '<div class="pg-msg"><div class="pg-msg-head"><p class="pg-sec-k" style="margin:0;">' + esc(label) + '</p>'
+      + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(full) + '">Copy</button></div>'
+    + (subject ? '<p class="pg-msg-subject">' + esc(subject) + '</p>' : '')
+    + '<p class="pg-sec-v">' + esc(text.trim()) + '</p></div>';
+}
+function pgSendHtml(pg){
+  const s = pg.send || {};
+  const lead = pg.tiers && pg.tiers[pg.leadTier];
+  const hasPlan = !!(s.method || s.timing || (s.followup && s.followup.text));
+  const ticks = pg.checklist || {};
+  const done = PG_CHECKLIST.filter(c=> ticks[c.key]).length;
+  let plan = '<div class="pg-panel"><h3 class="pg-panel-title">Send plan' + (lead && lead.name ? ': ' + esc(lead.name) : '') + '</h3>';
+  if(hasPlan){
+    plan += '<div class="pg-facts">'
+        + '<div class="pg-fact"><div class="pg-fact-k">Method</div><div class="pg-fact-v">' + esc(PG_SEND_METHODS[s.method] || s.method || '-') + '</div></div>'
+        + '<div class="pg-fact"><div class="pg-fact-k">Timing</div><div class="pg-fact-v">' + esc(s.timing || '-') + '</div></div>'
+      + '</div>'
+      + (s.methodWhy ? '<p class="pg-sec-v" style="color:var(--ink-soft); font-size:12.5px;">' + esc(s.methodWhy) + '</p>' : '')
+      + pgMsgHtml('01 Before landing', s.beforeLanding)
+      + pgMsgHtml('04 Follow-up, once tracking shows delivered', s.followup)
+      + pgMsgHtml('03 Public posting', s.publicPosting);
+  } else {
+    plan += '<p class="pg-tier-empty">No send plan in this run. Runs from the updated skill include the method, timing and the messages around the send.</p>';
+  }
+  plan += '</div>';
+  const checklist = '<div class="pg-panel"><h3 class="pg-panel-title">Package checklist (' + done + ' of ' + PG_CHECKLIST.length + ')</h3><ul class="pg-checklist">'
+    + PG_CHECKLIST.map(c=> '<li' + (ticks[c.key] ? ' class="is-done"' : '') + '><label><input type="checkbox" data-pg-check="' + c.key + '"' + (ticks[c.key] ? ' checked' : '') + '>'
+        + '<span><span class="pg-ck-h">' + esc(c.h) + '</span><br><span class="pg-ck-b">' + esc(c.b) + '</span></span></label></li>').join('')
+    + '</ul></div>';
+  return '<div class="pg-send">' + plan + checklist + '</div>';
 }
 
 function pgResearchHtml(pg){
@@ -3061,6 +3129,7 @@ function pgRender(){
       + '</div></div>';
   }
   html += '<div class="pg-tiers">' + PG_TIERS.map(t=> pgTierHtml(pg, t)).join('') + '</div>';
+  html += pgSendHtml(pg);
   if(pg.summary && pg.summary.trim()){
     html += '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Signals that hold up</h2></div>'
       + '<div class="outline-view"><div style="white-space:pre-wrap;">' + esc(pg.summary.trim()) + '</div></div></div>';
@@ -3091,6 +3160,21 @@ function pgRender(){
     const key = sel.dataset.pgStatus;
     pg.tiers[key].status = sel.value;
     pgSave(pg, { ['tiers.' + key + '.status']: sel.value });
+  }));
+  body.querySelectorAll('[data-pg-check]').forEach(box=> box.addEventListener('change', ()=>{
+    const key = box.dataset.pgCheck;
+    pg.checklist = pg.checklist || {};
+    pg.checklist[key] = box.checked;
+    box.closest('li').classList.toggle('is-done', box.checked);
+    const title = box.closest('.pg-panel').querySelector('.pg-panel-title');
+    title.textContent = 'Package checklist (' + PG_CHECKLIST.filter(c=> pg.checklist[c.key]).length + ' of ' + PG_CHECKLIST.length + ')';
+    pgSave(pg, { ['checklist.' + key]: box.checked });
+  }));
+  body.querySelectorAll('[data-pg-copy-text]').forEach(btn=> btn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(btn.dataset.pgCopyText);
+      btn.textContent = 'Copied'; setTimeout(()=>{ btn.textContent = 'Copy'; }, 1400);
+    }catch(e){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the text and copy it by hand.'); }
   }));
   body.querySelectorAll('[data-pg-copy]').forEach(btn=> btn.addEventListener('click', async ()=>{
     try{
