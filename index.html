@@ -334,6 +334,87 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   font-family:var(--font-display); font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
   color:var(--bespoke-dark); margin:0 0 6px;
 }
+/* ---------- physical good page (Creative Outreach -> prospect -> Physical Good) ---------- */
+.pg-inner{max-width:1240px; margin:0 auto;}
+.pg-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; font-size:12.5px; color:var(--ink-soft);}
+.pg-pill{
+  display:inline-flex; align-items:center; gap:4px; font-family:var(--font-display); font-weight:700; font-size:10.5px;
+  letter-spacing:.04em; text-transform:uppercase; border-radius:20px; padding:3px 9px; white-space:nowrap;
+  background:var(--mimeo-ink); color:var(--bespoke-dark);
+}
+.pg-pill.is-original{background:#EFE7F8; color:#5E3FA0;}
+.pg-pill.is-warn{background:#FBEEE0; color:var(--warn);}
+.pg-pill.is-plain{background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);}
+.pg-lead{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  background:var(--bespoke-bg); border:1px solid #CBE6D6; border-left:4px solid var(--bespoke); border-radius:12px;
+  padding:14px 18px; margin-bottom:20px;
+}
+.pg-lead-label{font-family:var(--font-display); font-weight:700; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--bespoke);}
+.pg-lead-pick{font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--ink); margin:2px 0 4px;}
+.pg-lead-reason{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0; white-space:pre-wrap;}
+.pg-lead-body{flex:1 1 320px; min-width:0;}
+.pg-tiers{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:26px; align-items:start;}
+.pg-tier{
+  position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; overflow:hidden; min-width:0;
+}
+.pg-tier.is-lead{border-color:var(--bespoke); box-shadow:0 0 0 2px rgba(30,107,69,.18), var(--shadow);}
+.pg-tier-band{
+  display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 16px;
+  background:var(--paper); border-bottom:1px solid var(--line);
+}
+.pg-tier.is-lead .pg-tier-band{background:var(--bespoke-bg);}
+.pg-tier-label{font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft);}
+.pg-tier-body{padding:16px 16px 18px; display:flex; flex-direction:column; gap:14px;}
+.pg-tier-name{font-family:var(--font-display); font-weight:800; font-size:18px; line-height:1.25; color:var(--ink); margin:0; overflow-wrap:break-word;}
+.pg-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.pg-facts{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+.pg-fact{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-width:0;}
+.pg-fact-k{font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);}
+.pg-fact-v{font-size:13px; font-weight:600; color:var(--ink); margin-top:2px; overflow-wrap:break-word;}
+.pg-status{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-soft);}
+.pg-status select, .pg-form select{
+  font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:5px 8px; border-radius:8px;
+  border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink); cursor:pointer;
+}
+.pg-sec-k{font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--bespoke); margin:0 0 4px;}
+.pg-sec-v{font-size:13.5px; line-height:1.6; color:var(--ink); margin:0; white-space:pre-wrap; overflow-wrap:break-word;}
+.pg-sec-empty{font-size:13px; color:var(--ink-faint); font-style:italic; margin:0;}
+.pg-note{
+  position:relative; background:#FBF7EC; border:1px solid #EADFC4; border-radius:10px; padding:12px 14px 12px;
+  font-size:14px; line-height:1.6; color:#3E3523; white-space:pre-wrap; overflow-wrap:break-word;
+}
+.pg-note-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;}
+.pg-note-count{font-size:11px; color:var(--ink-faint);}
+.pg-note-count.is-over{color:var(--warn); font-weight:700;}
+.pg-risk{background:#FDF5EC; border:1px solid #F1DEC6; border-radius:10px; padding:10px 12px;}
+.pg-risk .pg-sec-k{color:var(--warn);}
+.pg-tier-empty{font-size:13px; color:var(--ink-faint); line-height:1.6; margin:0;}
+.pg-form{display:flex; flex-direction:column; gap:10px;}
+.pg-form label{display:flex; flex-direction:column; gap:4px; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
+.pg-form input[type=text], .pg-form textarea{
+  font-family:var(--font-body); font-size:13.5px; line-height:1.5; color:var(--ink); text-transform:none; letter-spacing:0; font-weight:400;
+  border:1px solid var(--line-strong); border-radius:8px; padding:7px 10px; background:var(--paper-raised); width:100%; box-sizing:border-box;
+}
+.pg-form textarea{resize:vertical; min-height:64px;}
+.pg-form input:focus, .pg-form textarea:focus{outline:none; border-color:var(--mimeo); box-shadow:0 0 0 3px rgba(47,143,91,.15);}
+.pg-form-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.pg-form .pg-check{flex-direction:row; align-items:center; gap:8px; text-transform:none; letter-spacing:0; font-size:12.5px; font-weight:600; color:var(--ink);}
+.pg-form-actions{display:flex; justify-content:flex-end; gap:8px;}
+.pg-research details{border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); box-shadow:var(--shadow); margin-bottom:10px;}
+.pg-research summary{cursor:pointer; padding:12px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink);}
+.pg-research ul{margin:0; padding:0 16px 14px 34px;}
+.pg-research li{font-size:13px; line-height:1.55; color:var(--ink); margin:6px 0;}
+.pg-research .pg-src{color:var(--ink-faint); font-size:12px;}
+.pg-research .pg-prompt{font-weight:700; color:var(--ink-soft);}
+.pg-foot{font-size:12px; color:var(--ink-faint); margin:8px 0 0;}
+.pg-foot code{font-family:var(--font-mono); font-size:11.5px;}
+@media (max-width:600px){
+  .pg-tiers{grid-template-columns:1fr;}
+  .pg-form-row{grid-template-columns:1fr;}
+  .pg-lead{padding:12px 14px;}
+}
 .launcher-card .lc-soon-badge{
   display:inline-flex; align-items:center; font-family:var(--font-display); font-weight:700; font-size:10.5px;
   letter-spacing:.02em; color:var(--ink-soft); background:var(--mimeo-ink); border-radius:20px; padding:3px 9px; white-space:nowrap;
@@ -1048,6 +1129,23 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
   </div>
 </div>
 
+<!-- Physical Good: filled by the /physical-goods skill (scripts/bank.py publish), read and edited here. -->
+<div class="cv-detail-overlay tab-page" id="pgDetailOverlay">
+  <div class="cv-detail-box">
+    <div class="cv-detail-head">
+      <div style="min-width:0;">
+        <button type="button" class="all-shots-eyebrow" id="pgBackLink">&larr; Prospect</button>
+        <h2 id="pgDetailTitle" style="font-family:var(--font-display); font-weight:800; font-size:clamp(16px, 4.5vw, 20px); margin:2px 0 0; color:var(--ink); overflow-wrap:break-word; line-height:1.25;">Physical Good</h2>
+        <div class="pg-meta" id="pgMeta"></div>
+      </div>
+      <button type="button" class="btn small" id="pgEditDetailsBtn">Edit details</button>
+    </div>
+    <div class="cv-detail-scroll">
+      <div class="pg-inner" id="pgBody"></div>
+    </div>
+  </div>
+</div>
+
 <div class="cv-detail-overlay tab-page" id="cvDetailOverlay">
   <div class="cv-detail-box">
     <div class="cv-detail-head">
@@ -1137,7 +1235,7 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -2495,6 +2593,7 @@ function cvOpen(id){
   document.getElementById('cvLauncherOverlay').classList.remove('active');
   document.getElementById('coProspectsOverlay').classList.remove('active');
   document.getElementById('coProspectOverlay').classList.remove('active');
+  document.getElementById('pgDetailOverlay').classList.remove('active');
   document.getElementById('cvDetailOverlay').classList.add('active');
   cvRenderDetail();
 }
@@ -2534,7 +2633,9 @@ function coMovieFor(prospectId){ return coMovies().find(r=> r.prospectId===prosp
 async function coLoadProspects(movies){
   try{
     const snap = await getDocs(collection(db, CO_PROSPECTS_COLLECTION));
-    coProspects = snap.docs.map(d=> ({ id: d.id, ...d.data() })).filter(r=> r.kind===CO_PROSPECT_KIND);
+    const all = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+    coProspects = all.filter(r=> r.kind===CO_PROSPECT_KIND);
+    coPhysicalGoods = all.filter(r=> r.kind===PG_KIND);
   }catch(e){
     console.error('Failed to load prospects from Firebase:', e);
     await lcAlert('Connection error', 'Could not load your prospects from the database. Check your connection and try again.');
@@ -2555,6 +2656,10 @@ async function coLoadProspects(movies){
     }
   }
   if(coActiveProspectId && !coProspects.some(p=> p.id===coActiveProspectId)) coActiveProspectId = null;
+  // Restore an open Physical Good page across reloads.
+  const pg = pgActiveId && coPhysicalGoods.find(r=> r.id===pgActiveId);
+  if(pg && coProspects.some(p=> p.id===pg.prospectId)) coActiveProspectId = pg.prospectId;
+  else pgActiveId = null;
 }
 async function coSaveProspect(p){
   try{
@@ -2583,7 +2688,8 @@ function coRenderProspects(){
     const done = !!p.completed;
     const movie = coMovieFor(p.id);
     const shotCount = movie ? (movie.shots||[]).filter(s=> !s.isSection).length : 0;
-    const meta = 'Updated ' + cvFmtDate(p.updatedAt) + ' · ' + (movie ? 'Movie, ' + shotCount + ' shot' + (shotCount===1?'':'s') : 'No movie yet');
+    const has = [movie ? 'Movie, ' + shotCount + ' shot' + (shotCount===1?'':'s') : '', pgFor(p.id) ? 'Physical Good' : ''].filter(Boolean);
+    const meta = 'Updated ' + cvFmtDate(p.updatedAt) + ' · ' + (has.length ? has.join(' · ') : 'Nothing created yet');
     html += '<div class="launcher-card' + (done ? ' is-complete' : '') + '" data-prospect-id="' + escAttr(p.id) + '">'
       + '<button type="button" class="lc-complete-btn' + (done ? ' is-complete' : '') + '" data-complete-id="' + escAttr(p.id) + '" title="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-label="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
       + '<h3 class="lc-name">' + esc(p.name || 'Untitled Prospect') + '</h3>'
@@ -2633,15 +2739,39 @@ function coRenderProspect(){
   } else {
     html += '<button type="button" class="launcher-card new" id="coCreateMovieBtn"><span class="plus">+</span><span class="label">Create Creative Outreach Movie</span></button>';
   }
-  ['Physical Good', 'Strategy Doc'].forEach(label=>{
-    html += '<div class="launcher-card is-soon" aria-disabled="true">'
-      + '<p class="lc-type">' + esc(label) + '</p>'
-      + '<h3 class="lc-name">Create ' + esc(label) + '</h3>'
-      + '<div class="lc-footer"><span class="lc-soon-badge">Coming soon</span><span></span></div>'
+  const pg = pgFor(p.id);
+  if(pg){
+    const lead = pg.tiers && pg.tiers[pg.leadTier];
+    const picks = PG_TIERS.filter(t=> pg.tiers && pg.tiers[t.key] && pg.tiers[t.key].name).length;
+    html += '<div class="launcher-card" data-pg-id="' + escAttr(pg.id) + '">'
+      + '<p class="lc-type">Physical Good</p>'
+      + '<h3 class="lc-name">' + esc(lead && lead.name ? lead.name : (picks ? picks + ' picks, no lead chosen' : 'No picks yet')) + '</h3>'
+      + '<p class="lc-meta">' + (lead && lead.name ? 'Lead: ' + esc(pgTierDef(pg.leadTier).label) + ' · ' : '') + picks + ' of 3 price points · Updated ' + cvFmtDate(pg.updatedAt) + '</p>'
+      + '<div class="lc-footer"><span></span>'
+        + '<div class="lc-actions">'
+          + '<button type="button" class="lc-icon-btn lc-delete" data-delete-pg-id="' + escAttr(pg.id) + '" title="Delete this Physical Good" aria-label="Delete">' + CV_TRASH_SVG + '</button>'
+        + '</div>'
+      + '</div>'
     + '</div>';
-  });
+  } else {
+    html += '<button type="button" class="launcher-card new" id="coCreatePgBtn"><span class="plus">+</span><span class="label">Create Physical Good</span></button>';
+  }
+  html += '<div class="launcher-card is-soon" aria-disabled="true">'
+    + '<p class="lc-type">Strategy Doc</p>'
+    + '<h3 class="lc-name">Create Strategy Doc</h3>'
+    + '<div class="lc-footer"><span class="lc-soon-badge">Coming soon</span><span></span></div>'
+  + '</div>';
   const grid = document.getElementById('coProspectItemsGrid');
   grid.innerHTML = html;
+  const pgCard = grid.querySelector('[data-pg-id]');
+  if(pgCard) pgCard.addEventListener('click', (e)=>{
+    if(e.target.closest('.lc-icon-btn')) return;
+    pgOpen(pgCard.dataset.pgId);
+  });
+  const pgDelBtn = grid.querySelector('[data-delete-pg-id]');
+  if(pgDelBtn) pgDelBtn.addEventListener('click', (e)=>{ e.stopPropagation(); pgDelete(pgDelBtn.dataset.deletePgId); });
+  const pgCreateBtn = document.getElementById('coCreatePgBtn');
+  if(pgCreateBtn) pgCreateBtn.addEventListener('click', pgCreate);
   const movieCard = grid.querySelector('[data-co-movie-id]');
   if(movieCard) movieCard.addEventListener('click', (e)=>{
     if(e.target.closest('.lc-icon-btn')) return;
@@ -2656,6 +2786,11 @@ function coRenderProspect(){
 function coShowPage(page){
   document.getElementById('coProspectsOverlay').classList.toggle('active', page==='list');
   document.getElementById('coProspectOverlay').classList.toggle('active', page==='prospect');
+  document.getElementById('pgDetailOverlay').classList.toggle('active', page==='pg');
+  if(page!=='pg' && pgActiveId){
+    pgActiveId = null;
+    try{ localStorage.removeItem(PG_ACTIVE_KEY); }catch(e){}
+  }
 }
 function coOpenProspect(id){
   if(!coProspects.some(p=> p.id===id)) return;
@@ -2663,6 +2798,8 @@ function coOpenProspect(id){
   try{ localStorage.setItem(CO_ACTIVE_PROSPECT_KEY, id); }catch(e){}
   coShowPage('prospect');
   coRenderProspect();
+  // The skill publishes from outside the page, so pick up anything it sent since the page loaded.
+  pgRefresh().then(changed=>{ if(changed && coActiveProspectId===id && !pgActiveId && !cvActiveId) coRenderProspect(); });
 }
 function coBackToProspects(){
   coActiveProspectId = null;
@@ -2711,12 +2848,15 @@ async function coDeleteProspect(id){
   const p = coProspects.find(x=> x.id===id);
   if(!p) return;
   const movie = coMovieFor(id);
-  const ok = await lcConfirm('Delete this prospect?', 'Delete "' + (p.name || 'Untitled Prospect') + '"' + (movie ? ' and its Creative Outreach Movie' : '') + '? This cannot be undone.', {
+  const pg = pgFor(id);
+  const parts = [movie ? 'its Creative Outreach Movie' : '', pg ? 'its Physical Good' : ''].filter(Boolean);
+  const ok = await lcConfirm('Delete this prospect?', 'Delete "' + (p.name || 'Untitled Prospect') + '"' + (parts.length ? ' and ' + parts.join(' and ') : '') + '? This cannot be undone.', {
     confirmText: 'Delete', danger: true
   });
   if(!ok) return;
   try{
     if(movie) await deleteDoc(doc(db, CV_COLLECTION, movie.id));
+    if(pg) await deleteDoc(doc(db, CV_COLLECTION, pg.id));
     await deleteDoc(doc(db, CO_PROSPECTS_COLLECTION, id));
   }catch(e){
     console.error('Failed to delete prospect:', e);
@@ -2724,6 +2864,7 @@ async function coDeleteProspect(id){
     return;
   }
   if(movie) cvLibrary = cvLibrary.filter(r=> r.id!==movie.id);
+  if(pg) coPhysicalGoods = coPhysicalGoods.filter(r=> r.id!==pg.id);
   coProspects = coProspects.filter(x=> x.id!==id);
   if(coActiveProspectId===id) coBackToProspects();
   else coRenderProspects();
@@ -2742,6 +2883,318 @@ async function coCreateMovie(){
     console.error('Failed to create Creative Outreach Movie:', e);
     await lcAlert('Connection error', 'Could not create this Creative Outreach Movie. Check your connection and try again.');
   }
+}
+
+/* ================= PHYSICAL GOODS ================= */
+// One Physical Good record per prospect (kind 'physicalGood' in cineVlogs, linked by prospectId).
+// The /physical-goods skill does the research and picks, then `scripts/bank.py publish` writes
+// them here. This page is where they are read, edited and tracked through to delivery.
+const PG_KIND = 'physicalGood';
+const PG_ACTIVE_KEY = 'lcActivePgId';
+const PG_TIERS = [
+  { key:'low',  label:'Low-medium', cap:'Up to $20' },
+  { key:'mid',  label:'Medium',     cap:'Up to $50' },
+  { key:'high', label:'High',       cap:'Over $50' },
+];
+const PG_STAGES = ['cold', 'warm', 'stalled', 'closing', 'strategic'];
+const PG_STATUSES = ['Idea', 'Approved', 'Ordered', 'Sent', 'Delivered', 'Not sending'];
+const PG_NOTE_WORDS = 50;
+const PG_RESEARCH_GROUPS = [
+  { key:'strategic', label:'Strategic' }, { key:'business', label:'Business' },
+  { key:'personal', label:'Personal' }, { key:'notes', label:'Notes' },
+];
+const PG_PROMPT_LABELS = {
+  priorities6to12:'Priorities, next 6 to 12 months', recentLaunches:'Recent launches', growthSignals:'Growth signals',
+  workingWell:'Working well', contrarianBelief:'Beliefs they repeat', customerSignal:'What customers love',
+  obsessions:'Obsessions', recurringStory:'Stories they tell', frustrations:'Frustrations', trueCares:'What they care about',
+  notes:'Notes',
+};
+let coPhysicalGoods = [];
+let pgActiveId = null;
+try{ pgActiveId = localStorage.getItem(PG_ACTIVE_KEY); }catch(e){}
+let pgEditing = null;   // null | 'details' | 'lead' | 'summary' | 'notes' | 'tier:<key>'
+
+function pgTierDef(key){ return PG_TIERS.find(t=> t.key===key) || { key, label: key || '', cap:'' }; }
+function pgFor(prospectId){ return coPhysicalGoods.find(r=> r.prospectId===prospectId) || null; }
+function pgActive(){ return coPhysicalGoods.find(r=> r.id===pgActiveId) || null; }
+function pgWordCount(s){ return (s || '').trim().split(/\s+/).filter(Boolean).length; }
+
+// Re-reads every Physical Good so a fresh `publish` from the skill shows without a reload.
+async function pgRefresh(){
+  try{
+    const snap = await getDocs(query(collection(db, CV_COLLECTION), where('kind', '==', PG_KIND)));
+    const next = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+    const changed = JSON.stringify(next.map(r=> [r.id, r.updatedAt])) !== JSON.stringify(coPhysicalGoods.map(r=> [r.id, r.updatedAt]));
+    coPhysicalGoods = next;
+    return changed;
+  }catch(e){
+    console.warn('Could not refresh Physical Goods:', e);
+    return false;
+  }
+}
+async function pgSave(pg, fields){
+  pg.updatedAt = Date.now();
+  try{
+    await updateDoc(doc(db, CV_COLLECTION, pg.id), Object.assign({ updatedAt: pg.updatedAt }, fields));
+  }catch(e){
+    console.error('Failed to save Physical Good to Firebase:', e);
+    await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
+  }
+}
+
+async function pgCreate(){
+  const p = coProspects.find(x=> x.id===coActiveProspectId);
+  if(!p || pgFor(p.id)) return;
+  const rec = { kind: PG_KIND, prospectId: p.id, name: p.name || 'Untitled Prospect', company: p.name || '', contact: '', sender: '', stage: 'cold',
+                summary: '', leadTier: '', leadReason: '', tiers: {}, research: [], notes: '', updatedAt: Date.now() };
+  try{
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    rec.id = ref.id;
+    coPhysicalGoods.push(rec);
+    coTouchProspect(p.id);
+    pgOpen(rec.id);
+  }catch(e){
+    console.error('Failed to create Physical Good:', e);
+    await lcAlert('Connection error', 'Could not create this Physical Good. Check your connection and try again.');
+  }
+}
+async function pgDelete(id){
+  const pg = coPhysicalGoods.find(r=> r.id===id);
+  if(!pg) return;
+  const ok = await lcConfirm('Delete this Physical Good?', 'Delete the physical good picks for "' + (pg.company || pg.name || 'this prospect') + '"? The files in the physical-goods-bank are not touched, so you can publish them again.', {
+    confirmText: 'Delete', danger: true
+  });
+  if(!ok) return;
+  try{
+    await deleteDoc(doc(db, CV_COLLECTION, id));
+  }catch(e){
+    console.error('Failed to delete Physical Good:', e);
+    await lcAlert('Connection error', 'Could not delete this Physical Good. Check your connection and try again.');
+    return;
+  }
+  coPhysicalGoods = coPhysicalGoods.filter(r=> r.id!==id);
+  if(pgActiveId===id) pgBack(); else coRenderProspect();
+}
+
+function pgOpen(id){
+  const pg = coPhysicalGoods.find(r=> r.id===id);
+  if(!pg) return;
+  coActiveProspectId = pg.prospectId;
+  try{ localStorage.setItem(CO_ACTIVE_PROSPECT_KEY, pg.prospectId); }catch(e){}
+  coShowPage('pg');
+  pgActiveId = id;
+  try{ localStorage.setItem(PG_ACTIVE_KEY, id); }catch(e){}
+  pgEditing = null;
+  pgRender();
+}
+async function pgBack(){
+  if(pgEditing && !(await lcConfirm('Leave without saving?', 'You have an edit open on this page. Leave and lose it?', { confirmText:'Leave', danger:true }))) return;
+  pgEditing = null;
+  const prospectId = (pgActive() || {}).prospectId || coActiveProspectId;
+  if(coProspects.some(p=> p.id===prospectId)) coOpenProspect(prospectId);
+  else coBackToProspects();
+}
+
+function pgText(v, empty){
+  return v && String(v).trim() ? '<p class="pg-sec-v">' + esc(String(v).trim()) + '</p>' : '<p class="pg-sec-empty">' + esc(empty || 'Nothing yet.') + '</p>';
+}
+function pgSection(title, v, empty){
+  return '<div><p class="pg-sec-k">' + esc(title) + '</p>' + pgText(v, empty) + '</div>';
+}
+function pgField(label, name, value, multiline, rows){
+  return '<label>' + esc(label)
+    + (multiline
+        ? '<textarea name="' + escAttr(name) + '" rows="' + (rows||3) + '" spellcheck="true">' + esc(value || '') + '</textarea>'
+        : '<input type="text" name="' + escAttr(name) + '" value="' + escAttr(value || '') + '" spellcheck="false">')
+  + '</label>';
+}
+function pgFormActions(){
+  return '<div class="pg-form-actions"><button type="button" class="btn small" data-pg-cancel>Cancel</button><button type="button" class="btn small primary" data-pg-save>Save</button></div>';
+}
+
+function pgTierHtml(pg, t){
+  const tier = (pg.tiers && pg.tiers[t.key]) || {};
+  const isLead = pg.leadTier===t.key;
+  const editing = pgEditing==='tier:' + t.key;
+  let band = '<div class="pg-tier-band"><span class="pg-tier-label">' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
+    + '<span style="display:flex; gap:6px; align-items:center;">'
+      + (isLead ? '<span class="pg-pill">&#9733; Lead</span>' : '')
+      + (editing ? '' : '<button type="button" class="btn small" data-pg-edit="tier:' + escAttr(t.key) + '">Edit</button>')
+    + '</span></div>';
+  if(editing){
+    return '<div class="pg-tier' + (isLead?' is-lead':'') + '">' + band + '<div class="pg-tier-body"><form class="pg-form" data-pg-form="tier:' + escAttr(t.key) + '">'
+      + pgField('Good', 'name', tier.name)
+      + '<div class="pg-form-row">'
+        + '<label>Type<select name="type"><option value="catalog"' + (tier.type!=='original'?' selected':'') + '>Catalog</option><option value="original"' + (tier.type==='original'?' selected':'') + '>Original</option></select></label>'
+        + pgField('Size', 'size', tier.size)
+      + '</div>'
+      + '<div class="pg-form-row">' + pgField('Cost', 'cost', tier.cost) + pgField('Lead time', 'leadTime', tier.leadTime) + '</div>'
+      + '<label class="pg-check"><input type="checkbox" name="noFit"' + (tier.verdict==='no-strong-fit'?' checked':'') + '> No strong fit at this price</label>'
+      + pgField('What it is', 'what', tier.what, true, 3)
+      + pgField('Why them (research line + source)', 'whyThem', tier.whyThem, true, 4)
+      + pgField('Inside note (under ' + PG_NOTE_WORDS + ' words)', 'insideNote', tier.insideNote, true, 4)
+      + pgField('Cost / sourcing', 'sourcing', tier.sourcing, true, 2)
+      + pgField('Runner-up', 'runnerUp', tier.runnerUp, true, 2)
+      + pgField('Risk / gap', 'riskGap', tier.riskGap, true, 2)
+      + pgFormActions()
+    + '</form></div></div>';
+  }
+  if(!tier.name){
+    return '<div class="pg-tier">' + band + '<div class="pg-tier-body"><p class="pg-tier-empty">No pick at this price yet. Run <b>/physical-goods</b> for this prospect and publish, or click Edit to add one by hand.</p></div></div>';
+  }
+  const words = pgWordCount(tier.insideNote);
+  const status = tier.status || 'Idea';
+  return '<div class="pg-tier' + (isLead?' is-lead':'') + '">' + band + '<div class="pg-tier-body">'
+    + '<div><h3 class="pg-tier-name">' + esc(tier.name) + '</h3><div class="pg-tags">'
+      + '<span class="pg-pill' + (tier.type==='original' ? ' is-original">Original' : '">Catalog') + '</span>'
+      + (tier.size ? '<span class="pg-pill is-plain">' + esc(tier.size) + '</span>' : '')
+      + (tier.verdict==='no-strong-fit' ? '<span class="pg-pill is-warn">No strong fit</span>' : '')
+    + '</div></div>'
+    + '<div class="pg-facts">'
+      + '<div class="pg-fact"><div class="pg-fact-k">Cost</div><div class="pg-fact-v">' + esc(tier.cost || '-') + '</div></div>'
+      + '<div class="pg-fact"><div class="pg-fact-k">Lead time</div><div class="pg-fact-v">' + esc(tier.leadTime || '-') + '</div></div>'
+    + '</div>'
+    + '<label class="pg-status">Status <select data-pg-status="' + escAttr(t.key) + '">'
+      + PG_STATUSES.map(s=> '<option' + (s===status?' selected':'') + '>' + esc(s) + '</option>').join('')
+    + '</select></label>'
+    + pgSection('What it is', tier.what)
+    + pgSection('Why them', tier.whyThem)
+    + '<div><div class="pg-note-head"><p class="pg-sec-k" style="margin:0;">Inside note</p>'
+      + '<span style="display:flex; align-items:center; gap:8px;"><span class="pg-note-count' + (words>PG_NOTE_WORDS?' is-over':'') + '">' + words + ' / ' + PG_NOTE_WORDS + ' words</span>'
+      + (tier.insideNote ? '<button type="button" class="btn small" data-pg-copy="' + escAttr(t.key) + '">Copy</button>' : '') + '</span></div>'
+      + (tier.insideNote ? '<div class="pg-note">' + esc(tier.insideNote.trim()) + '</div>' : '<p class="pg-sec-empty">No note yet.</p>')
+    + '</div>'
+    + pgSection('Cost / sourcing', tier.sourcing)
+    + pgSection('Runner-up', tier.runnerUp)
+    + (tier.riskGap && tier.riskGap.trim() ? '<div class="pg-risk"><p class="pg-sec-k">Risk / gap</p><p class="pg-sec-v">' + esc(tier.riskGap.trim()) + '</p></div>' : '')
+  + '</div></div>';
+}
+
+function pgBlockHtml(key, title, value, empty, rows){
+  const editing = pgEditing===key;
+  return '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">' + esc(title) + '</h2>'
+      + '<div class="outline-head-actions">' + (editing ? '' : '<button type="button" class="btn small" data-pg-edit="' + escAttr(key) + '">Edit</button>') + '</div></div>'
+    + (editing
+        ? '<form class="pg-form" data-pg-form="' + escAttr(key) + '">' + '<textarea name="value" rows="' + (rows||5) + '">' + esc(value || '') + '</textarea>' + pgFormActions() + '</form>'
+        : '<div class="outline-view">' + (value && value.trim() ? '<div style="white-space:pre-wrap;">' + esc(value.trim()) + '</div>' : '<p class="outline-empty">' + esc(empty) + '</p>') + '</div>')
+  + '</div>';
+}
+
+function pgResearchHtml(pg){
+  const lines = Array.isArray(pg.research) ? pg.research : [];
+  if(!lines.length) return '';
+  let html = '<div class="outline-section pg-research"><div class="outline-head"><h2 class="outline-title">Research behind the picks</h2></div>';
+  PG_RESEARCH_GROUPS.forEach(g=>{
+    const rows = lines.filter(l=> l.group===g.key);
+    if(!rows.length) return;
+    html += '<details' + (g.key==='personal' ? ' open' : '') + '><summary>' + esc(g.label) + ' (' + rows.length + ')</summary><ul>'
+      + rows.map(l=> '<li><span class="pg-prompt">' + esc(PG_PROMPT_LABELS[l.prompt] || l.prompt || '') + ':</span> ' + esc(l.text || '')
+          + (l.source ? ' <span class="pg-src">(' + esc(l.source) + ')</span>' : '') + '</li>').join('')
+      + '</ul></details>';
+  });
+  return html + '</div>';
+}
+
+function pgRender(){
+  const pg = pgActive();
+  if(!pg) return;
+  const prospect = coProspects.find(p=> p.id===pg.prospectId);
+  document.getElementById('pgBackLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : 'Creative Outreach');
+  document.getElementById('pgDetailTitle').textContent = 'Physical Good' + (pg.company ? ': ' + pg.company : '');
+  document.getElementById('pgMeta').innerHTML = [
+    pg.contact ? esc(pg.contact) : '',
+    pg.stage ? '<span class="pg-pill is-plain">Stage: ' + esc(pg.stage) + '</span>' : '',
+    pg.sender ? 'Sent by ' + esc(pg.sender) : '',
+  ].filter(Boolean).join(' &middot; ');
+  document.getElementById('pgEditDetailsBtn').style.display = pgEditing==='details' ? 'none' : '';
+
+  let html = '';
+  if(pgEditing==='details'){
+    html += '<div class="outline-section"><div class="outline-head"><h2 class="outline-title">Details</h2></div><form class="pg-form" data-pg-form="details">'
+      + '<div class="pg-form-row">' + pgField('Company', 'company', pg.company) + pgField('Contact (name, title)', 'contact', pg.contact) + '</div>'
+      + '<div class="pg-form-row">' + pgField('Sender (blank = Lincko / Dan)', 'sender', pg.sender)
+        + '<label>Stage<select name="stage">' + PG_STAGES.map(s=> '<option' + (s===pg.stage?' selected':'') + '>' + s + '</option>').join('') + '</select></label></div>'
+      + pgFormActions() + '</form></div>';
+  }
+
+  // Lead with
+  const leadTier = pg.tiers && pg.tiers[pg.leadTier];
+  if(pgEditing==='lead'){
+    html += '<div class="pg-lead"><form class="pg-form pg-lead-body" data-pg-form="lead">'
+      + '<label>Lead with<select name="leadTier"><option value="">Not decided</option>'
+        + PG_TIERS.map(t=> '<option value="' + t.key + '"' + (t.key===pg.leadTier?' selected':'') + '>' + esc(t.label + ' (' + t.cap + ')') + '</option>').join('')
+      + '</select></label>'
+      + pgField('Why this price point', 'leadReason', pg.leadReason, true, 3)
+      + pgFormActions() + '</form></div>';
+  } else {
+    html += '<div class="pg-lead"><div class="pg-lead-body"><div class="pg-lead-label">Lead with</div>'
+      + '<div class="pg-lead-pick">' + (leadTier && leadTier.name ? esc(pgTierDef(pg.leadTier).label) + ': ' + esc(leadTier.name) : 'Not decided yet') + '</div>'
+      + (pg.leadReason ? '<p class="pg-lead-reason">' + esc(pg.leadReason.trim()) + '</p>' : '')
+      + '</div><button type="button" class="btn small" data-pg-edit="lead">Change</button></div>';
+  }
+
+  html += '<div class="pg-tiers">' + PG_TIERS.map(t=> pgTierHtml(pg, t)).join('') + '</div>';
+  html += pgBlockHtml('summary', 'Signals that hold up', pg.summary, 'No summary yet. The skill fills this with the strongest signals from the research.', 5);
+  html += pgResearchHtml(pg);
+  html += pgBlockHtml('notes', 'Notes', pg.notes, 'Your notes: address confirmed, what happened after the send, anything else.', 5);
+  html += '<p class="pg-foot">' + (pg.publishedAt ? 'Published by the /physical-goods skill on ' + esc(cvFmtDate(pg.publishedAt)) : 'Created by hand')
+    + (pg.slug ? ' &middot; <code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code>' : '')
+    + (pg.publishedAt && pg.updatedAt > pg.publishedAt + 1000 ? ' &middot; edited here since' : '') + '</p>';
+
+  const body = document.getElementById('pgBody');
+  body.innerHTML = html;
+
+  body.querySelectorAll('[data-pg-edit]').forEach(btn=> btn.addEventListener('click', async ()=>{
+    if(pgEditing && pgEditing!==btn.dataset.pgEdit && !(await lcConfirm('Discard your edit?', 'You have another edit open on this page. Discard it?', { confirmText:'Discard', danger:true }))) return;
+    pgEditing = btn.dataset.pgEdit; pgRender();
+    const first = body.querySelector('[data-pg-form] input, [data-pg-form] textarea');
+    if(first) first.focus();
+  }));
+  body.querySelectorAll('[data-pg-cancel]').forEach(btn=> btn.addEventListener('click', ()=>{ pgEditing = null; pgRender(); }));
+  body.querySelectorAll('[data-pg-save]').forEach(btn=> btn.addEventListener('click', ()=> pgSubmit(btn.closest('form'))));
+  body.querySelectorAll('[data-pg-status]').forEach(sel=> sel.addEventListener('change', ()=>{
+    const key = sel.dataset.pgStatus;
+    pg.tiers[key].status = sel.value;
+    pgSave(pg, { ['tiers.' + key + '.status']: sel.value });
+  }));
+  body.querySelectorAll('[data-pg-copy]').forEach(btn=> btn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(pg.tiers[btn.dataset.pgCopy].insideNote.trim());
+      btn.textContent = 'Copied'; setTimeout(()=>{ btn.textContent = 'Copy'; }, 1400);
+    }catch(e){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the note and copy it by hand.'); }
+  }));
+}
+
+async function pgSubmit(form){
+  const pg = pgActive();
+  if(!pg || !form) return;
+  const key = form.dataset.pgForm;
+  const val = n=> { const el = form.elements[n]; return el ? (el.type==='checkbox' ? el.checked : el.value.trim()) : ''; };
+  let fields = {};
+  if(key==='details'){
+    fields = { company: val('company'), contact: val('contact'), sender: val('sender'), stage: val('stage') };
+    if(fields.company) fields.name = fields.company;
+  } else if(key==='lead'){
+    fields = { leadTier: val('leadTier'), leadReason: val('leadReason') };
+  } else if(key==='summary' || key==='notes'){
+    fields = { [key]: val('value') };
+  } else if(key.startsWith('tier:')){
+    const t = key.slice(5);
+    const prev = (pg.tiers && pg.tiers[t]) || {};
+    const tier = {
+      name: val('name'), type: val('type'), size: val('size'), cost: val('cost'), leadTime: val('leadTime'),
+      verdict: val('noFit') ? 'no-strong-fit' : 'pick', what: val('what'), whyThem: val('whyThem'),
+      insideNote: val('insideNote'), sourcing: val('sourcing'), runnerUp: val('runnerUp'), riskGap: val('riskGap'),
+      status: prev.status || 'Idea',
+    };
+    pg.tiers = pg.tiers || {};
+    pg.tiers[t] = tier;
+    fields = { ['tiers.' + t]: tier };
+  }
+  if(!key.startsWith('tier:')) Object.assign(pg, fields);
+  pgEditing = null;
+  pgRender();
+  await pgSave(pg, fields);
 }
 
 // Cine Vlogs have a permanent Thumbnail section pinned to the top of the shot table.
@@ -3314,15 +3767,18 @@ function switchTab(tab){
   const isCo = tab==='outreach';
   const showDetail = isCv && !!cvActiveId;
   const showLauncher = tab==='cine' && !cvActiveId;
-  const showProspect = isCo && !cvActiveId && !!coActiveProspectId && coProspects.some(p=> p.id===coActiveProspectId);
-  const showProspects = isCo && !cvActiveId && !showProspect;
+  const showPg = isCo && !cvActiveId && !!pgActive();
+  const showProspect = isCo && !cvActiveId && !showPg && !!coActiveProspectId && coProspects.some(p=> p.id===coActiveProspectId);
+  const showProspects = isCo && !cvActiveId && !showPg && !showProspect;
   document.getElementById('cvLauncherOverlay').classList.toggle('active', showLauncher);
   document.getElementById('coProspectsOverlay').classList.toggle('active', showProspects);
   document.getElementById('coProspectOverlay').classList.toggle('active', showProspect);
+  document.getElementById('pgDetailOverlay').classList.toggle('active', showPg);
   document.getElementById('cvDetailOverlay').classList.toggle('active', showDetail);
   if(showLauncher) cvRenderLauncher();
   if(showProspects) coRenderProspects();
   if(showProspect) coRenderProspect();
+  if(showPg) pgRender();
   if(showDetail){ cvApplyModeLabels(); cvRenderDetail(); }
   if(isCv) cvLoadMode(tab);
 }
@@ -3384,6 +3840,8 @@ function switchTab(tab){
   });
   document.getElementById('cvBackToLauncherLink').addEventListener('click', cvBackToLauncher);
   document.getElementById('coBackToProspectsLink').addEventListener('click', coBackToProspects);
+  document.getElementById('pgBackLink').addEventListener('click', pgBack);
+  document.getElementById('pgEditDetailsBtn').addEventListener('click', ()=>{ if(!pgEditing){ pgEditing = 'details'; pgRender(); } });
   document.getElementById('coProspectRenameBtn').addEventListener('click', ()=>{ if(coActiveProspectId) coRenameProspect(coActiveProspectId); });
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
