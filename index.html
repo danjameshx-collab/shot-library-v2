@@ -1721,10 +1721,12 @@ function toggleEffectsFullscreen(){
 }
 
 /* ================= CINE VLOGS ================= */
-// The Cine Vlogs and Creative Outreach Movie tabs share one UI; each mode keeps its own Firestore collection.
+// The Cine Vlogs and Creative Outreach Movie tabs share one UI and one Firestore collection;
+// records are told apart by their `kind` field (missing kind = Cine Vlog).
+const CV_COLLECTION = 'cineVlogs';
 const CV_MODES = {
-  cine:     { collection:'cineVlogs',              singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId' },
-  outreach: { collection:'creativeOutreachMovies', singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId' },
+  cine:     { singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId' },
+  outreach: { singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId' },
 };
 let cvMode = 'cine';
 function cvM(){ return CV_MODES[cvMode]; }
@@ -2143,9 +2145,10 @@ function outlineInit(){
 }
 
 async function cvFetchLibrary(){
+  const mode = cvMode;
   try{
-    const snap = await getDocs(collection(db, cvM().collection));
-    return snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+    const snap = await getDocs(collection(db, CV_COLLECTION));
+    return snap.docs.map(d=> ({ id: d.id, ...d.data() })).filter(r=> (r.kind || 'cine') === mode);
   }catch(e){
     console.error('Failed to load ' + cvM().plural + ' from Firebase:', e);
     await lcAlert('Connection error', 'Could not load ' + cvM().plural + ' from the database. Check your connection and try again.');
@@ -2154,7 +2157,7 @@ async function cvFetchLibrary(){
 }
 async function cvSaveRecord(rec){
   try{
-    await updateDoc(doc(db, cvM().collection, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, locations: rec.locations || [], outlineText: rec.outlineText || '', ideasText: rec.ideasText || '', completed: !!rec.completed });
+    await updateDoc(doc(db, CV_COLLECTION, rec.id), { name: rec.name, updatedAt: rec.updatedAt, shots: rec.shots, locations: rec.locations || [], outlineText: rec.outlineText || '', ideasText: rec.ideasText || '', completed: !!rec.completed });
   }catch(e){
     console.error('Failed to save ' + cvM().singular + ' to Firebase:', e);
     await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
@@ -2298,9 +2301,9 @@ async function cvCreate(){
     message: 'Give this ' + m.singular + ' a name.', confirmText: 'Create'
   });
   if(name === null) return;
-  const rec = { name: name || 'Untitled ' + m.singular, updatedAt: Date.now(), shots: [], locations: [], outlineText: '', ideasText: '' };
+  const rec = { kind: cvMode, name: name || 'Untitled ' + m.singular, updatedAt: Date.now(), shots: [], locations: [], outlineText: '', ideasText: '' };
   try{
-    const ref = await addDoc(collection(db, m.collection), rec);
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
     rec.id = ref.id;
     cvLibrary.push(rec);
     cvOpen(rec.id);
@@ -2338,7 +2341,7 @@ async function cvDelete(id){
   });
   if(!ok) return;
   try{
-    await deleteDoc(doc(db, m.collection, id));
+    await deleteDoc(doc(db, CV_COLLECTION, id));
   }catch(e){
     console.error('Failed to delete ' + m.singular + ':', e);
     await lcAlert('Connection error', 'Could not delete this ' + m.singular + '. Check your connection and try again.');
