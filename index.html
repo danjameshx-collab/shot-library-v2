@@ -2518,7 +2518,9 @@ function cvBackToLauncher(){
 // A prospect groups everything made for one outreach target: one Creative Outreach Movie
 // (a `cineVlogs` record with kind 'outreach' and this prospect's id), plus a Physical Good
 // and a Strategy Doc, which are placeholders for now.
-const CO_PROSPECTS_COLLECTION = 'coProspects';
+// Prospects are stored in `cineVlogs` too, as kind 'prospect': the database rules only allow that collection.
+const CO_PROSPECTS_COLLECTION = CV_COLLECTION;
+const CO_PROSPECT_KIND = 'prospect';
 const CO_ACTIVE_PROSPECT_KEY = 'lcActiveCoProspectId';
 let coProspects = [];
 let coActiveProspectId = null;
@@ -2532,7 +2534,7 @@ function coMovieFor(prospectId){ return coMovies().find(r=> r.prospectId===prosp
 async function coLoadProspects(movies){
   try{
     const snap = await getDocs(collection(db, CO_PROSPECTS_COLLECTION));
-    coProspects = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+    coProspects = snap.docs.map(d=> ({ id: d.id, ...d.data() })).filter(r=> r.kind===CO_PROSPECT_KIND);
   }catch(e){
     console.error('Failed to load prospects from Firebase:', e);
     await lcAlert('Connection error', 'Could not load your prospects from the database. Check your connection and try again.');
@@ -2541,7 +2543,7 @@ async function coLoadProspects(movies){
   }
   for(const movie of movies){
     if(movie.prospectId && coProspects.some(p=> p.id===movie.prospectId)) continue;
-    const p = { name: movie.name || 'Untitled Prospect', updatedAt: movie.updatedAt || Date.now(), completed: !!movie.completed };
+    const p = { kind: CO_PROSPECT_KIND, name: movie.name || 'Untitled Prospect', updatedAt: movie.updatedAt || Date.now(), completed: !!movie.completed };
     try{
       const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
       p.id = ref.id;
@@ -2674,7 +2676,7 @@ async function coCreateProspect(){
     message: 'Who is this outreach for? Use the person or company name.', confirmText: 'Create'
   });
   if(name === null) return;
-  const p = { name: name || 'Untitled Prospect', updatedAt: Date.now(), completed: false };
+  const p = { kind: CO_PROSPECT_KIND, name: name || 'Untitled Prospect', updatedAt: Date.now(), completed: false };
   try{
     const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
     p.id = ref.id;
