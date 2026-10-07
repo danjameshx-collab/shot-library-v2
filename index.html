@@ -205,6 +205,104 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
   .home-grid{grid-template-columns:1fr;}
 }
 
+/* ---------- Content tracker: Stats box on the landing page + the full tracker page ---------- */
+:root{ --hit:#2F8F5B; --hit-bg:#E6F4EC; --miss:#B8432F; --miss-bg:#FBECE8; }
+.trk-home{max-width:760px; margin:0 auto 40px; border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); box-shadow:var(--shadow); padding:20px 22px 22px;}
+.trk-home-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;}
+.trk-home-head h2{font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; margin:0;}
+.trk-home-head p{margin:2px 0 0; font-size:12.5px; color:var(--ink-soft);}
+.trk-cards{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;}
+.trk-card{border:1px solid var(--line); border-radius:var(--radius); padding:14px 14px 12px; display:flex; flex-direction:column; gap:8px; min-width:0;}
+.trk-card-name{font-family:var(--font-display); font-weight:800; font-size:14px; margin:0;}
+.trk-card-target{font-size:11.5px; color:var(--ink-soft); margin:0;}
+.trk-big{font-family:var(--font-display); font-weight:800; font-size:30px; line-height:1; letter-spacing:-.02em; margin:4px 0 0; font-variant-numeric:tabular-nums;}
+.trk-big small{font-size:11.5px; font-weight:600; color:var(--ink-soft); letter-spacing:0; margin-left:6px;}
+.trk-sub{font-size:11.5px; color:var(--ink-soft); margin:0; font-variant-numeric:tabular-nums;}
+.trk-now{display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding-top:8px; border-top:1px solid var(--line); font-size:11.5px; color:var(--ink-soft);}
+.trk-now-label{font-weight:700; color:var(--ink); margin-right:2px;}
+.trk-card-actions{display:flex; gap:6px; flex-wrap:wrap; margin-top:auto; padding-top:4px;}
+.trk-card-actions .btn{flex:1 1 auto;}
+.trk-spark{display:flex; align-items:flex-end; gap:2px; height:28px;}
+.trk-spark span{flex:1 1 0; min-width:0; background:var(--hit); border-radius:2px 2px 0 0; min-height:2px;}
+.trk-spark span.empty{background:var(--line);}
+.trk-spark span.future{background:none; border-bottom:2px dotted var(--line-strong); border-radius:0;}
+.trk-loading{font-size:13px; color:var(--ink-soft); padding:6px 0;}
+
+/* the hit / miss tick boxes */
+.trk-tick{display:inline-flex; align-items:center; gap:5px; padding:4px 9px 4px 6px; border-radius:999px; border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft); font:inherit; font-size:11.5px; font-weight:700; cursor:pointer; transition:background-color .12s ease, border-color .12s ease, color .12s ease;}
+.trk-tick .box{width:15px; height:15px; border-radius:4px; border:1.5px solid var(--line-strong); display:flex; align-items:center; justify-content:center; background:#fff;}
+.trk-tick .box svg{width:11px; height:11px; opacity:0;}
+.trk-tick:hover{border-color:var(--line-strong); color:var(--ink);}
+.trk-tick.hit.on{background:var(--hit-bg); border-color:var(--hit); color:var(--hit);}
+.trk-tick.hit.on .box{background:var(--hit); border-color:var(--hit); color:#fff;}
+.trk-tick.miss.on{background:var(--miss-bg); border-color:var(--miss); color:var(--miss);}
+.trk-tick.miss.on .box{background:var(--miss); border-color:var(--miss); color:#fff;}
+.trk-tick.on .box svg{opacity:1;}
+
+/* full tracker page */
+.trk-overlay{position:fixed; inset:0; z-index:560; background:var(--paper); align-items:flex-start; justify-content:center; padding:40px 24px 80px; overflow-y:auto;}
+.trk-page{width:100%; max-width:860px;}
+.trk-back{display:inline-flex; align-items:center; gap:6px; color:var(--ink-soft); font-size:13px; font-weight:600; background:none; border:none; padding:0; cursor:pointer; font-family:inherit; margin-bottom:18px;}
+.trk-back:hover{color:var(--bespoke);}
+.trk-back svg{width:14px; height:14px;}
+.trk-page-head{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;}
+.trk-page-head h1{font-family:var(--font-display); font-weight:800; font-size:30px; letter-spacing:-.01em; margin:0;}
+.trk-year{display:flex; align-items:center; gap:6px; font-weight:700; font-size:13px; font-variant-numeric:tabular-nums;}
+.trk-year button{width:28px; height:28px; border-radius:999px; border:1px solid var(--line); background:var(--paper-raised); cursor:pointer; font:inherit; color:var(--ink);}
+.trk-year button:disabled{opacity:.35; cursor:default;}
+.trk-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px;}
+.trk-tabs button{font:inherit; font-size:13px; font-weight:700; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft); cursor:pointer;}
+.trk-tabs button.active{background:var(--ink); border-color:var(--ink); color:#fff;}
+.trk-target{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-bottom:14px;}
+.trk-target p{margin:0; font-size:13px; color:var(--ink-soft);}
+.trk-target strong{display:block; font-family:var(--font-display); font-size:18px; color:var(--ink);}
+.trk-tiles{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-bottom:22px;}
+.trk-tile{border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px;}
+.trk-tile p{margin:0; font-size:11.5px; color:var(--ink-soft);}
+.trk-tile p.trk-big{font-size:26px; margin:6px 0 4px; color:var(--ink);}
+.trk-h2{font-family:var(--font-display); font-weight:800; font-size:16px; margin:0 0 4px;}
+.trk-h2-sub{font-size:12.5px; color:var(--ink-soft); margin:0 0 12px;}
+.trk-chart{display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:6px; align-items:end; border:1px solid var(--line); border-radius:var(--radius); padding:14px 12px 10px; margin-bottom:26px;}
+.trk-col{display:flex; flex-direction:column; align-items:stretch; gap:4px; min-width:0; cursor:default; position:relative;}
+.trk-col-val{font-size:11px; font-weight:700; text-align:center; color:var(--ink); font-variant-numeric:tabular-nums; min-height:14px;}
+.trk-col-track{height:110px; display:flex; align-items:flex-end; border-bottom:1px solid var(--line-strong);}
+.trk-col-bar{width:100%; background:var(--hit); border-radius:4px 4px 0 0; min-height:0;}
+.trk-col-lbl{font-size:11px; color:var(--ink-faint); text-align:center;}
+.trk-col.is-now .trk-col-lbl{color:var(--ink); font-weight:700;}
+.trk-col.is-off .trk-col-val{color:var(--ink-faint); font-weight:500;}
+.trk-col:hover .trk-col-bar{filter:brightness(.9);}
+.trk-col-tip{position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-size:11px; padding:5px 8px; border-radius:6px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .1s ease; z-index:2;}
+.trk-col:hover .trk-col-tip{opacity:1;}
+.trk-month{border:1px solid var(--line); border-radius:var(--radius); margin-bottom:12px; overflow:hidden;}
+.trk-month-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; background:#F7F8F7; border-bottom:1px solid var(--line);}
+.trk-month-head h3{margin:0; font-family:var(--font-display); font-size:14px; font-weight:800;}
+.trk-month-head span{font-size:12px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+.trk-month-head span b{color:var(--ink);}
+.trk-row{display:flex; align-items:center; gap:10px; padding:9px 14px; border-top:1px solid var(--line); border-left:3px solid transparent;}
+.trk-month-head + .trk-row{border-top:none;}
+.trk-row.is-hit{border-left-color:var(--hit); background:#F5FAF7;}
+.trk-row.is-miss{border-left-color:var(--miss); background:#FDF6F4;}
+.trk-row-name{flex:1 1 auto; min-width:0; font-size:13px; font-weight:700;}
+.trk-row-name small{display:block; font-weight:500; color:var(--ink-soft); font-size:11.5px;}
+.trk-row-ticks{display:flex; gap:6px; flex:0 0 auto;}
+.trk-pill{display:inline-block; font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:2px 6px; border-radius:999px; background:var(--ink); color:#fff; margin-left:6px; vertical-align:1px;}
+.trk-row.is-future .trk-row-name{color:var(--ink-faint);}
+.trk-upcoming > summary{cursor:pointer; font-size:13px; font-weight:700; color:var(--ink-soft); padding:8px 0 12px; list-style-position:inside;}
+.trk-upcoming > summary:hover{color:var(--ink);}
+@media (max-width:760px){
+  .trk-cards{grid-template-columns:1fr;}
+  .trk-tiles{grid-template-columns:repeat(2, minmax(0,1fr));}
+}
+@media (max-width:600px){
+  .trk-home{padding:16px;}
+  .trk-overlay{padding:24px 16px 60px;}
+  .trk-page-head h1{font-size:24px;}
+  .trk-chart{gap:3px; padding:12px 8px 8px;}
+  .trk-col-val{font-size:9.5px;}
+  .trk-col-lbl{font-size:10px;}
+  .trk-row{padding:9px 10px; flex-wrap:wrap;}
+}
+
 .top-tab-ext{text-decoration:none; margin-left:auto; color:var(--ink-faint); font-weight:600;}
 .top-tab-ext[hidden]{display:none;}
 
@@ -1593,6 +1691,14 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
     <div class="launcher-header">
       <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span>Lincko Content</span></h1>
     </div>
+    <!-- Stats: how each channel is doing against its posting target. Drawn by trkRenderHome(). -->
+    <section class="trk-home" id="trkHome" aria-labelledby="trkHomeTitle">
+      <div class="trk-home-head">
+        <div><h2 id="trkHomeTitle">Stats</h2><p id="trkHomeSub">Content posted against your targets</p></div>
+        <button type="button" class="btn small" data-trk-open="linkedin">Open tracker</button>
+      </div>
+      <div id="trkHomeBody"><p class="trk-loading">Loading your stats...</p></div>
+    </section>
     <h2 class="home-group">Outreach</h2>
     <div class="home-grid">
       <button type="button" class="home-card" data-channel="outreach">
@@ -1626,6 +1732,11 @@ table.shot-table tbody tr.shot-row-sectioned td:first-child{box-shadow:inset 4px
       </button>
     </div>
   </div>
+</div>
+
+<!-- Content tracker: every week (or video) per channel, ticked Hit or Miss. Drawn by trkRenderPage(). -->
+<div class="trk-overlay tab-page" id="trkOverlay">
+  <div class="trk-page" id="trkPage"></div>
 </div>
 
 <div class="top-tabs" id="topTabs">
@@ -5913,6 +6024,250 @@ function osInit(){
   });
 }
 
+/* ---------- Content tracker (Stats box on the landing page + the tracker page) ---------- */
+// Targets and history come from the Tasks & Trackers page. Weekly trackers are numbered from the first Monday of the year
+// (Week 1 2026 = 5 January) and belong to the month their Monday falls in. Cine is ticked per video, two a month.
+// Everything is one Firestore record: marks[tracker][slotKey] = 'hit' | 'miss' (no key = not ticked yet).
+const TRK_KIND = 'contentTracker';
+const TRK_FIRST_YEAR = 2026;
+const TRK_DEFS = [
+  { id:'linkedin', name:'LinkedIn',      target:'7 LinkedIn posts per week',        unit:'week',  channel:'linkedin', channelName:'LinkedIn' },
+  { id:'youtube',  name:'YouTube',       target:'2/3 talking head videos per week', unit:'week',  channel:'business', channelName:'Dan James (Business)' },
+  { id:'cine',     name:'YouTube (Cine)', target:'2 Cine YouTube videos per month', unit:'video', perMonth:2, start:'2026-09', channel:'builds', channelName:'Dan James (Builds)' },
+];
+const TRK_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const trkState = { rec:null, loading:null, view:'linkedin', year:null };
+
+function trkSeed(){
+  const wk = (from, to, v, out)=>{ for(let n=from; n<=to; n++) out['2026-W' + String(n).padStart(2,'0')] = v; return out; };
+  const linkedin = {}, youtube = {};
+  wk(1,6,'miss',linkedin); wk(7,15,'hit',linkedin); wk(16,17,'miss',linkedin); wk(18,26,'hit',linkedin); wk(33,43,'hit',linkedin);
+  wk(1,6,'miss',youtube); wk(7,14,'hit',youtube); wk(15,16,'miss',youtube); wk(17,25,'hit',youtube); wk(26,34,'miss',youtube); wk(35,40,'hit',youtube);
+  return { linkedin, youtube, cine: { '2026-09-v1':'hit', '2026-09-v2':'hit' } };
+}
+async function trkLoad(){
+  if(trkState.rec) return trkState.rec;
+  if(!trkState.loading){
+    trkState.loading = (async ()=>{
+      const snap = await getDocs(query(collection(db, CV_COLLECTION), where('kind', '==', TRK_KIND)));
+      if(snap.docs.length){ const d = snap.docs[0]; trkState.rec = { id: d.id, ...d.data() }; }
+      else{
+        const rec = { kind: TRK_KIND, marks: trkSeed(), createdAt: Date.now(), updatedAt: Date.now() };
+        const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+        trkState.rec = Object.assign({ id: ref.id }, rec);
+      }
+      if(!trkState.rec.marks) trkState.rec.marks = {};
+      TRK_DEFS.forEach(t=>{ if(!trkState.rec.marks[t.id]) trkState.rec.marks[t.id] = {}; });
+      return trkState.rec;
+    })();
+  }
+  try{ return await trkState.loading; }
+  catch(e){ trkState.loading = null; throw e; }
+}
+let trkSaveTimer = null;
+function trkSave(){
+  clearTimeout(trkSaveTimer);
+  trkSaveTimer = setTimeout(async ()=>{
+    trkSaveTimer = null;
+    const r = trkState.rec;
+    try{ await updateDoc(doc(db, CV_COLLECTION, r.id), { marks: r.marks, updatedAt: r.updatedAt }); }
+    catch(e){
+      console.error('Failed to save the tracker:', e);
+      await lcAlert('Connection error', 'Could not save your tick to the database. Check your connection and try again.');
+    }
+  }, 400);
+}
+
+function trkToday(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function trkYears(){ const ys = []; for(let y=TRK_FIRST_YEAR; y<=Math.max(TRK_FIRST_YEAR, trkToday().getFullYear()); y++) ys.push(y); return ys; }
+// Every slot (week or video) a tracker has in a year: { key, month, start, end, name, sub }.
+function trkSlots(t, year){
+  const out = [];
+  if(t.unit==='week'){
+    const d = new Date(year, 0, 1);
+    while(d.getDay()!==1) d.setDate(d.getDate() + 1);
+    for(let n=1; d.getFullYear()===year; n++, d.setDate(d.getDate() + 7)){
+      const start = new Date(d), end = new Date(d); end.setDate(end.getDate() + 6);
+      out.push({ key: year + '-W' + String(n).padStart(2,'0'), month: start.getMonth(), start, end,
+        name: 'Week ' + n, sub: start.toLocaleDateString(undefined, { day:'numeric', month:'long' }) });
+    }
+  }else{
+    for(let m=0; m<12; m++){
+      const ym = year + '-' + String(m + 1).padStart(2,'0');
+      if(t.start && ym < t.start) continue;
+      for(let v=1; v<=t.perMonth; v++){
+        out.push({ key: ym + '-v' + v, month: m, start: new Date(year, m, 1), end: new Date(year, m + 1, 0),
+          name: TRK_MONTHS[m] + ' Video ' + v, sub: 'Video ' + v + ' of ' + t.perMonth });
+      }
+    }
+  }
+  return out;
+}
+function trkMark(t, key){ return (trkState.rec && trkState.rec.marks[t.id][key]) || ''; }
+// Month score = hits / slots in that month (unticked counts as not hit), as on the Notion monthly reports.
+function trkStats(t, year){
+  const today = trkToday();
+  const slots = trkSlots(t, year);
+  const months = TRK_MONTHS.map((_, m)=>{
+    const s = slots.filter(x=> x.month===m);
+    const hits = s.filter(x=> trkMark(t, x.key)==='hit').length;
+    const started = s.length && s[0].start <= today;
+    return { m, total: s.length, hits, pct: s.length ? hits / s.length : null, started };
+  });
+  const past = slots.filter(x=> x.start <= today);
+  const hits = past.filter(x=> trkMark(t, x.key)==='hit').length;
+  const misses = past.filter(x=> trkMark(t, x.key)==='miss').length;
+  // Streak: hits in a row counting back from the latest slot, ignoring the current week / month's slots while still unticked.
+  let streak = 0;
+  for(let i=past.length - 1; i>=0; i--){
+    const v = trkMark(t, past[i].key);
+    if(v==='hit') streak++;
+    else if(!v && past[i].end >= today) continue;
+    else break;
+  }
+  const curSlots = slots.filter(x=> x.start <= today && x.end >= today);
+  const nowMonth = year===today.getFullYear() ? months[today.getMonth()] : null;
+  return { slots, months, past, hits, misses, open: past.length - hits - misses, streak, curSlots, nowMonth,
+    monthsOnTarget: months.filter(x=> x.started && x.total && x.hits===x.total).length };
+}
+const trkPct = (p)=> p==null ? '-' : Math.round(p * 100) + '%';
+const TRK_CHECK = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2l2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const TRK_CROSS = '<svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function trkTicks(t, key){
+  const v = trkMark(t, key);
+  return '<button type="button" class="trk-tick hit' + (v==='hit' ? ' on' : '') + '" data-trk-tick="' + t.id + '|' + key + '|hit" aria-pressed="' + (v==='hit') + '"><span class="box">' + TRK_CHECK + '</span>Hit</button>'
+    + '<button type="button" class="trk-tick miss' + (v==='miss' ? ' on' : '') + '" data-trk-tick="' + t.id + '|' + key + '|miss" aria-pressed="' + (v==='miss') + '"><span class="box">' + TRK_CROSS + '</span>Miss</button>';
+}
+function trkToggle(spec){
+  const [id, key, val] = spec.split('|');
+  const marks = trkState.rec.marks[id];
+  if(marks[key]===val) delete marks[key]; else marks[key] = val;
+  trkState.rec.updatedAt = Date.now();
+  trkSave();
+  trkRenderHome();
+  if(document.getElementById('trkOverlay').classList.contains('active')) trkRenderPage();
+}
+
+function trkRenderHome(){
+  const body = document.getElementById('trkHomeBody');
+  if(!trkState.rec){ return; }
+  const year = trkToday().getFullYear();
+  body.innerHTML = '<div class="trk-cards">' + TRK_DEFS.map(t=>{
+    const st = trkStats(t, year);
+    const nm = st.nowMonth;
+    const spark = st.months.filter(x=> x.total).map(x=>{
+      const tip = TRK_MONTHS[x.m] + ': ' + (x.started ? trkPct(x.pct) : 'not started');
+      if(!x.started) return '<span class="future" title="' + tip + '"></span>';
+      return '<span class="' + (x.hits ? '' : 'empty') + '" style="height:' + Math.max(8, Math.round((x.pct || 0) * 100)) + '%" title="' + tip + '"></span>';
+    }).join('');
+    const nowLabel = t.unit==='week' ? 'This week' : 'This month';
+    const now = st.curSlots.length
+      ? st.curSlots.map(s=> '<span class="trk-now-label">' + (t.unit==='week' ? nowLabel : s.sub.replace(/ of \d+$/, '')) + '</span>' + trkTicks(t, s.key)).join('')
+      : '<span>Starts ' + (trkSlots(t, year)[0] ? TRK_MONTHS[trkSlots(t, year)[0].month] : 'later') + '</span>';
+    return '<div class="trk-card">'
+      + '<div><p class="trk-card-name">' + esc(t.name) + '</p><p class="trk-card-target">' + esc(t.target) + '</p></div>'
+      + '<p class="trk-big">' + (nm && nm.total ? trkPct(nm.pct) : '-') + '<small>' + TRK_MONTHS[trkToday().getMonth()] + '</small></p>'
+      + '<p class="trk-sub">' + st.hits + ' of ' + st.past.length + ' ' + (t.unit==='week' ? 'weeks' : 'videos') + ' hit this year &middot; streak ' + st.streak + '</p>'
+      + '<div class="trk-spark" aria-hidden="true">' + spark + '</div>'
+      + '<div class="trk-now">' + now + '</div>'
+      + '<div class="trk-card-actions"><button type="button" class="btn small" data-trk-open="' + t.id + '">Tracker</button>'
+      + '<button type="button" class="btn small primary" data-trk-channel="' + t.channel + '">' + esc(t.channelName) + ' &rarr;</button></div>'
+      + '</div>';
+  }).join('') + '</div>';
+}
+
+function trkRenderPage(){
+  const page = document.getElementById('trkPage');
+  const t = TRK_DEFS.find(x=> x.id===trkState.view) || TRK_DEFS[0];
+  const years = trkYears();
+  if(!years.includes(trkState.year)) trkState.year = years[years.length - 1];
+  const year = trkState.year;
+  const today = trkToday();
+  let html = '<button type="button" class="trk-back" id="trkBackBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back to Lincko Content</button>'
+    + '<div class="trk-page-head"><h1>Content Tracker</h1><div class="trk-year">'
+    + '<button type="button" data-trk-year="-1" aria-label="Previous year"' + (year<=years[0] ? ' disabled' : '') + '>&lsaquo;</button><span>' + year + '</span>'
+    + '<button type="button" data-trk-year="1" aria-label="Next year"' + (year>=years[years.length - 1] ? ' disabled' : '') + '>&rsaquo;</button></div></div>'
+    + '<div class="trk-tabs" role="tablist">' + TRK_DEFS.map(x=> '<button type="button" role="tab" data-trk-view="' + x.id + '" class="' + (x.id===t.id ? 'active' : '') + '" aria-selected="' + (x.id===t.id) + '">' + esc(x.name) + '</button>').join('') + '</div>';
+  if(!trkState.rec){ page.innerHTML = html + '<p class="trk-loading">Loading your tracker...</p>'; return; }
+  const st = trkStats(t, year);
+  const unitWord = t.unit==='week' ? 'weeks' : 'videos';
+  html += '<div class="trk-target"><p>Target<strong>' + esc(t.target) + '</strong></p>'
+    + '<button type="button" class="btn small primary" data-trk-channel="' + t.channel + '">Go to ' + esc(t.channelName) + ' &rarr;</button></div>';
+  const nm = st.nowMonth;
+  html += '<div class="trk-tiles">'
+    + '<div class="trk-tile"><p>' + (nm ? TRK_MONTHS[today.getMonth()] : 'Year') + '</p><p class="trk-big">' + (nm ? (nm.total ? trkPct(nm.pct) : '-') : trkPct(st.slots.length ? st.slots.filter(x=> trkMark(t, x.key)==='hit').length / st.slots.length : null)) + '</p><p>' + (nm ? nm.hits + ' of ' + nm.total + ' ' + unitWord + ' hit' : 'hit across the year') + '</p></div>'
+    + '<div class="trk-tile"><p>Year so far</p><p class="trk-big">' + trkPct(st.past.length ? st.hits / st.past.length : null) + '</p><p>' + st.hits + ' of ' + st.past.length + ' ' + unitWord + ' hit</p></div>'
+    + '<div class="trk-tile"><p>Current streak</p><p class="trk-big">' + st.streak + '</p><p>' + unitWord + ' hit in a row</p></div>'
+    + '<div class="trk-tile"><p>Months on target</p><p class="trk-big">' + st.monthsOnTarget + '</p><p>' + st.misses + ' missed &middot; ' + st.open + ' not ticked</p></div>'
+    + '</div>';
+  html += '<h2 class="trk-h2">Monthly reports</h2><p class="trk-h2-sub">Share of ' + unitWord + ' hit each month. Hover a bar for the numbers.</p><div class="trk-chart">'
+    + st.months.map(x=>{
+      const isNow = year===today.getFullYear() && x.m===today.getMonth();
+      const off = !x.total || !x.started;
+      const tip = TRK_MONTHS[x.m] + ' ' + year + ': ' + (!x.total ? 'not tracked' : x.hits + ' of ' + x.total + ' hit' + (x.started ? '' : ' (not started)'));
+      return '<div class="trk-col' + (isNow ? ' is-now' : '') + (off ? ' is-off' : '') + '"><span class="trk-col-tip">' + tip + '</span>'
+        + '<span class="trk-col-val">' + (off ? '-' : trkPct(x.pct)) + '</span>'
+        + '<div class="trk-col-track"><div class="trk-col-bar" style="height:' + (off ? 0 : Math.round(x.pct * 100)) + '%"></div></div>'
+        + '<span class="trk-col-lbl">' + TRK_MONTHS[x.m].slice(0,3) + '</span></div>';
+    }).join('') + '</div>';
+  html += '<h2 class="trk-h2">' + (t.unit==='week' ? 'Weekly' : 'Video') + ' tracker</h2><p class="trk-h2-sub">Tick Hit when you reached the target, Miss when you did not. Click a ticked box again to clear it.</p>';
+  // Months that have started come first, newest at the top; months still to come fold away underneath.
+  const monthHtml = (m)=>{
+    const rows = st.slots.filter(x=> x.month===m);
+    if(!rows.length) return '';
+    const mo = st.months[m];
+    return '<div class="trk-month"><div class="trk-month-head"><h3>' + TRK_MONTHS[m] + ' ' + year + '</h3><span><b>' + trkPct(mo.pct) + '</b> &middot; ' + mo.hits + ' of ' + mo.total + ' hit</span></div>'
+      + rows.slice().reverse().map(s=>{
+        const v = trkMark(t, s.key);
+        const isNow = s.start <= today && s.end >= today;
+        const future = s.start > today;
+        return '<div class="trk-row' + (v ? ' is-' + v : '') + (future ? ' is-future' : '') + '"><div class="trk-row-name">' + esc(s.name) + (isNow ? '<span class="trk-pill">' + (t.unit==='week' ? 'This week' : 'This month') + '</span>' : '') + '<small>' + esc(s.sub) + '</small></div>'
+          + '<div class="trk-row-ticks">' + trkTicks(t, s.key) + '</div></div>';
+      }).join('') + '</div>';
+  };
+  const started = st.months.filter(x=> x.total && x.started).map(x=> x.m).reverse();
+  const upcoming = st.months.filter(x=> x.total && !x.started).map(x=> x.m);
+  html += started.map(monthHtml).join('');
+  if(upcoming.length){
+    html += '<details class="trk-upcoming"' + (started.length ? '' : ' open') + '><summary>Upcoming: ' + upcoming.map(m=> TRK_MONTHS[m]).join(', ') + '</summary>' + upcoming.map(monthHtml).join('') + '</details>';
+  }
+  page.innerHTML = html;
+}
+
+function trkOpen(view, opts){
+  if(view && TRK_DEFS.some(x=> x.id===view)) trkState.view = view;
+  if(!(opts && opts.fromHistory) && location.hash!=='#stats-' + trkState.view){
+    history[opts && opts.replace ? 'replaceState' : 'pushState'](null, '', '#stats-' + trkState.view);
+  }
+  document.getElementById('trkOverlay').classList.add('active');
+  document.getElementById('trkOverlay').scrollTop = 0;
+  trkRenderPage();
+}
+function trkClose(){ document.getElementById('trkOverlay').classList.remove('active'); }
+
+function trkInit(){
+  // One click handler for the Stats box and the tracker page: ticks, tracker tabs, year arrows and channel buttons.
+  const onClick = (e)=>{
+    const b = e.target.closest('button');
+    if(!b) return;
+    if(b.dataset.trkTick){ if(trkState.rec) trkToggle(b.dataset.trkTick); }
+    else if(b.dataset.trkOpen){ trkOpen(b.dataset.trkOpen); }
+    else if(b.dataset.trkView){ trkState.view = b.dataset.trkView; history.replaceState(null, '', '#stats-' + trkState.view); trkRenderPage(); }
+    else if(b.dataset.trkYear){ trkState.year += +b.dataset.trkYear; trkRenderPage(); }
+    else if(b.dataset.trkChannel){ trkClose(); openChannel(b.dataset.trkChannel); }
+    else if(b.id==='trkBackBtn'){ trkClose(); goHome(); }
+  };
+  document.getElementById('trkHome').addEventListener('click', onClick);
+  document.getElementById('trkOverlay').addEventListener('click', onClick);
+  trkLoad().then(()=>{
+    trkRenderHome();
+    if(document.getElementById('trkOverlay').classList.contains('active')) trkRenderPage();
+  }).catch(e=>{
+    console.error('Failed to load the content tracker:', e);
+    document.getElementById('trkHomeBody').innerHTML = '<p class="trk-loading">Could not load your stats. Check your connection and refresh the page.</p>';
+  });
+}
+
 /* ---------- channels (Lincko Content landing page) ---------- */
 // Each channel only shows its own tabs. 'soon' is the placeholder page for channels not built yet.
 // The open channel lives in the URL hash (#builds etc.), so a refresh stays put and a plain link lands on the landing page.
@@ -5927,6 +6282,8 @@ const CHANNELS = {
 let activeChannel = null;
 
 function openChannel(ch, opts){
+  if(ch && ch.startsWith('stats')){ goHome(Object.assign({}, opts, {fromHistory:true})); return trkOpen(ch.slice(6), opts); }
+  trkClose();
   const c = CHANNELS[ch];
   if(!c) return goHome(opts);
   activeChannel = ch;
@@ -5951,6 +6308,7 @@ function openChannel(ch, opts){
 function goHome(opts){
   if(cvActiveId){ outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty(); }
   osHide();
+  trkClose();
   activeChannel = null;
   if(!(opts && opts.fromHistory) && location.hash){
     history[opts && opts.replace ? 'replaceState' : 'pushState'](null, '', location.pathname + location.search);
@@ -6086,6 +6444,7 @@ function switchTab(tab){
   ideasInit();
   cvJumpInit();
   osInit();
+  trkInit();
 
   openChannel(location.hash.slice(1), {replace:true});
 })();
