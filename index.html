@@ -622,6 +622,10 @@ body.tabs-hidden .all-shots-overlay{top:0;}
   padding-right:30px; overflow-wrap:break-word;
 }
 .launcher-card .lc-meta{font-size:12px; color:var(--ink-faint); margin:0;}
+.launcher-card .lc-status{list-style:none; margin:6px 0 10px; padding:0; display:flex; flex-direction:column; gap:3px; font-size:12.5px; color:var(--ink);}
+.launcher-card .lc-status .is-yes{color:var(--bespoke); font-weight:600;}
+.launcher-card .lc-status .is-no{color:var(--ink-faint);}
+.launcher-card .lc-dates{list-style:none; margin:0; padding:0; font-size:12px; color:var(--ink-faint); display:flex; flex-direction:column; gap:2px;}
 .launcher-card.is-complete{background:var(--bespoke-bg); border-left:4px solid var(--bespoke); padding-left:14px;}
 .launcher-card.is-complete:hover{background:#DCF0E5;}
 .launcher-card .lc-complete-btn{
@@ -2910,7 +2914,7 @@ async function coLoadProspects(movies){
   }
   for(const movie of movies){
     if(movie.prospectId && coProspects.some(p=> p.id===movie.prospectId)) continue;
-    const p = { kind: CO_PROSPECT_KIND, name: movie.name || 'Untitled Prospect', updatedAt: movie.updatedAt || Date.now(), completed: !!movie.completed };
+    const p = { kind: CO_PROSPECT_KIND, name: movie.name || 'Untitled Prospect', createdAt: movie.createdAt || movie.updatedAt || Date.now(), updatedAt: movie.updatedAt || Date.now(), completed: !!movie.completed };
     try{
       const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
       p.id = ref.id;
@@ -2920,6 +2924,17 @@ async function coLoadProspects(movies){
     }catch(e){
       console.error('Failed to create a prospect for "' + movie.name + '":', e);
     }
+  }
+  // Prospects made before Date Created existed get the earliest date found on them, their movie or their Physical Good.
+  for(const p of coProspects){
+    if(p.createdAt) continue;
+    const movie = movies.find(m=> m.prospectId===p.id);
+    const pg = coPhysicalGoods.find(r=> r.prospectId===p.id);
+    const dates = [p.updatedAt, movie && movie.createdAt, movie && movie.updatedAt, pg && pg.createdAt, pg && pg.updatedAt].filter(Boolean);
+    if(!dates.length) continue;
+    p.createdAt = Math.min(...dates);
+    try{ await updateDoc(doc(db, CO_PROSPECTS_COLLECTION, p.id), { createdAt: p.createdAt }); }
+    catch(e){ console.error('Failed to save Date Created for "' + p.name + '":', e); }
   }
   if(coActiveProspectId && !coProspects.some(p=> p.id===coActiveProspectId)) coActiveProspectId = null;
   // Restore an open Physical Good page across reloads.
@@ -2953,13 +2968,22 @@ function coRenderProspects(){
   sorted.forEach(p=>{
     const done = !!p.completed;
     const movie = coMovieFor(p.id);
-    const shotCount = movie ? (movie.shots||[]).filter(s=> !s.isSection).length : 0;
-    const has = [movie ? 'Movie, ' + shotCount + ' shot' + (shotCount===1?'':'s') : '', pgFor(p.id) ? 'Physical Good' : ''].filter(Boolean);
-    const meta = 'Updated ' + cvFmtDate(p.updatedAt) + ' · ' + (has.length ? has.join(' · ') : 'Nothing created yet');
+    const pg = pgFor(p.id);
+    // The Strategy Doc is still a placeholder, so it always reads Not Created until it can be built.
+    const statusRow = (label, made)=> '<li>' + label + ': <span class="' + (made ? 'is-yes' : 'is-no') + '">' + (made ? 'Created' : 'Not Created') + '</span></li>';
+    const lastUpdate = Math.max(p.updatedAt||0, movie ? movie.updatedAt||0 : 0, pg ? pg.updatedAt||0 : 0);
     html += '<div class="launcher-card' + (done ? ' is-complete' : '') + '" data-prospect-id="' + escAttr(p.id) + '">'
       + '<button type="button" class="lc-complete-btn' + (done ? ' is-complete' : '') + '" data-complete-id="' + escAttr(p.id) + '" title="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-label="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
       + '<h3 class="lc-name">' + esc(p.name || 'Untitled Prospect') + '</h3>'
-      + '<p class="lc-meta">' + esc(meta) + '</p>'
+      + '<ul class="lc-status">'
+        + statusRow('Creative Outreach Movie', !!movie)
+        + statusRow('Physical Good', !!pg)
+        + statusRow('Strategy Doc', false)
+      + '</ul>'
+      + '<ul class="lc-dates">'
+        + '<li>Date Created: ' + esc(cvFmtDate(p.createdAt || lastUpdate)) + '</li>'
+        + '<li>Last Update: ' + esc(cvFmtDate(lastUpdate)) + '</li>'
+      + '</ul>'
       + '<div class="lc-footer">'
         + (done ? '<span class="lc-complete-badge">' + CV_CHECK_SVG + 'Completed</span>' : '<span></span>')
         + '<div class="lc-actions">'
@@ -2993,8 +3017,11 @@ function coRenderProspect(){
     const shotCount = (movie.shots||[]).filter(s=> !s.isSection).length;
     html += '<div class="launcher-card' + (movie.completed ? ' is-complete' : '') + '" data-co-movie-id="' + escAttr(movie.id) + '">'
       + '<p class="lc-type">Creative Outreach Movie</p>'
-      + '<h3 class="lc-name">' + esc(movie.name || 'Untitled Creative Outreach Movie') + '</h3>'
-      + '<p class="lc-meta">Updated ' + cvFmtDate(movie.updatedAt) + ' · ' + shotCount + ' shot' + (shotCount===1?'':'s') + '</p>'
+      + '<ul class="lc-dates">'
+        + '<li>No. of Shots: ' + shotCount + '</li>'
+        + '<li>Date Created: ' + esc(cvFmtDate(movie.createdAt || movie.updatedAt)) + '</li>'
+        + '<li>Last Updated: ' + esc(cvFmtDate(movie.updatedAt)) + '</li>'
+      + '</ul>'
       + '<div class="lc-footer">'
         + (movie.completed ? '<span class="lc-complete-badge">' + CV_CHECK_SVG + 'Completed</span>' : '<span></span>')
         + '<div class="lc-actions">'
@@ -3081,7 +3108,8 @@ async function coCreateProspect(){
     message: 'Who is this outreach for? Use the person or company name.', confirmText: 'Create'
   });
   if(name === null) return;
-  const p = { kind: CO_PROSPECT_KIND, name: name || 'Untitled Prospect', updatedAt: Date.now(), completed: false };
+  const now = Date.now();
+  const p = { kind: CO_PROSPECT_KIND, name: name || 'Untitled Prospect', createdAt: now, updatedAt: now, completed: false };
   try{
     const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
     p.id = ref.id;
