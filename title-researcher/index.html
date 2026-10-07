@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Title Researcher</title>
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#FFFFFF; --paper-raised:#FFFFFF; --paper-soft:#F7F8F7;
+  --ink:#14181B; --ink-soft:#5B6560; --ink-faint:#757E78;
+  --mimeo:#2F8F5B; --mimeo-ink:#E6F4EC;
+  --line:#E4E9E6; --line-strong:#CCD5D0;
+  --good:#2F8F5B; --warn:#B4691A;
+  --bespoke:#1E6B45; --bespoke-dark:#123D28; --bespoke-bg:#E6F4EC; --bespoke-bg-2:#DCF0E5;
+  --shadow: 0 1px 0 rgba(20,24,27,.03), 0 8px 20px -12px rgba(20,24,27,.14);
+  --shadow-hover: 0 1px 0 rgba(20,24,27,.03), 0 14px 30px -14px rgba(20,24,27,.22);
+  --shadow-lg: 0 2px 4px rgba(20,24,27,.04), 0 22px 44px -18px rgba(20,24,27,.24);
+  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+  --ease: cubic-bezier(.2,.7,.3,1);
+  --r:8px; --r2:14px;
+  /* legacy aliases used by inline styles in the JS render functions */
+  --bg:var(--paper); --surface:var(--paper-raised); --surface2:var(--paper); --surface3:var(--paper-soft);
+  --accent:var(--bespoke); --text:var(--ink); --text-dim:var(--ink-soft); --text-muted:var(--ink-faint);
+  --border:var(--line); --border2:var(--line-strong); --success:var(--good);
+}
+html,body{overflow-x:clip;max-width:100%} /* clip, not hidden: hidden makes body a scroll container and breaks position:sticky */
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);min-height:100vh;font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::selection{background:var(--mimeo);color:var(--mimeo-ink)}
+:focus-visible{outline:2px solid var(--bespoke);outline-offset:2px;border-radius:4px}
+
+/* TOP TAB BAR (same style as the Shots library) */
+:root{--tabs-h:52px}
+html.embedded{--tabs-h:0px}
+html.embedded .top-tabs{display:none}
+.top-tabs{
+  position:sticky; top:0; z-index:100; height:52px; display:flex; align-items:center; gap:6px;
+  padding:0 20px; background:var(--paper-raised); border-bottom:1px solid var(--line); box-shadow:0 1px 0 rgba(20,24,27,.03);
+  padding-left:calc(20px + env(safe-area-inset-left)); padding-right:calc(20px + env(safe-area-inset-right));
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.top-tabs::-webkit-scrollbar{display:none}
+.top-tab-btn{
+  font-family:var(--font-display); font-weight:700; font-size:14.5px; letter-spacing:.02em;
+  padding:8px 18px; border-radius:999px; border:1px solid transparent; background:transparent; color:var(--ink-soft);
+  cursor:pointer; white-space:nowrap; flex:0 0 auto;
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.top-tab-btn:hover{color:var(--ink); background:var(--mimeo-ink)}
+.top-tab-btn.active{background:var(--bespoke); color:#fff; border-color:var(--bespoke)}
+@media (max-width:480px){
+  .top-tabs{padding-left:calc(12px + env(safe-area-inset-left)); padding-right:calc(12px + env(safe-area-inset-right)); gap:4px}
+  .top-tab-btn{padding:7px 14px; font-size:13.5px}
+}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - var(--tabs-h))}
+
+/* SIDEBAR */
+.sidebar{background:var(--paper-raised);border-right:1px solid var(--line);padding:20px 18px;overflow-y:auto;height:calc(100vh - var(--tabs-h));position:sticky;top:var(--tabs-h)}
+.s-label{font-family:var(--font-display);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--bespoke);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.s-sec{margin-bottom:22px}
+.s-hint{font-size:11.5px;color:var(--ink-faint);margin-top:5px;line-height:1.45}
+
+/* FORM */
+input,select,textarea{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);color:var(--ink);padding:8px 11px;font-size:13.5px;outline:none;transition:border-color .15s ease,box-shadow .15s ease;font-family:inherit}
+input:hover,select:hover,textarea:hover{border-color:var(--line-strong)}
+input:focus,select:focus,textarea:focus{border-color:var(--mimeo);box-shadow:0 0 0 3px rgba(47,143,91,.15)}
+input::placeholder,textarea::placeholder{color:var(--ink-faint)}
+textarea{resize:vertical}
+select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235B6560' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:10px 6px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink);font-size:12.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .12s ease,box-shadow .15s ease;font-family:inherit;white-space:nowrap;text-decoration:none}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--bespoke);border-color:var(--bespoke);color:#fff;box-shadow:0 1px 0 rgba(20,24,27,.03),0 10px 20px -12px rgba(30,107,69,.45)}
+.btn-primary:hover{background:var(--bespoke-dark);border-color:var(--bespoke-dark);transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-sec{background:var(--paper-raised);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow)}
+.btn-sec:hover{background:var(--paper-soft);border-color:var(--line-strong);box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--ink-soft);padding:4px 9px}
+.btn-ghost:hover{background:var(--mimeo-ink);color:var(--bespoke)}
+.btn-sm{padding:5px 11px;font-size:11.5px}
+.btn-full{width:100%;justify-content:center;padding:11px 16px;font-size:13px}
+
+
+/* CHANNEL LIST */
+.ch-list{display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto}
+.ch-item{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--paper);border-radius:var(--r);border:1px solid var(--line);transition:border-color .15s ease}
+.ch-item:hover{border-color:var(--line-strong)}
+.ch-item.ok{border-color:rgba(47,143,91,.3)}.ch-item.err{border-color:rgba(180,105,26,.35)}
+.ch-avatar{width:24px;height:24px;border-radius:50%;background:var(--bespoke-bg);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--bespoke)}
+.ch-avatar img{width:100%;height:100%;object-fit:cover}
+.ch-name{flex:1;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.ch-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ch-dot.ok{background:var(--good)}.ch-dot.err{background:var(--warn)}
+.ch-dot.loading{background:var(--mimeo);animation:pulse 1s infinite}
+.add-row{display:flex;gap:6px;margin-top:8px}.add-row input{flex:1}
+.bulk-panel{margin-top:8px;margin-bottom:8px;display:none}.bulk-panel.open{display:block}
+.bulk-panel textarea{height:90px;font-size:12.5px}
+.bulk-actions{display:flex;gap:6px;margin-top:6px}
+
+/* PROGRESS */
+.prog-wrap{display:none;margin-bottom:12px}.prog-wrap.show{display:block}
+.prog-track{height:4px;background:var(--bespoke-bg);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:100%;background:var(--bespoke);border-radius:999px;transition:width .3s var(--ease)}
+.prog-row{display:flex;justify-content:space-between}
+.prog-text,.prog-count{font-size:12px;color:var(--ink-soft)}
+
+/* TOOLBAR */
+.toolbar{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);position:sticky;top:var(--tabs-h);z-index:90}
+.tb-search{flex:1;min-width:180px;max-width:340px;position:relative}
+.tb-search input{padding-left:32px;border-radius:999px}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-faint);pointer-events:none;display:flex}
+.search-ico svg{width:14px;height:14px}
+.toolbar select{border-radius:999px}
+.tb-space{flex:1}
+.view-toggle{display:flex;gap:2px;background:var(--paper-soft);border:1px solid var(--line);padding:3px;border-radius:999px}
+.view-btn{padding:5px 13px;border-radius:999px;border:none;background:transparent;color:var(--ink-soft);cursor:pointer;font-size:12.5px;font-weight:700;transition:all .15s ease;font-family:inherit}
+.view-btn:hover{color:var(--ink)}
+.view-btn.active{background:var(--bespoke);color:#fff}
+
+/* FRAMEWORK VIEW */
+.fw-wrap{padding:22px 24px 40px}
+.fw-cat-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.fw-cat-pill{padding:5px 13px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;font-family:inherit}
+.fw-cat-pill:hover{color:var(--ink);background:var(--mimeo-ink);border-color:var(--line-strong)}
+.fw-cat-pill.active{background:var(--bespoke);color:#fff;border-color:var(--bespoke)}
+
+.fw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(500px,1fr));gap:18px}
+
+/* FRAMEWORK CARD */
+.fw-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--r2);padding:22px 24px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow);transition:border-color .15s ease,box-shadow .15s ease,transform .12s ease}
+.fw-card:hover{border-color:var(--mimeo);box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.fw-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.fw-cat-tag{font-family:var(--font-display);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:999px}
+.fw-meta{font-size:12px;color:var(--ink-faint)}
+.fw-meta strong{color:var(--ink-soft)}
+
+/* THE FRAMEWORK TEMPLATE, the hero element */
+.fw-tpl{font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:-.01em;line-height:1.6;color:var(--ink);word-break:break-word}
+
+/* OUTLIER BADGE */
+.ol{display:inline-flex;align-items:center;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-left:6px}
+.ol-fire{background:#FFF3D6;color:#8A5A00;border:1px solid #F0D48A}
+.ol-great{background:var(--bespoke);color:#fff;border:1px solid var(--bespoke)}
+.ol-good{background:var(--bespoke-bg-2);color:var(--bespoke-dark);border:1px solid rgba(30,107,69,.25)}
+.ol-above{background:var(--mimeo-ink);color:var(--bespoke);border:1px solid rgba(47,143,91,.2)}
+.ol-avg{background:var(--paper-soft);color:var(--ink-faint);border:1px solid var(--line)}
+.ol-below{background:#FBEEE0;color:var(--warn);border:1px solid #EFD3B4}
+.ol-low{background:#F9E3DF;color:#A33B2A;border:1px solid #ECC3BB}
+
+/* FRAMEWORK SORT BAR */
+.fw-sort-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.fw-sort-lbl{font-family:var(--font-display);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--bespoke);margin-right:4px}
+.fw-sort-btn{padding:5px 13px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;font-family:inherit}
+.fw-sort-btn:hover{color:var(--ink);background:var(--mimeo-ink);border-color:var(--line-strong)}
+.fw-sort-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* PLACEHOLDERS */
+.ph{display:inline-flex;align-items:center;padding:1px 9px;border-radius:6px;font-size:13px;font-weight:700;font-family:var(--font-mono);vertical-align:middle;margin:0 1px;letter-spacing:0}
+.ph-n{background:#E4EEF8;color:#1F5A93;border:1px solid #C7DAEE}
+.ph-dollar{background:var(--bespoke-bg);color:var(--bespoke);border:1px solid rgba(30,107,69,.22)}
+.ph-pct{background:#FBEEE0;color:var(--warn);border:1px solid #EFD3B4}
+.ph-topic{background:#EFE8F7;color:#6A3FA0;border:1px solid #DCCDEE}
+
+.fw-divider{height:1px;background:var(--line)}
+
+.fw-examples{display:flex;flex-direction:column;gap:10px}
+.fw-ex{font-size:13px;color:var(--ink);line-height:1.45}
+.fw-ex a{color:inherit;text-decoration:none;font-weight:600}
+.fw-ex a:hover{color:var(--bespoke)}
+.fw-ex-src{display:flex;align-items:center;gap:6px;margin-top:4px}
+.fw-ch-avatar{width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bespoke-bg)}
+.fw-ch-fallback{display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--bespoke);font-weight:800;background:var(--bespoke-bg)}
+.fw-ch-name{font-size:12px;color:var(--ink-soft);font-weight:600}
+.fw-ex-views{font-size:11.5px;color:var(--ink-faint);margin-left:2px}
+.fw-more-btn{font-size:12px;font-weight:700;color:var(--bespoke);cursor:pointer;padding:3px 0}
+.fw-more-btn:hover{color:var(--bespoke-dark);text-decoration:underline}
+
+.fw-actions{display:flex;gap:6px;flex-wrap:wrap}
+.fw-avg-views{font-size:11.5px;color:var(--ink-faint);margin-left:auto;align-self:center}
+.fw-avg-views strong{color:var(--bespoke)}
+
+/* RESULTS TABLE */
+.results{padding:22px 24px 40px;flex:1}
+.res-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden;background:var(--paper-raised)}
+.res-table th{text-align:left;padding:12px 12px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bespoke);border-bottom:1.5px solid var(--line-strong);background:var(--bespoke-bg);white-space:nowrap}
+.res-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.res-table tbody tr:last-child td{border-bottom:none}
+.res-table tbody tr:nth-child(even) td{background:rgba(30,107,69,.02)}
+.res-table tbody tr:hover td{background:var(--mimeo-ink)}
+.title-cell{display:flex;align-items:flex-start;gap:10px}
+.thumb-sm{width:80px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--ink)}
+.title-txt a{color:var(--ink);text-decoration:none;font-weight:600;line-height:1.4;font-size:13.5px}
+.title-txt a:hover{color:var(--bespoke)}
+.ch-link{color:var(--ink-soft);text-decoration:none;font-size:12.5px;font-weight:600}.ch-link:hover{color:var(--bespoke)}
+.views{color:var(--ink-soft);font-size:13px}.views.hot{color:var(--bespoke);font-weight:800}
+.date-txt{color:var(--ink-faint);font-size:12px;white-space:nowrap}
+.act-cell{display:flex;gap:3px}
+
+/* GRID */
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.v-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:11px;overflow:hidden;transition:border-color .15s ease,box-shadow .15s ease,transform .12s ease}
+.v-card:hover{border-color:var(--mimeo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.card-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--ink);display:block}
+.card-body{padding:11px 13px 13px}
+.card-title{font-family:var(--font-display);font-weight:800;line-height:1.4;margin-bottom:7px;font-size:13px}
+.card-title a{color:var(--ink);text-decoration:none}.card-title a:hover{color:var(--bespoke)}
+.card-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink-faint)}
+.card-acts{display:flex;gap:6px;margin-top:10px}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;color:var(--ink-soft)}
+.empty-ico{width:56px;height:56px;border-radius:50%;background:var(--bespoke-bg);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.empty h3{font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:-.01em;color:var(--ink);margin-bottom:6px}
+.empty p{font-size:13.5px}
+.empty strong{color:var(--bespoke)}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:1000}
+.toast{padding:11px 16px;border-radius:12px;font-size:13px;font-weight:600;max-width:340px;animation:slideIn .2s var(--ease);box-shadow:var(--shadow-lg);background:var(--paper-raised);color:var(--ink);border:1px solid var(--line)}
+.toast-err{border-left:4px solid var(--warn)}
+.toast-ok{border-left:4px solid var(--bespoke)}
+.toast-info{border-left:4px solid var(--line-strong)}
+
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:999px;border:2px solid var(--paper)}
+
+/* THUMBNAILS PAGE (same format as the Shots library Thumbnails tab) */
+#thumbsPage{display:none;padding:32px;background:var(--paper)}
+.thumbs-box{width:100%;max-width:1357px;margin:0 auto;background:var(--paper-raised);border-radius:16px;overflow:clip;box-shadow:0 30px 70px -22px rgba(0,0,0,.5)} /* clip, not hidden, so the creator nav can stick */
+.thumbs-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:23px 28px 16px;border-bottom:1px solid var(--line)}
+.thumbs-head > div:first-child{min-width:0;flex:1 1 auto}
+.thumbs-head-right{display:flex;align-items:center;gap:10px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}
+.thumbs-eyebrow{font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--bespoke)}
+.thumbs-head h2{font-family:var(--font-display);font-weight:800;font-size:clamp(18px,4.5vw,23px);margin:2px 0 0;color:var(--ink);line-height:1.25}
+.thumbs-status{font-size:13.5px;color:var(--ink-faint)}
+.thumbs-nav{position:sticky;top:var(--tabs-h);z-index:2;display:flex;flex-wrap:wrap;gap:9px;padding:14px 28px;background:var(--paper-raised);border-bottom:1px solid var(--line)}
+.thumbs-nav:empty{display:none}
+.thumbs-nav-btn{border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-soft);cursor:pointer;font-family:var(--font-display);font-weight:700;font-size:14.5px;padding:8px 16px;border-radius:999px;transition:background .15s ease,color .15s ease,border-color .15s ease}
+.thumbs-nav-btn:hover{color:var(--ink);border-color:var(--ink-soft)}
+.thumbs-nav-btn.active{background:var(--bespoke);border-color:var(--bespoke);color:#fff}
+.thumbs-scroll{padding:7px 28px 28px}
+.thumbs-channel{border:1px solid var(--line);border-radius:16px;padding:18px 21px 21px;margin-top:21px;background:var(--paper)}
+.thumbs-channel[hidden]{display:none}
+.thumbs-channel-head{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:0 0 16px}
+.thumbs-channel-name{margin:0;font-family:var(--font-display);font-weight:800;font-size:19.5px;color:var(--ink)}
+.thumbs-channel-head a{color:var(--ink-faint);font-size:14.5px;font-weight:600;text-decoration:none}
+.thumbs-channel-head a:hover{color:var(--ink);text-decoration:underline}
+.thumbs-channel-count{margin-left:auto;font-size:13.5px;color:var(--ink-faint)}
+.thumbs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(322px,1fr));gap:21px}
+.thumbs-card{display:flex;flex-direction:column;text-align:left;border:1px solid var(--line);border-radius:13px;background:var(--paper);overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s ease,box-shadow .15s ease,transform .12s ease}
+.thumbs-card:hover{border-color:var(--mimeo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.thumbs-card-media{width:100%;aspect-ratio:16/9;background:var(--ink);overflow:hidden}
+.thumbs-card-media img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs-card-body{padding:12px 14px 14px}
+.thumbs-card-title{font-family:var(--font-display);font-weight:700;font-size:15px;line-height:1.35;color:var(--ink);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.thumbs-empty{padding:26px;text-align:center;color:var(--ink-faint);font-style:italic}
+@media (max-width:720px){
+  #thumbsPage{padding:0}
+  .thumbs-box{border-radius:0;box-shadow:none}
+  .thumbs-nav{padding:10px 16px}
+  .thumbs-channel{padding:14px 12px}
+}
+@media (max-width:480px){
+  .thumbs-head{padding:16px 16px 12px;flex-direction:column}
+  .thumbs-scroll{padding:6px 16px 20px}
+  .thumbs-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  .fw-grid{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .toolbar,.fw-wrap,.results{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<script>if (window.self !== window.top) document.documentElement.classList.add('embedded');</script>
+
+<div class="top-tabs">
+  <button type="button" class="top-tab-btn active" id="pNavResearch" onclick="setPage('research')">Titles</button>
+  <button type="button" class="top-tab-btn" id="pNavThumbs" onclick="setPage('thumbs')">Thumbnails</button>
+</div>
+
+<div class="layout" id="researchPage">
+<aside class="sidebar">
+
+  <div class="s-sec">
+    <div id="chPanel">
+      <div class="s-label">
+        <span id="chCountLabel">Channels (0)</span>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm" onclick="toggleBulk()">+ Bulk</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearChannels()">Clear</button>
+        </div>
+      </div>
+      <div class="bulk-panel" id="bulkPanel">
+        <textarea id="bulkInput" placeholder="One channel per line:&#10;https://youtube.com/@handle&#10;@handle"></textarea>
+        <div class="bulk-actions">
+          <button class="btn btn-sec btn-sm" onclick="addBulk()" style="flex:1">Add All</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleBulk()">Cancel</button>
+        </div>
+      </div>
+      <input type="text" id="chSearchInput" placeholder="Search channels..." oninput="renderChList()" style="margin-bottom:6px">
+      <div class="ch-list" id="chList"></div>
+      <div class="add-row">
+        <input type="text" id="chInput" placeholder="@handle or URL" onkeydown="if(event.key==='Enter')addCh()">
+        <button class="btn btn-sec btn-sm" onclick="addCh()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-row">
+      <div class="prog-text" id="progText">Fetching...</div>
+      <div class="prog-count" id="progCount"></div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-full" id="fetchBtn" onclick="startFetch()">Fetch Titles</button>
+</aside>
+
+<main style="display:flex;flex-direction:column;min-width:0">
+  <div class="toolbar">
+    <div class="tb-search">
+      <span class="search-ico"><svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <input type="text" id="filterTxt" placeholder="Filter..." oninput="applyFilters()">
+    </div>
+    <select id="sortSel" onchange="applyFilters()" style="width:148px">
+      <option value="views_d">Most Viewed</option>
+      <option value="views_a">Least Viewed</option>
+      <option value="date_d">Newest First</option>
+      <option value="date_a">Oldest First</option>
+      <option value="title_a">Title A–Z</option>
+      <option value="channel">By Channel</option>
+    </select>
+    <select id="chFilter" onchange="applyFilters()" style="width:150px">
+      <option value="">All Channels</option>
+    </select>
+    <div class="tb-space"></div>
+    <button class="btn btn-sec btn-sm" onclick="copyAll()">Copy All Titles</button>
+    <button class="btn btn-sec btn-sm" onclick="exportCSV()">Export CSV</button>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vFw"    onclick="setView('frameworks')">Frameworks</button>
+      <button class="view-btn"       id="vTable"  onclick="setView('table')">Table</button>
+      <button class="view-btn"       id="vGrid"   onclick="setView('grid')">Grid</button>
+    </div>
+  </div>
+
+  <div id="mainContent" style="flex:1;overflow:auto">
+    <div class="empty" style="padding:80px 20px;text-align:center">
+      <div class="empty-ico">🎬</div>
+      <h3>No titles yet</h3>
+      <p>Click <strong>Fetch Titles</strong> in the sidebar to start</p>
+    </div>
+  </div>
+</main>
+</div>
+
+<div id="thumbsPage">
+  <div class="thumbs-box">
+    <div class="thumbs-head">
+      <div><div class="thumbs-eyebrow">Reference Library</div><h2>Thumbnails</h2></div>
+      <div class="thumbs-head-right">
+        <span class="thumbs-status" id="thStatus"></span>
+        <div class="view-toggle">
+          <button class="view-btn active" id="thNewest" onclick="setThumbOrder('newest')">Newest first</button>
+          <button class="view-btn" id="thOldest" onclick="setThumbOrder('oldest')">Oldest first</button>
+        </div>
+        <button class="btn btn-sec btn-sm" id="thRefresh" onclick="loadThumbs(true)">Refresh</button>
+      </div>
+    </div>
+    <div class="thumbs-nav" id="thumbsNav" aria-label="Choose creator"></div>
+    <div class="thumbs-scroll" id="thContent"><div class="thumbs-empty">Loading thumbnails…</div></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────
+let allVideos = [];
+let shown = [];
+let frameworks = [];
+let fwCatFilter = '';
+let fwSortBy = 'cross-channel';
+let channels = [];
+let view = 'frameworks';
+let expandedCards = new Set();
+let autoResolving = false;
+let fetching = false;
+
+// ── CATEGORY CONFIG ───────────────────────────────────────────────
+const CAT = {
+  'List':           '#1F5A93',
+  'How To':         '#0E7490',
+  'Results':        '#1E6B45',
+  'Income/Results': '#1E6B45',
+  'Mistakes':       '#A33B2A',
+  'Why':            '#B4691A',
+  'Problem':        '#A33B2A',
+  'Warning':        '#A33B2A',
+  'Truth/Secret':   '#A33B2A',
+  'Lessons':        '#6A3FA0',
+  'Story':          '#6A3FA0',
+  'Transformation': '#6A3FA0',
+  'Experiment':     '#0E7490',
+  'Comparison':     '#0E7490',
+  'Guide':          '#0E7490',
+  'Experience':     '#B4691A',
+  'Question':       '#6A3FA0',
+  'Case Study':     '#1E6B45',
+  'Other':          '#757E78',
+};
+
+// ── NICHE PRESETS ─────────────────────────────────────────────────
+const NICHES = {
+  business: {
+    channels: [
+      'https://www.youtube.com/@maxwellcopy',
+      'https://www.youtube.com/@matthewlucero',
+      'https://www.youtube.com/@InstantlyAI',
+      'https://www.youtube.com/@JeremyHaynesTraining',
+      'https://www.youtube.com/@SamPiliero',
+      'https://www.youtube.com/@goglencoco',
+      'https://www.youtube.com/@ed-lawrence',
+      'https://www.youtube.com/@jaketrinder',
+    ]
+  },
+  finance:  { channels:['@GrahamStephan','@AndreiJikh','@MarkTilbury','@MeetKevin'] },
+  fitness:  { channels:['@JeffNippard','@AthleanX','@ChrisHeria','@HamzaAhmedOfficial'] },
+  tech:     { channels:['@mkbhd','@LinusTechTips','@fireship','@ThePrimeTimeagen'] },
+  custom:   { channels:[] }
+};
+
+// ── INIT ──────────────────────────────────────────────────────────
+loadNiche('business');
+
+function loadNiche(n) {
+  const p = NICHES[n]; if (!p) return;
+  channels = p.channels.map(h => mkCh(h));
+  renderChList();
+  autoResolveChannels();
+}
+
+function mkCh(input) {
+  const clean = input.trim().replace(/\/(videos|shorts|playlists)\/?$/, '');
+  let displayName = clean;
+  try {
+    const u = new URL(clean.startsWith('http') ? clean : 'https://' + clean);
+    const p = u.pathname.replace(/\/$/, '');
+    if (p.startsWith('/@'))          displayName = p.slice(1);
+    else if (p.startsWith('/c/'))    displayName = p.slice(3);
+    else if (p.startsWith('/user/')) displayName = p.slice(6);
+  } catch { /* already a clean handle or plain text */ }
+  return { input: clean, name: displayName, id: null, uploadsId: null, thumb: null, status: 'pending', count: 0 };
+}
+
+// ── CHANNEL UI ────────────────────────────────────────────────────
+function addCh() {
+  const v = document.getElementById('chInput').value.trim();
+  if (!v) return;
+  const clean = v.replace(/\/(videos|shorts)\/?$/, '');
+  if (channels.some(c => c.input.toLowerCase() === clean.toLowerCase())) { toast('Already in list','info'); return; }
+  channels.push(mkCh(clean));
+  document.getElementById('chInput').value = '';
+  renderChList();
+  autoResolveChannels();
+}
+
+function toggleBulk() {
+  const p = document.getElementById('bulkPanel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) document.getElementById('bulkInput').focus();
+}
+
+function addBulk() {
+  const lines = document.getElementById('bulkInput').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  let added = 0;
+  for (const line of lines) {
+    const clean = line.replace(/\/(videos|shorts)\/?$/, '');
+    if (!channels.some(c => c.input.toLowerCase() === clean.toLowerCase())) { channels.push(mkCh(clean)); added++; }
+  }
+  document.getElementById('bulkInput').value = '';
+  document.getElementById('bulkPanel').classList.remove('open');
+  renderChList();
+  toast(`Added ${added} channels`, 'ok');
+  autoResolveChannels();
+}
+
+function removeCh(i) { channels.splice(i,1); renderChList(); }
+function clearChannels() { channels=[]; renderChList(); }
+
+async function autoResolveChannels() {
+  if (autoResolving || fetching) return;
+  const pending = channels.filter(c => c.status === 'pending');
+  if (!pending.length) return;
+  autoResolving = true;
+  pending.forEach(c => { c.status = 'loading'; });
+  renderChList();
+  await runPool(pending, 5, async ch => {
+    await resolveChannel(ch);
+    renderChList();
+  });
+  autoResolving = false;
+}
+
+function renderChList() {
+  const q = (document.getElementById('chSearchInput')?.value||'').toLowerCase();
+  document.getElementById('chCountLabel').textContent = `Channels (${channels.length})`;
+
+  const visible = channels.filter(c => !q || c.name.toLowerCase().includes(q) || c.input.toLowerCase().includes(q));
+  document.getElementById('chList').innerHTML = visible.map((c) => {
+    const ri = channels.indexOf(c);
+    return `<div class="ch-item ${c.status==='ok'?'ok':c.status==='err'?'err':''}">
+      <div class="ch-avatar">${c.thumb?`<img src="${esc(c.thumb)}" alt="">`:(c.name[0]||'?').toUpperCase()}</div>
+      <span class="ch-name" title="${esc(c.input)}">${esc(c.name)}</span>
+      ${c.count?`<span style="font-size:11px;color:var(--text-muted)">${c.count}</span>`:''}
+      <div class="ch-dot ${c.status==='ok'?'ok':c.status==='err'?'err':c.status==='loading'?'loading':''}"></div>
+      <button class="btn btn-ghost btn-sm" onclick="removeCh(${ri})" style="padding:2px 6px;line-height:1">×</button>
+    </div>`;
+  }).join('');
+}
+
+// ── YOUTUBE API ───────────────────────────────────────────────────
+function apiKey() { return 'AIzaSyAuuNvqjo_jhGYzJSeEUhO70VYMpEmTDDs'; }
+
+async function yt(ep, params) {
+  const u = new URL(`https://www.googleapis.com/youtube/v3/${ep}`);
+  u.searchParams.set('key', apiKey());
+  Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+  const r = await fetch(u.toString());
+  if (!r.ok) { let m=`API error ${r.status}`; try{const e=await r.json();m=e.error?.message||m;}catch{}throw new Error(m); }
+  return r.json();
+}
+
+async function resolveChannel(ch) {
+  let input = ch.input.trim();
+  if (/^UC[\w-]{22}$/.test(input)) { ch.id = input; }
+  else if (input.includes('youtube.com')) {
+    try {
+      const u = new URL(input.startsWith('http')?input:'https://'+input);
+      const p = u.pathname.replace(/\/$/,'');
+      if (p.startsWith('/channel/'))    ch.id = p.split('/channel/')[1];
+      else if (p.startsWith('/@'))      input = p.slice(1);
+      else if (p.startsWith('/c/'))     input = p.slice(3);
+      else if (p.startsWith('/user/'))  input = p.slice(6);
+    } catch {}
+  }
+  if (ch.id) { await enrichFromId(ch); return; }
+  const handle = input.startsWith('@')?input:'@'+input;
+  try {
+    const d = await yt('channels',{part:'id,snippet,contentDetails',forHandle:handle});
+    if (d.items?.length) { applyChData(ch,d.items[0]); return; }
+  } catch {}
+  try {
+    const q = input.startsWith('@')?input.slice(1):input;
+    const d = await yt('search',{part:'snippet',type:'channel',q,maxResults:1});
+    if (d.items?.length) { ch.id=d.items[0].snippet.channelId; await enrichFromId(ch); return; }
+  } catch {}
+  ch.status='err';
+}
+
+async function enrichFromId(ch) {
+  try {
+    const d = await yt('channels',{part:'snippet,contentDetails',id:ch.id});
+    if (d.items?.length) applyChData(ch,d.items[0]); else ch.status='err';
+  } catch { ch.status='err'; }
+}
+
+function applyChData(ch,item) {
+  ch.id=item.id; ch.name=item.snippet.title;
+  ch.thumb=item.snippet.thumbnails?.default?.url;
+  ch.uploadsId=item.contentDetails.relatedPlaylists.uploads;
+  ch.status='ok';
+}
+
+// since (optional): stop paging once uploads are older than this Date
+async function fetchChVideos(ch, max, since) {
+  const vids=[]; let token=null, page=0, pages=Math.ceil(max/50), reachedCutoff=false;
+  do {
+    const p={part:'snippet',playlistId:ch.uploadsId,maxResults:50};
+    if (token) p.pageToken=token;
+    const d = await yt('playlistItems',p);
+    for (const it of d.items||[]) {
+      if (['Deleted video','Private video'].includes(it.snippet.title)) continue;
+      if (since && new Date(it.snippet.publishedAt) < since) { reachedCutoff=true; continue; }
+      vids.push({
+        videoId:it.snippet.resourceId.videoId, title:it.snippet.title,
+        date:it.snippet.publishedAt,
+        thumb:it.snippet.thumbnails?.medium?.url||it.snippet.thumbnails?.default?.url||'',
+        channelName:ch.name, channelId:ch.id, channelThumb:ch.thumb||null, views:null
+      });
+    }
+    token=d.nextPageToken; page++;
+    if (vids.length>=max || reachedCutoff) break;
+  } while (token && page<pages);
+  ch.count=vids.length;
+  return vids.slice(0,max);
+}
+
+// Fetches duration + livestream flag (always) + view counts (if includeStats).
+// Returns number of videos removed as Shorts (< 2 min).
+async function fetchVideoDetails(vids, includeStats) {
+  const part = includeStats ? 'snippet,contentDetails,liveStreamingDetails,statistics' : 'snippet,contentDetails,liveStreamingDetails';
+  const ids = vids.map(v => v.videoId);
+  const map = {};
+  const batches = [];
+  for (let i = 0; i < ids.length; i += 50) batches.push(ids.slice(i, i+50));
+  await Promise.all(batches.map(async batch => {
+    try {
+      const d = await yt('videos', { part, id: batch.join(',') });
+      for (const it of d.items || []) {
+        map[it.id] = {
+          duration: parseDuration(it.contentDetails?.duration),
+          // past streams keep liveStreamingDetails; live/upcoming ones flag liveBroadcastContent
+          isLive: !!it.liveStreamingDetails || (it.snippet?.liveBroadcastContent && it.snippet.liveBroadcastContent !== 'none'),
+          views: includeStats ? (+it.statistics?.viewCount || 0) : undefined
+        };
+      }
+    } catch {}
+  }));
+  vids.forEach(v => {
+    const data = map[v.videoId];
+    if (!data) return;
+    v.duration = data.duration;
+    v.isLive = data.isLive;
+    if (data.views !== undefined) v.views = data.views;
+  });
+}
+
+function parseDuration(iso) {
+  if (!iso) return null;
+  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return null;
+  return (parseInt(m[1]||0) * 3600) + (parseInt(m[2]||0) * 60) + parseInt(m[3]||0);
+}
+
+async function runPool(items, n, fn, onProg) {
+  let i=0, done=0;
+  async function worker() {
+    while (i<items.length) { const idx=i++; await fn(items[idx],idx); done++; if(onProg) onProg(done,items.length); }
+  }
+  await Promise.all(Array.from({length:Math.min(n,items.length)},worker));
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────
+
+async function startFetch() {
+  if (fetching) return;
+  if (!apiKey()) { toast('Enter your API key','err'); return; }
+  fetching=true; allVideos=[];
+  const btn=document.getElementById('fetchBtn');
+  btn.innerHTML='<span class="spin"></span> Fetching...'; btn.disabled=true;
+  document.getElementById('progWrap').classList.add('show');
+
+  try {
+    await fetchByChannels();
+  } catch(e) { toast('Error: '+e.message,'err'); }
+
+  fetching=false; btn.innerHTML='Fetch Titles'; btn.disabled=false;
+  document.getElementById('progWrap').classList.remove('show');
+  // Deduplicate by videoId (catches any channel duplication or race overlap)
+  const seenIds = new Set();
+  allVideos = allVideos.filter(v => seenIds.has(v.videoId) ? false : (seenIds.add(v.videoId), true));
+  updateChFilter();
+  rebuildFrameworks();
+  applyFilters();
+  toast(`${allVideos.length} titles · ${frameworks.length} frameworks`,'ok');
+}
+
+async function fetchByChannels() {
+  if (!channels.length) { toast('No channels configured','err'); return; }
+  const max=500;
+  const stats=true;
+  const w=8;
+
+  channels.forEach(c=>{ if(c.status!=='ok') c.status='loading'; }); renderChList();
+  prog(0,'Resolving channels...',`0 / ${channels.length}`);
+
+  await runPool(channels, w, async ch=>{
+    if (ch.status !== 'ok') await resolveChannel(ch);
+    renderChList();
+  }, (done,total)=>prog(done/total*40,'Resolving channels...',`${done} / ${total}`));
+
+  const ok=channels.filter(c=>c.status==='ok');
+  if (!ok.length) { toast('No channels resolved','err'); return; }
+
+  await runPool(ok, w, async ch=>{
+    const vids=await fetchChVideos(ch,max); allVideos.push(...vids); renderChList();
+  }, (done,total)=>prog(40+done/total*45,'Fetching videos...',`${done} / ${total} channels`));
+
+  if (allVideos.length) {
+    prog(88, `Filtering shorts & livestreams${stats?', fetching views':''}...`, `${allVideos.length} videos`);
+    await fetchVideoDetails(allVideos, stats);
+    const before = allVideos.length;
+    allVideos = allVideos.filter(v => !v.isLive && (v.duration == null || v.duration >= 120));
+    const removed = before - allVideos.length;
+    if (removed > 0) prog(96, `Removed ${removed} shorts & livestreams`, `${allVideos.length} remaining`);
+  }
+  prog(100,'Done!',`${allVideos.length} titles`);
+}
+
+function prog(pct,txt,cnt='') {
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progText').textContent=txt;
+  document.getElementById('progCount').textContent=cnt;
+}
+
+// ── FRAMEWORK EXTRACTION ──────────────────────────────────────────
+const TOPIC_WORDS = 'cold email, copywriting, agency, outreach, leads, clients, B2B, SaaS';
+
+function getTopicPhrases() {
+  return TOPIC_WORDS
+    .split(',').map(s=>s.trim()).filter(s=>s.length>1)
+    .sort((a,b)=>b.length-a.length); // longest first so "cold email" matches before "email"
+}
+
+function escRx(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+function normalizeTitle(title, topicPhrases) {
+  let t = title;
+  // Topic words first
+  for (const phrase of topicPhrases) {
+    t = t.replace(new RegExp('\\b'+escRx(phrase)+'\\b','gi'),'[Topic]');
+  }
+  t = t.replace(/\$[\d,]+(?:\.\d+)?[KMBkmb]?/g,'[$]');          // $1,000 / $10K
+  t = t.replace(/\b\d+(?:\.\d+)?%/g,'[X%]');                     // 40%
+  t = t.replace(/\b\d[\d,]*(?:\.\d+)?\b/g,'[N]');                // standalone numbers
+  t = t.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|fifty|hundred|thousand|million)\b/gi,'[N]');
+  return t;
+}
+
+function categorize(t) {
+  // ── NUMBER-LED LIST PATTERNS ──────────────────────────────────
+  if (/^\[N\] (ways?|methods?|approaches?)\s+to\b/i.test(t))               return 'List';
+  if (/^\[N\] (things?|reasons?|facts?|signs?|examples?)\b/i.test(t))      return 'List';
+  if (/^\[N\] (tips?|tricks?|hacks?|secrets?|strategies?|tactics?|ideas?|moves?)\b/i.test(t)) return 'List';
+  if (/^\[N\] (mistakes?|errors?|pitfalls?|problems?|traps?|sins?|fails?)\b/i.test(t)) return 'Mistakes';
+  if (/^\[N\] (lessons?|takeaways?|insights?|principles?|rules?|laws?|commandments?)\b/i.test(t)) return 'Lessons';
+  if (/^\[N\] (steps?|phases?|stages?|parts?|chapters?)\b/i.test(t))       return 'List';
+  if (/^\[N\] (tools?|resources?|apps?|plugins?|extensions?|software)\b/i.test(t)) return 'Tools';
+  if (/^\[N\] (templates?|scripts?|formulas?|frameworks?|systems?|processes?)\b/i.test(t)) return 'Systems';
+  if (/^\[N\] years? of\b/i.test(t))                                        return 'Experience';
+  if (/^\[N\] months? of\b/i.test(t))                                       return 'Experience';
+  if (/^\[N\] (things?|stuff|advice|tips?) (i|we) wish\b/i.test(t))        return 'Lessons';
+  if (/^\[N\] (questions?|objections?|concerns?)\b/i.test(t))              return 'Q&A';
+  if (/^\[N\] (types?|kinds?|categories?|styles?|modes?|formats?)\b/i.test(t)) return 'Breakdown';
+  if (/^\[N\] (words?|phrases?|lines?|subject lines?|headlines?|hooks?|openers?)\b/i.test(t)) return 'Copywriting';
+  if (/^\[N\] (emails?|messages?|texts?|dms?|pitches?)\b/i.test(t))        return 'Copywriting';
+  if (/^\[N\] (clients?|customers?|leads?|prospects?|deals?|sales?|bookings?|meetings?|appointments?)\b/i.test(t)) return 'Results';
+
+  // ── HOW TO / HOW I ────────────────────────────────────────────
+  if (/^how to\b/i.test(t))                                                 return 'How To';
+  if (/^how (i|we) (got|made|built|grew|earned|scaled|closed|landed|generated|booked|went from|turned|created|signed|acquired)\b/i.test(t)) return 'Results';
+  if (/^how (i|we)\b/i.test(t))                                             return 'Results';
+
+  // ── WHY / PROBLEM ─────────────────────────────────────────────
+  if (/^why (your?|my|their|our|most|every|this|the)\b/i.test(t))          return 'Problem';
+  if (/^why (i|we)\b/i.test(t))                                             return 'Story';
+  if (/^why\b/i.test(t))                                                    return 'Why';
+
+  // ── TRUTH / REVELATION ───────────────────────────────────────
+  if (/^(the truth|the real reason|the secret|the hidden|the dark side)\b/i.test(t)) return 'Truth/Secret';
+  if (/nobody (talks?|tells?|shows?|teaches?|mentions?)\b/i.test(t))       return 'Truth/Secret';
+  if (/everyone (gets? wrong|is wrong|is lying|is missing|ignores?)\b/i.test(t)) return 'Truth/Secret';
+
+  // ── WARNINGS ─────────────────────────────────────────────────
+  if (/^(stop|never|don'?t|do not|quit|avoid)\b/i.test(t))                 return 'Warning';
+  if (/\b(killing|destroying|ruining|sabotaging|hurting) (your|my)\b/i.test(t)) return 'Warning';
+
+  // ── EXPERIMENTS / STORIES ────────────────────────────────────
+  if (/^i (did|tried|tested|spent|sent|ran|built|used|wrote|posted|reached out|applied|read|watched)\b/i.test(t)) return 'Experiment';
+  if (/^we (did|tried|tested|spent|sent|ran|built|used)\b/i.test(t))       return 'Experiment';
+  if (/\[N\] (days?|weeks?|months?|years?) (later|of|ago|challenge|experiment)\b/i.test(t)) return 'Experiment';
+
+  // ── INCOME / MONEY ────────────────────────────────────────────
+  if (/\[\$\]/.test(t))                                                     return 'Income/Results';
+  if (/\b(revenue|profit|income|mrr|arr|arr)\b/i.test(t))                  return 'Income/Results';
+
+  // ── COMPARISON ───────────────────────────────────────────────
+  if (/\bvs\.?\b/i.test(t))                                                 return 'Comparison';
+  if (/\b(better than|worse than|compared to|instead of)\b/i.test(t))      return 'Comparison';
+
+  // ── QUESTIONS ────────────────────────────────────────────────
+  if (/^(is |are |should |can |will |does |do |was |were |has |have ).+\?$/.test(t)) return 'Question';
+
+  // ── WHAT / LESSONS ────────────────────────────────────────────
+  if (/^what (i learned|i found|i discovered|i realised?|i figured)\b/i.test(t)) return 'Lessons';
+  if (/^what (happens?|happened|to do|you need|every|most)\b/i.test(t))    return 'Why';
+  if (/^what\b/i.test(t))                                                   return 'Why';
+
+  // ── TRANSFORMATION ───────────────────────────────────────────
+  if (/from .+ to\b/i.test(t))                                              return 'Transformation';
+  if (/went from\b/i.test(t))                                               return 'Transformation';
+
+  // ── GUIDES ───────────────────────────────────────────────────
+  if (/^the (ultimate|complete|definitive|only|full|beginners?|step.by.step|comprehensive)\b/i.test(t)) return 'Guide';
+  if (/\b(masterclass|bootcamp|course|workshop|training)\b/i.test(t))      return 'Guide';
+  if (/\b(101|basics?|introduction|intro to|getting started|beginner'?s? guide)\b/i.test(t)) return 'Guide';
+  if (/\b(deep dive|breakdown|full breakdown|explained|everything you need)\b/i.test(t)) return 'Breakdown';
+
+  // ── CASE STUDIES ─────────────────────────────────────────────
+  if (/case study/i.test(t))                                                return 'Case Study';
+
+  // ── ANALYSIS / REVIEW ────────────────────────────────────────
+  if (/\b(review|honest review|my thoughts|my take|my opinion|reacting to|react to)\b/i.test(t)) return 'Review/Opinion';
+  if (/\b(analysing?|analyzing?|breaking down|deconstructing?|dissecting?)\b/i.test(t)) return 'Breakdown';
+  if (/\b(audit|teardown|roast|critique)\b/i.test(t))                      return 'Breakdown';
+
+  // ── SYSTEMS / FRAMEWORKS ─────────────────────────────────────
+  if (/^my (exact|full|complete|entire|real|actual|personal|daily|weekly|monthly)\b/i.test(t)) return 'Systems';
+  if (/\b(system|framework|process|workflow|playbook|blueprint|roadmap|formula|method|strategy)\b/i.test(t)) return 'Systems';
+  if (/\b(swipe file|template|script|done.for.you|copy.paste|fill.in)\b/i.test(t)) return 'Copywriting';
+
+  // ── BEHIND THE SCENES ────────────────────────────────────────
+  if (/^(inside|behind|a day in|day in the life|week in my|month in)\b/i.test(t)) return 'Behind the Scenes';
+  if (/\b(behind the scenes|live (session|call|demo|example|walkthrough))\b/i.test(t)) return 'Behind the Scenes';
+
+  // ── Q&A / INTERVIEW ──────────────────────────────────────────
+  if (/\b(interview|q&a|ama|ask me|podcast|episode|talking with|chat with)\b/i.test(t)) return 'Interview/Q&A';
+
+  // ── COPYWRITING / EMAIL SPECIFIC ─────────────────────────────
+  if (/\b(subject line|open rate|click rate|reply rate|conversion rate|deliverability|spam)\b/i.test(t)) return 'Copywriting';
+  if (/\b(cold email|outreach|follow.?up|sequence|campaign|drip)\b/i.test(t)) return 'Outreach';
+
+  // ── TOOLS / SOFTWARE ─────────────────────────────────────────
+  if (/\b(klaviyo|mailchimp|hubspot|salesforce|lemlist|instantly|apollo|outreach\.io|smartlead|reply\.io|woodpecker|close\.io|pipedrive|notion|slack|zapier|make\.com|n8n|chatgpt|openai|gpt)\b/i.test(t)) return 'Tools';
+  if (/\b(setup|set up|install|configure|integrate|connect|automate|automation)\b/i.test(t)) return 'Tutorial';
+  if (/\b(tutorial|walkthrough|how (it|this) works?|step by step)\b/i.test(t)) return 'Tutorial';
+
+  // ── MINDSET / STORY ──────────────────────────────────────────
+  if (/\b(mindset|motivation|discipline|habits?|routine|productivity|focus)\b/i.test(t)) return 'Mindset';
+  if (/^(my story|our story|the story of|how i started|how we started)\b/i.test(t)) return 'Story';
+  if (/\b(quit|fired|failed|lost|mistake i made|biggest regret)\b/i.test(t)) return 'Story';
+
+  return 'Other';
+}
+
+function median(arr) {
+  if (!arr.length) return 0;
+  const s = [...arr].sort((a,b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m-1] + s[m]) / 2;
+}
+
+function buildFrameworks(videos) {
+  const phrases = getTopicPhrases();
+
+  // Compute per-channel MEDIAN views — mean is distorted by viral outliers,
+  // median gives a stable "typical video" baseline per channel.
+  const chViewsList = {};
+  for (const v of videos) {
+    if (v.views === null) continue;
+    if (!chViewsList[v.channelName]) chViewsList[v.channelName] = [];
+    chViewsList[v.channelName].push(v.views);
+  }
+  const chMedian = {};
+  for (const [name, arr] of Object.entries(chViewsList)) {
+    // Need at least 5 videos to get a reliable baseline
+    chMedian[name] = arr.length >= 5 ? median(arr) : null;
+  }
+
+  const groups = {};
+  for (const v of videos) {
+    const tpl = normalizeTitle(v.title, phrases);
+    const cat = categorize(tpl);
+    if (!groups[tpl]) groups[tpl] = { template:tpl, category:cat, videos:[], channels:new Set(), seenIds:new Set() };
+    // Deduplicate within each group by videoId
+    if (groups[tpl].seenIds.has(v.videoId)) continue;
+    groups[tpl].seenIds.add(v.videoId);
+    // Attach outlier ratio: this video's views ÷ channel's typical (median) views
+    const base = chMedian[v.channelName];
+    const outlierRatio = (v.views !== null && base && base > 0) ? v.views / base : null;
+    groups[tpl].videos.push({ ...v, outlierRatio });
+    groups[tpl].channels.add(v.channelName);
+  }
+
+  // Sort: multi-channel patterns first, then by video count
+  return Object.values(groups).sort((a,b)=>{
+    if (b.channels.size !== a.channels.size) return b.channels.size - a.channels.size;
+    return b.videos.length - a.videos.length;
+  });
+}
+
+function rebuildFrameworks() {
+  frameworks = buildFrameworks(allVideos);
+  if (view==='frameworks') renderView();
+}
+
+// ── OUTLIER BADGE ─────────────────────────────────────────────────
+function outlierBadge(ratio) {
+  if (ratio === null) return '';
+  if (ratio >= 8)    return `<span class="ol ol-fire">🔥 ${ratio.toFixed(1)}× outlier</span>`;
+  if (ratio >= 4)    return `<span class="ol ol-great">↑ ${ratio.toFixed(1)}× avg</span>`;
+  if (ratio >= 2)    return `<span class="ol ol-good">↑ ${ratio.toFixed(1)}× avg</span>`;
+  if (ratio >= 1.3)  return `<span class="ol ol-above">↑ ${ratio.toFixed(1)}× avg</span>`;
+  if (ratio >= 0.77) return `<span class="ol ol-avg">≈ avg</span>`;
+  if (ratio >= 0.4)  return `<span class="ol ol-below">↓ ${Math.round(ratio*100)}% of avg</span>`;
+  return               `<span class="ol ol-low">↓↓ ${Math.round(ratio*100)}% of avg</span>`;
+}
+
+// ── PLACEHOLDER STYLING ───────────────────────────────────────────
+function styleTemplate(escapedTpl) {
+  return escapedTpl
+    .replace(/\[N\]/g,     '<span class="ph ph-n">N</span>')
+    .replace(/\[\$\]/g,    '<span class="ph ph-dollar">$</span>')
+    .replace(/\[X%\]/g,    '<span class="ph ph-pct">X%</span>')
+    .replace(/\[Topic\]/g, '<span class="ph ph-topic">Topic</span>');
+}
+
+// ── FILTER / SORT ─────────────────────────────────────────────────
+function applyFilters() {
+  const q   = document.getElementById('filterTxt').value.toLowerCase();
+  const chf = document.getElementById('chFilter').value;
+  const sort= document.getElementById('sortSel').value;
+
+  shown = allVideos.filter(v=>
+    (!q || v.title.toLowerCase().includes(q)) &&
+    (!chf || v.channelName===chf)
+  );
+  shown.sort((a,b)=>{
+    if (sort==='views_d') return (b.views||0)-(a.views||0);
+    if (sort==='views_a') return (a.views||0)-(b.views||0);
+    if (sort==='date_d')  return new Date(b.date)-new Date(a.date);
+    if (sort==='date_a')  return new Date(a.date)-new Date(b.date);
+    if (sort==='title_a') return a.title.localeCompare(b.title);
+    if (sort==='channel') return a.channelName.localeCompare(b.channelName);
+    return 0;
+  });
+  renderView();
+}
+
+function updateChFilter() {
+  const names=[...new Set(allVideos.map(v=>v.channelName))].sort();
+  document.getElementById('chFilter').innerHTML='<option value="">All Channels</option>'+
+    names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function renderView() {
+  const el = document.getElementById('mainContent');
+  if (view==='frameworks') renderFrameworksView(el);
+  else if (view==='table') renderTable(el);
+  else renderGrid(el);
+}
+
+// FRAMEWORKS VIEW
+function renderFrameworksView(el) {
+  const q = document.getElementById('filterTxt').value.toLowerCase();
+  let fws = [...frameworks];
+
+  if (fwCatFilter) fws = fws.filter(f=>f.category===fwCatFilter);
+  if (q) fws = fws.filter(f=>
+    f.template.toLowerCase().includes(q) ||
+    f.videos.some(v=>v.title.toLowerCase().includes(q))
+  );
+
+  if (!fws.length) {
+    el.innerHTML = allVideos.length
+      ? `<div class="empty"><div class="empty-ico">🔍</div><h3>No frameworks match</h3><p>Try a different filter or category</p></div>`
+      : `<div class="empty"><div class="empty-ico">🎬</div><h3>No titles yet</h3><p>Click <strong>Fetch Titles</strong> in the sidebar to start</p></div>`;
+    return;
+  }
+
+  // Apply sort
+  fws.sort((a,b) => {
+    switch(fwSortBy) {
+      case 'cross-channel': {
+        if (b.channels.size !== a.channels.size) return b.channels.size - a.channels.size;
+        return b.videos.length - a.videos.length;
+      }
+      case 'most-titles':
+        return b.videos.length - a.videos.length;
+      case 'best-outlier': {
+        const score = fw => {
+          const ratios = fw.videos.map(v=>v.outlierRatio).filter(r=>r!==null);
+          return ratios.length ? median(ratios) : 0;
+        };
+        return score(b) - score(a);
+      }
+      case 'highest-views': {
+        const medV = fw => {
+          const views = fw.videos.map(v=>v.views).filter(v=>v!==null);
+          return views.length ? median(views) : 0;
+        };
+        return medV(b) - medV(a);
+      }
+      case 'a-z':
+        return a.template.localeCompare(b.template);
+      case 'channel': {
+        const chOf = fw => [...fw.channels].sort()[0] || '';
+        return chOf(a).localeCompare(chOf(b));
+      }
+      default: return 0;
+    }
+  });
+
+  // Sort buttons
+  const sorts = [
+    { id:'cross-channel', label:'Cross-channel' },
+    { id:'most-titles',   label:'Most Titles'   },
+    { id:'best-outlier',  label:'Best Outlier'  },
+    { id:'highest-views', label:'Highest Views' },
+    { id:'a-z',           label:'A – Z'         },
+    { id:'channel',       label:'By Channel'    },
+  ];
+  const sortHtml = `
+    <div class="fw-sort-bar">
+      <span class="fw-sort-lbl">Sort</span>
+      ${sorts.map(s=>`<button class="fw-sort-btn ${fwSortBy===s.id?'active':''}" onclick="setFwSort('${s.id}')">${s.label}</button>`).join('')}
+    </div>`;
+
+  // Category pills
+  const allCats = [...new Set(frameworks.map(f=>f.category))].sort();
+  const pillsHtml = `
+    <div class="fw-cat-bar">
+      <button class="fw-cat-pill ${!fwCatFilter?'active':''}" onclick="setFwCat('')">All (${frameworks.length})</button>
+      ${allCats.map(c=>{
+        const col=CAT[c]||'#757E78';
+        const cnt=frameworks.filter(f=>f.category===c).length;
+        return `<button class="fw-cat-pill ${fwCatFilter===c?'active':''}"
+          onclick="setFwCat('${c}')"
+          style="${fwCatFilter===c?`background:${col}22;color:${col};border-color:${col}55`:''}"
+        >${c} <span style="opacity:.6">${cnt}</span></button>`;
+      }).join('')}
+    </div>`;
+
+  const cardsHtml = fws.map((fw,i) => renderFwCard(fw, i)).join('');
+  el.innerHTML = `<div class="fw-wrap">${sortHtml}${pillsHtml}<div class="fw-grid">${cardsHtml}</div></div>`;
+}
+
+function setFwSort(s) { fwSortBy = s; renderView(); }
+
+function renderFwCard(fw, i) {
+  const col = CAT[fw.category] || '#757E78';
+  const exs = expandedCards.has(i) ? fw.videos : fw.videos.slice(0,3);
+  const hasMore = fw.videos.length > 3 && !expandedCards.has(i);
+
+  // Median views across this framework's examples (more representative than mean)
+  const withViews = fw.videos.filter(v=>v.views!==null).map(v=>v.views);
+  const medViews = withViews.length >= 2 ? Math.round(median(withViews)) : null;
+
+  const chStr = fw.channels.size > 1
+    ? `<strong>${fw.channels.size}</strong> channels`
+    : `<strong>${fw.channels.size}</strong> channel`;
+
+  return `
+  <div class="fw-card">
+    <div class="fw-hdr">
+      <span class="fw-cat-tag" style="background:${col}22;color:${col};border:1px solid ${col}44">${fw.category}</span>
+      <span class="fw-meta">${fw.videos.length} title${fw.videos.length>1?'s':''} · ${chStr}</span>
+    </div>
+
+    <div class="fw-tpl">${styleTemplate(esc(fw.template))}</div>
+
+    <div class="fw-divider"></div>
+
+    <div class="fw-examples">
+      ${exs.map(v=>`
+        <div class="fw-ex">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <a href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener" style="flex:1">${esc(v.title)}</a>
+            ${outlierBadge(v.outlierRatio)}
+          </div>
+          <div class="fw-ex-src">
+            ${v.channelThumb
+              ? `<img class="fw-ch-avatar" src="${esc(v.channelThumb)}" alt="${esc(v.channelName)}" title="${esc(v.channelName)}" onerror="this.style.display='none'">`
+              : `<span class="fw-ch-avatar fw-ch-fallback" title="${esc(v.channelName)}">${(v.channelName||'?')[0].toUpperCase()}</span>`}
+            <span class="fw-ch-name">${esc(v.channelName)}</span>
+            ${v.views!==null?`<span class="fw-ex-views">· ${fmtN(v.views)} views</span>`:''}
+          </div>
+        </div>`).join('')}
+      ${hasMore?`<div class="fw-more-btn" onclick="expandCard(${i})">+ ${fw.videos.length-3} more examples</div>`:''}
+    </div>
+
+    <div class="fw-actions">
+      <button class="btn btn-sec btn-sm" onclick="copyFw(${i})">Copy Framework</button>
+      <button class="btn btn-ghost btn-sm" onclick="copyFwTitles(${i})">Copy All Titles</button>
+      ${medViews!==null?`<span class="fw-avg-views">median <strong>${fmtN(medViews)}</strong> views</span>`:''}
+    </div>
+  </div>`;
+}
+
+function setFwCat(cat) {
+  fwCatFilter = cat;
+  renderView();
+}
+
+function expandCard(i) {
+  expandedCards.add(i);
+  renderView();
+}
+
+// TABLE VIEW
+function renderTable(el) {
+  if (!shown.length) { el.innerHTML=emptyHtml(); return; }
+  el.innerHTML=`<div class="results"><table class="res-table">
+    <thead><tr><th style="width:50%">Title</th><th>Channel</th><th>Views</th><th>Published</th><th style="width:68px"></th></tr></thead>
+    <tbody>${shown.map((v,i)=>`<tr>
+      <td><div class="title-cell">
+        ${v.thumb?`<img class="thumb-sm" src="${esc(v.thumb)}" loading="lazy" onerror="this.style.display='none'" alt="">`:''}
+        <div class="title-txt"><a href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener">${esc(v.title)}</a></div>
+      </div></td>
+      <td><a class="ch-link" href="https://www.youtube.com/channel/${esc(v.channelId)}" target="_blank" rel="noopener">${esc(v.channelName)}</a></td>
+      <td><span class="views ${v.views>500000?'hot':''}">${v.views!==null?fmtN(v.views):'—'}</span></td>
+      <td><span class="date-txt">${fmtD(v.date)}</span></td>
+      <td><div class="act-cell">
+        <button class="btn btn-ghost btn-sm" title="Copy title" onclick="copyTitle(${i})">⎘</button>
+        <a class="btn btn-ghost btn-sm" href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener">↗</a>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div>`;
+}
+
+// GRID VIEW
+function renderGrid(el) {
+  if (!shown.length) { el.innerHTML=emptyHtml(); return; }
+  el.innerHTML=`<div class="results"><div class="res-grid">${shown.map((v,i)=>`
+  <div class="v-card">
+    ${v.thumb?`<img class="card-thumb" src="${esc(v.thumb)}" loading="lazy" onerror="this.style.display='none'" alt="">`:
+              `<div class="card-thumb" style="height:157px"></div>`}
+    <div class="card-body">
+      <div class="card-title"><a href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener">${esc(v.title)}</a></div>
+      <div class="card-meta">
+        <a class="ch-link" href="https://www.youtube.com/channel/${esc(v.channelId)}" target="_blank" rel="noopener">${esc(v.channelName)}</a>
+        <span>${v.views!==null?fmtN(v.views)+' views':fmtD(v.date)}</span>
+      </div>
+      <div class="card-acts">
+        <button class="btn btn-sec btn-sm" onclick="copyTitle(${i})">Copy Title</button>
+        <a class="btn btn-ghost btn-sm" href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>
+  </div>`).join('')}</div></div>`;
+}
+
+function emptyHtml() {
+  return `<div class="empty"><div class="empty-ico">🎬</div><h3>${allVideos.length?'No matches':'No titles yet'}</h3>
+    <p>${allVideos.length?'Try a different filter':'Click <strong>Fetch Titles</strong> to start'}</p></div>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────
+function copyTitle(i) { navigator.clipboard.writeText(shown[i].title); toast('Copied!','ok'); }
+
+function copyFw(i) {
+  // Find the ith visible framework
+  const fws = getVisibleFrameworks();
+  if (!fws[i]) return;
+  const plain = fws[i].template.replace(/\[N\]/g,'[N]').replace(/\[Topic\]/g,'[Topic]').replace(/\[\$\]/g,'[$]');
+  navigator.clipboard.writeText(plain);
+  toast('Framework copied!','ok');
+}
+
+function copyFwTitles(i) {
+  const fws = getVisibleFrameworks();
+  if (!fws[i]) return;
+  const text = fws[i].videos.map(v=>v.title).join('\n');
+  navigator.clipboard.writeText(text);
+  toast(`Copied ${fws[i].videos.length} titles`,'ok');
+}
+
+function getVisibleFrameworks() {
+  const q = document.getElementById('filterTxt').value.toLowerCase();
+  let fws = frameworks;
+  if (fwCatFilter) fws = fws.filter(f=>f.category===fwCatFilter);
+  if (q) fws = fws.filter(f=>f.template.toLowerCase().includes(q)||f.videos.some(v=>v.title.toLowerCase().includes(q)));
+  return fws;
+}
+
+function copyAll() {
+  if (!shown.length) { toast('Nothing to copy','info'); return; }
+  navigator.clipboard.writeText(shown.map(v=>v.title).join('\n'));
+  toast(`Copied ${shown.length} titles`,'ok');
+}
+
+function exportCSV() {
+  if (!shown.length) { toast('Nothing to export','info'); return; }
+  const rows=[['Title','Framework','Category','Channel','Views','Date','URL'],
+    ...shown.map(v=>{
+      const phrases=getTopicPhrases();
+      const fw=normalizeTitle(v.title,phrases);
+      const cat=categorize(fw);
+      return[
+        `"${v.title.replace(/"/g,'""')}"`,
+        `"${fw.replace(/"/g,'""')}"`,
+        `"${cat}"`,
+        `"${v.channelName}"`,
+        v.views??'',
+        (v.date||'').split('T')[0],
+        `"https://www.youtube.com/watch?v=${v.videoId}"`
+      ];
+    })];
+  const a=Object.assign(document.createElement('a'),{
+    href:URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'})),
+    download:'yt-frameworks.csv'
+  });
+  a.click();
+  toast('CSV exported (includes Framework + Category columns)','ok');
+}
+
+// ── UI ────────────────────────────────────────────────────────────
+function setView(v) {
+  view=v;
+  document.getElementById('vFw').classList.toggle('active',v==='frameworks');
+  document.getElementById('vTable').classList.toggle('active',v==='table');
+  document.getElementById('vGrid').classList.toggle('active',v==='grid');
+  // Sort/filter dropdowns only relevant for table/grid
+  const tableOnly = v!=='frameworks';
+  document.getElementById('sortSel').style.display=tableOnly?'':'none';
+  document.getElementById('chFilter').style.display=tableOnly?'':'none';
+  renderView();
+}
+
+function toast(msg,type='info') {
+  const t=document.createElement('div');
+  t.className=`toast toast-${type==='err'?'err':type==='ok'?'ok':'info'}`;
+  t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+
+function fmtN(n) { if(n>=1e6)return(n/1e6).toFixed(1)+'M'; if(n>=1e3)return(n/1e3).toFixed(0)+'K'; return String(n); }
+function fmtD(s) {
+  if(!s)return''; const d=Math.floor((Date.now()-new Date(s))/86400000);
+  if(d===0)return'Today'; if(d===1)return'Yesterday';
+  if(d<30)return d+'d ago'; if(d<365)return Math.floor(d/30)+'mo ago';
+  return Math.floor(d/365)+'y ago';
+}
+function esc(s) { if(!s)return''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Hide table-only controls on start since default view is frameworks
+document.getElementById('sortSel').style.display='none';
+document.getElementById('chFilter').style.display='none';
+
+// ── THUMBNAILS PAGE ───────────────────────────────────────────────
+// Creators shown on the Thumbnails tab (displayed alphabetically by channel name).
+const THUMB_CHANNELS = [
+  '@colethomasgordon',
+  '@JeremyHaynesTraining',
+  '@sooweigoh',
+  '@ed-lawrence',
+  '@jaketrinder',
+  '@goglencoco',
+  '@realmattgray',
+];
+const THUMB_CACHE_KEY = 'ytThumbCache.v1';
+const THUMB_MAX_AGE_DAYS = 365; // only show thumbnails from the last year
+function thumbCutoff() { return new Date(Date.now() - THUMB_MAX_AGE_DAYS * 86400000); }
+let thumbData = null;      // [{handle, name, thumb, id, videos:[{videoId,title,date,views}]}]
+let thumbOrder = 'newest';
+let thumbLoading = false;
+
+function setPage(p) {
+  document.getElementById('researchPage').style.display = p === 'research' ? '' : 'none';
+  document.getElementById('thumbsPage').style.display = p === 'thumbs' ? 'block' : 'none';
+  document.getElementById('pNavResearch').classList.toggle('active', p === 'research');
+  document.getElementById('pNavThumbs').classList.toggle('active', p === 'thumbs');
+  if (p === 'thumbs' && !thumbData) loadThumbs(false);
+}
+
+function setThumbOrder(o) {
+  thumbOrder = o;
+  document.getElementById('thNewest').classList.toggle('active', o === 'newest');
+  document.getElementById('thOldest').classList.toggle('active', o === 'oldest');
+  renderThumbs();
+}
+
+function readThumbCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(THUMB_CACHE_KEY) || 'null');
+    // Only reuse the cache if it was built from the same creator list
+    if (c && c.handles === THUMB_CHANNELS.join(',')) return c;
+  } catch {}
+  return null;
+}
+
+function writeThumbCache(data) {
+  try { localStorage.setItem(THUMB_CACHE_KEY, JSON.stringify({ handles: THUMB_CHANNELS.join(','), ts: Date.now(), data })); } catch {}
+}
+
+async function loadThumbs(force) {
+  if (thumbLoading) return;
+  if (!force) {
+    const c = readThumbCache();
+    if (c) { thumbData = c.data; renderThumbs(); setThumbStatus(`Updated ${fmtD(new Date(c.ts).toISOString())}`); return; }
+  }
+  thumbLoading = true;
+  const btn = document.getElementById('thRefresh');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin" style="border-color:rgba(20,24,27,.2);border-top-color:var(--bespoke)"></span> Loading';
+  if (!thumbData) document.getElementById('thContent').innerHTML =
+    `<div class="thumbs-empty">Pulling every long-form upload from the last year for ${THUMB_CHANNELS.length} creators…</div>`;
+
+  const results = THUMB_CHANNELS.map(h => ({ handle: h, name: h, thumb: null, id: null, videos: [], err: false }));
+  let done = 0;
+  setThumbStatus(`Loading 0 / ${THUMB_CHANNELS.length} creators...`);
+  await runPool(THUMB_CHANNELS, 6, async (h, i) => {
+    const ch = mkCh(h);
+    try {
+      await resolveChannel(ch);
+      if (ch.status !== 'ok') throw new Error('not found');
+      // Page back until the 1-year cutoff (Shorts-heavy channels can post 500+ uploads a year)
+      let vids = await fetchChVideos(ch, 5000, thumbCutoff());
+      if (vids.length) await fetchVideoDetails(vids, true);
+      vids = vids.filter(v => !v.isLive && (v.duration == null || v.duration >= 120));
+      Object.assign(results[i], {
+        name: ch.name, thumb: ch.thumb, id: ch.id,
+        videos: vids.map(v => ({ videoId: v.videoId, title: v.title, date: v.date, views: v.views }))
+      });
+    } catch (e) {
+      results[i].err = true;
+      toast(`${h}: couldn't load`, 'err');
+    }
+    done++;
+    setThumbStatus(`Loading ${done} / ${THUMB_CHANNELS.length} creators...`);
+  });
+
+  thumbData = results;
+  writeThumbCache(results);
+  thumbLoading = false;
+  btn.disabled = false; btn.textContent = 'Refresh';
+  setThumbStatus('Updated just now');
+  renderThumbs();
+}
+
+function setThumbStatus(t) { document.getElementById('thStatus').textContent = t; }
+
+const THUMB_CREATOR_KEY = 'ytThumbsCreator';
+let thumbCreator = null;   // handle of the creator being shown, or 'all'
+
+function thumbCardHtml(v) {
+  const base = `https://i.ytimg.com/vi/${esc(v.videoId)}/`;
+  return `<a class="thumbs-card" href="https://www.youtube.com/watch?v=${esc(v.videoId)}" target="_blank" rel="noopener" title="${esc(v.title)}">
+    <div class="thumbs-card-media"><img src="${base}maxresdefault.jpg" data-fallback="${base}hqdefault.jpg" alt="${esc(v.title)}" loading="lazy"></div>
+    <div class="thumbs-card-body"><h4 class="thumbs-card-title">${esc(v.title)}</h4></div>
+  </a>`;
+}
+
+function renderThumbs() {
+  if (!thumbData) return;
+  // Re-apply the cutoff at render so cached data never shows anything older than a year
+  const cutoff = thumbCutoff();
+  const recent = c => c.videos.filter(v => new Date(v.date) >= cutoff);
+  const creators = [...thumbData].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+
+  const nav = document.getElementById('thumbsNav');
+  nav.innerHTML = `<button type="button" class="thumbs-nav-btn" data-handle="all">All</button>` +
+    creators.map(c => `<button type="button" class="thumbs-nav-btn" data-handle="${esc(c.handle)}">${esc(c.name)}</button>`).join('');
+
+  const scroll = document.getElementById('thContent');
+  scroll.innerHTML = creators.map(c => {
+    const vids = recent(c).sort((a, b) =>
+      thumbOrder === 'newest' ? new Date(b.date) - new Date(a.date) : new Date(a.date) - new Date(b.date));
+    return `<section class="thumbs-channel" data-handle="${esc(c.handle)}">
+      <div class="thumbs-channel-head">
+        <h3 class="thumbs-channel-name">${esc(c.name)}</h3>
+        <a href="https://www.youtube.com/${esc(c.handle)}/videos" target="_blank" rel="noopener">${esc(c.handle)}</a>
+        <span class="thumbs-channel-count">${c.err ? "Couldn't load this channel" : `${vids.length} videos`}</span>
+      </div>
+      <div class="thumbs-grid">${vids.map(thumbCardHtml).join('')}</div>
+    </section>`;
+  }).join('');
+
+  nav.querySelectorAll('.thumbs-nav-btn').forEach(b => b.addEventListener('click', () => showThumbCreator(b.dataset.handle, true)));
+  if (thumbCreator === null) { try { thumbCreator = localStorage.getItem(THUMB_CREATOR_KEY); } catch {} }
+  showThumbCreator(thumbCreator, false);
+
+  // maxresdefault doesn't exist for every video; YouTube serves a 120x90 grey placeholder instead of a 404.
+  scroll.querySelectorAll('img[data-fallback]').forEach(img => {
+    const swap = () => { if (img.dataset.fallback) { img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); } };
+    img.addEventListener('error', swap);
+    img.addEventListener('load', () => { if (img.naturalWidth <= 120) swap(); });
+  });
+}
+
+// One creator card at a time (or 'all' for one continuous scroll): the nav buttons switch what's shown.
+function showThumbCreator(handle, scrollTop) {
+  const secs = [...document.querySelectorAll('#thContent .thumbs-channel')];
+  if (!secs.length) return;
+  if (handle !== 'all' && !secs.some(s => s.dataset.handle === handle)) handle = secs[0].dataset.handle;
+  thumbCreator = handle;
+  document.querySelectorAll('#thumbsNav .thumbs-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.handle === handle));
+  secs.forEach(s => s.hidden = handle !== 'all' && s.dataset.handle !== handle);
+  if (scrollTop) window.scrollTo({ top: 0 });
+  try { localStorage.setItem(THUMB_CREATOR_KEY, handle); } catch {}
+}
+
+// When embedded in the shots app, the parent picks the page through the address (#thumbs or #research).
+// Calling setPage across frames is blocked when the app is opened from a file, but changing the hash always works.
+function pageFromHash() { if (location.hash === '#thumbs' || location.hash === '#research') setPage(location.hash.slice(1)); }
+window.addEventListener('hashchange', pageFromHash);
+pageFromHash();
+</script>
+</body>
+</html>
