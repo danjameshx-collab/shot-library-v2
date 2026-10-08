@@ -54,6 +54,7 @@ async function close(path, method = 'GET', body){
     method,
     headers: { Authorization: 'Basic ' + Buffer.from(CLOSE_KEY + ':').toString('base64'), Accept: 'application/json', 'Content-Type': 'application/json' },
     body: body && JSON.stringify(body),
+    signal: AbortSignal.timeout(30000),   // a hung request must not stall the run (the scheduler skips runs while one is going)
   });
   if(!res.ok){ const err = new Error('Close ' + res.status + ' on ' + path.split('?')[0] + ': ' + (await res.text()).slice(0, 300)); err.status = res.status; throw err; }
   return res.json();
@@ -73,7 +74,7 @@ async function closeDueTasks(){
     out.push(...page.data);
     if(!page.has_more || !page.data.length) break;
   }
-  return out.filter(t=> t.date && closeDay(t.date) <= last);
+  return out.filter(t=> !t.date || closeDay(t.date) <= last);   // a task with no date shows straight away
 }
 // Already complete or deleted in Close counts as done too.
 async function completeInClose(id){
@@ -100,7 +101,7 @@ function fromFs(v){
   return v.stringValue ?? v.timestampValue ?? null;
 }
 async function fs(path, body){
-  const res = await fetch(FS + path + '?key=' + FB_KEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const res = await fetch(FS + path + '?key=' + FB_KEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(30000) });
   if(!res.ok){ const err = new Error('Firestore ' + res.status + ': ' + (await res.text()).slice(0, 300)); err.status = res.status; throw err; }
   return res.json();
 }
@@ -158,7 +159,7 @@ async function main(){
       closeId: t.id,
       closeUrl: t.lead_id ? 'https://app.close.com/lead/' + t.lead_id + '/' : 'https://app.close.com/',
     }));
-    add.forEach(a=> msgs.push('Added from Close: ' + a.name + ' (due ' + a.due + ')'));
+    add.forEach(a=> msgs.push('Added from Close: ' + a.name + ' (due ' + (a.due || 'no date') + ')'));
 
     // 2. ticked Done in the app: complete in Close
     const completed = new Set(docu.closeCompleted);
