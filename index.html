@@ -213,7 +213,7 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
 .home-resume .hr-arrow{flex:none; width:16px; height:16px; color:var(--ink-faint); transition:transform .2s var(--ease), color .2s var(--ease);}
 .home-resume:hover .hr-arrow{color:var(--accent); transform:translateX(3px);}
 
-/* sections: Daily Tasks full width, Social as a 2x2, then Stats / Outreach / Reading side by side */
+/* sections: Daily Tasks full width, Content as a 2x2, Reading as a pair, then Stats full width */
 .home-section{display:flex; flex-direction:column; min-width:0;}
 .home-group{
   display:flex; align-items:center; gap:12px; margin:0 0 14px;
@@ -221,12 +221,11 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
 }
 .home-group::after{content:''; flex:1; height:1px; background:var(--line);}
 .home-grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px;}
-.home-trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; margin-top:40px;}
-/* Today: Daily Tasks on its own above Social, as wide as the Social grid */
+.home-more{margin-top:40px;}
+/* Today: Daily Tasks on its own above Content, as wide as the Content grid */
 .home-top{margin-bottom:40px;}
 .home-card.is-wide{min-height:0;}
 @media (max-width:640px){ .home-top{margin-bottom:28px;} }
-.home-trio .home-card{flex:1;}
 
 .home-card{
   --accent:var(--bespoke); --accent-bg:var(--bespoke-bg);
@@ -283,6 +282,8 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
 .home-card .hc-status.is-on-track{color:var(--good);}
 .home-card .hc-status.is-partial{color:var(--warn);}
 .home-card .hc-status.is-behind{color:#B42318;}
+.home-card .hc-status.is-due{color:#A67C00;}
+.home-card .hc-status.is-due::before{background:#F2C200;}
 .home-card:hover .hc-foot{border-color:color-mix(in srgb, var(--accent) 22%, var(--line));}
 .home-card.is-soon .hc-foot{border-top-style:dashed;}
 .home-card .lc-soon-badge{vertical-align:3px; margin-left:8px;}
@@ -308,10 +309,6 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
   .home-card .hc-key, .home-foot{display:none;}
   .home-card .hc-arrow{opacity:1; transform:none; color:var(--ink-faint);}
 }
-@media (max-width:820px){
-  .home-trio{grid-template-columns:1fr; gap:28px;}
-  .home-trio .home-card{min-height:0;}
-}
 @media (max-width:640px){
   .home-overlay{padding:36px 16px 56px;}
   .home-hero{margin-bottom:32px;}
@@ -322,7 +319,7 @@ body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
   .home-resume{width:100%;}
   .home-resume .hr-arrow{margin-left:auto;}
   .home-grid{grid-template-columns:1fr; gap:12px;}
-  .home-trio{gap:28px; margin-top:28px;}
+  .home-more{margin-top:28px;}
   .home-card{min-height:0; padding:18px;}
   .home-card .hc-top{margin-bottom:14px;}
 }
@@ -1100,7 +1097,58 @@ textarea.os-input.os-wrap.is-desc{font-size:13.5px; color:var(--ink-soft);}
 /* ================= CINE VLOGS ================= */
 
 /* ---------- Books (reading list) ---------- */
-body.channel-books .top-tab-btn[data-tab="books"]{cursor:default;}
+body.channel-books .top-tab-btn[data-tab="books"], body.channel-learnings .top-tab-btn[data-tab="learnings"]{cursor:default;}
+.bk-add.ln-add{grid-template-columns:minmax(0,1fr) auto;}
+/* Learnings: cover shape, drag to reposition, and the category dropdown */
+.bk-cover.ln-landscape, .bk-cover-big.ln-landscape{aspect-ratio:3/2;}
+.bk-cover.ln-square, .bk-cover-big.ln-square{aspect-ratio:1/1;}
+.bk-detail-head.is-landscape{grid-template-columns:340px minmax(0,1fr);}
+.bk-detail-head.is-square{grid-template-columns:280px minmax(0,1fr);}
+.ln-cover-drag{cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; border-radius:12px;}
+.ln-cover-drag.is-dragging{cursor:grabbing;}
+.ln-cover-drag.is-dragging .bk-cover-big{border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg), 0 18px 36px -20px rgba(20,24,27,.45);}
+.ln-cover-hint{margin:8px 0 0; font-size:12px; color:var(--ink-faint); text-align:center;}
+.os-seg.ln-shape-seg{display:flex; width:100%; margin-top:12px;}
+.ln-shape-seg button{flex:1;}
+.ln-fields{grid-template-columns:repeat(3, minmax(0,1fr));}
+.bk-add.ln-add{grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) auto;}
+@media (max-width:600px){ .ln-fields{grid-template-columns:1fr;} }
+select.os-input.ln-select{
+  -webkit-appearance:none; appearance:none; cursor:pointer; padding-right:34px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 11px center; background-size:14px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+select.os-input.ln-select:hover{border-color:var(--ink-faint);}
+select.os-input.ln-select:focus{border-color:var(--bespoke);}
+/* Learnings and Books category dropdowns: where the browser allows it (Chrome 135+), the open list is styled too: a rounded card with soft highlighted rows */
+@supports (appearance:base-select){
+  select.os-input.ln-select, select.os-input.ln-select::picker(select){appearance:base-select;}
+  select.os-input.ln-select{display:flex; align-items:center; gap:8px; padding-right:12px; background-image:none;}
+  select.os-input.ln-select::picker-icon{
+    content:''; width:14px; height:14px; margin-left:auto; background:var(--ink-faint);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+    transition:rotate .2s ease;
+  }
+  select.os-input.ln-select:open{border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg);}
+  select.os-input.ln-select:open::picker-icon{rotate:180deg; background:var(--bespoke);}
+  select.os-input.ln-select::picker(select){
+    margin-block:6px; padding:6px; max-height:440px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;
+    border:1px solid var(--line); border-radius:12px; background:var(--paper-raised);
+    box-shadow:0 2px 4px rgba(20,24,27,.04), 0 18px 40px -16px rgba(20,24,27,.28);
+  }
+  select.ln-select option{
+    display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px;
+    font-family:inherit; font-size:13.5px; color:var(--ink); background:none; cursor:pointer;
+  }
+  select.ln-select option:hover, select.ln-select option:focus-visible{background:var(--paper); outline:none;}
+  select.ln-select option:checked{background:var(--bespoke-bg); color:var(--bespoke); font-weight:600;}
+  select.ln-select option::checkmark{order:1; margin-left:auto; content:'\2713'; font-weight:700; color:var(--bespoke);}
+  select.ln-select option[value=""]{color:var(--ink-faint);}
+  select.ln-select option[value="__new"]{margin-top:5px; position:relative; color:var(--bespoke); font-weight:600;}
+  select.ln-select option[value="__new"]::before{content:''; position:absolute; left:4px; right:4px; top:-3px; height:1px; background:var(--line);}
+}
 .bk-add{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) auto; gap:8px; margin-bottom:18px;}
 .bk-toolbar-right{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
 .bk-toolbar-right select.os-input{width:auto;}
@@ -1124,7 +1172,7 @@ body.channel-books .top-tab-btn[data-tab="books"]{cursor:default;}
 .bk-cover-drop span{font-size:12.5px;}
 .bk-cover-drop svg{width:30px; height:30px;}
 .bk-cover-drop:hover{border-color:var(--bespoke); background:var(--bespoke-bg); color:var(--bespoke);}
-@media (max-width:860px){ .bk-detail-head{grid-template-columns:1fr;} .bk-detail-cover{max-width:260px; width:100%; margin:0 auto;} .bk-detail-title{font-size:28px;} }
+@media (max-width:860px){ .bk-detail-head, .bk-detail-head.is-landscape, .bk-detail-head.is-square{grid-template-columns:1fr;} .bk-detail-cover{max-width:260px; width:100%; margin:0 auto;} .bk-detail-title{font-size:28px;} }
 .bk-cover.is-empty, .bk-cover-big.is-empty{display:flex; align-items:center; justify-content:center; color:var(--line-strong); box-shadow:none;}
 .bk-cover.is-empty svg{width:32px; height:32px;}
 .bk-cover-big.is-empty svg{width:64px; height:64px;}
@@ -2365,7 +2413,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
     </section>
 
     <section class="home-section">
-      <h2 class="home-group">Social</h2>
+      <h2 class="home-group">Content</h2>
       <div class="home-grid">
         <button type="button" class="home-card" data-channel="business" style="--accent:#1E6B45; --accent-bg:#E6F4EC;">
           <span class="hc-top">
@@ -2394,33 +2442,6 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
           <span class="hc-desc">Posts, ideas and the LinkedIn playbook.</span>
           <span class="hc-foot"></span>
         </button>
-        <button type="button" class="home-card is-soon" data-channel="misc" style="--accent:#64748B; --accent-bg:#EEF1F5;">
-          <span class="hc-top">
-            <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><path d="M16.75 14v5.5M14 16.75h5.5"/></svg></span>
-            <span class="hc-end"><kbd class="hc-key"></kbd><svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </span>
-          <span class="hc-name">Misc.<span class="lc-soon-badge">Coming soon</span></span>
-          <span class="hc-desc">Channels in the pipeline.</span>
-          <span class="hc-foot"></span>
-        </button>
-      </div>
-    </section>
-
-    <div class="home-trio">
-      <section class="home-section">
-        <h2 class="home-group">Stats</h2>
-        <button type="button" class="home-card" data-channel="stats" style="--accent:#4F46E5; --accent-bg:#EEEFFE;">
-          <span class="hc-top">
-            <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 3.5v17h17"/><path d="M7.5 15l4-4.5 3 3 5.5-6.5"/></svg></span>
-            <span class="hc-end"><kbd class="hc-key"></kbd><svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </span>
-          <span class="hc-name">Content Stats</span>
-          <span class="hc-desc">Posting targets, daily wins and progress across every channel.</span>
-          <span class="hc-foot"></span>
-        </button>
-      </section>
-      <section class="home-section">
-        <h2 class="home-group">Outreach</h2>
         <button type="button" class="home-card" data-channel="outreach" style="--accent:#B45309; --accent-bg:#FEF3E2;">
           <span class="hc-top">
             <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-7.5L3 9.5z"/></svg></span>
@@ -2430,9 +2451,12 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
           <span class="hc-desc">Prospects and personalised outreach movies.</span>
           <span class="hc-foot"></span>
         </button>
-      </section>
-      <section class="home-section">
-        <h2 class="home-group">Reading</h2>
+      </div>
+    </section>
+
+    <section class="home-section home-more">
+      <h2 class="home-group">Reading</h2>
+      <div class="home-grid">
         <button type="button" class="home-card" data-channel="books" style="--accent:#7C3AED; --accent-bg:#F3EEFF;">
           <span class="hc-top">
             <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8.2 4.5 3.5 4.5v14c4.7 0 7 .5 8.5 2 1.5-1.5 3.8-2 8.5-2v-14c-4.7 0-7 .5-8.5 2z"/><path d="M12 6.5v14"/></svg></span>
@@ -2442,8 +2466,30 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
           <span class="hc-desc">Your reading list, PDFs and audiobooks.</span>
           <span class="hc-foot"></span>
         </button>
-      </section>
-    </div>
+        <button type="button" class="home-card" data-channel="learnings" style="--accent:#0E7490; --accent-bg:#E1F3F7;">
+          <span class="hc-top">
+            <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.6V16h6v-.1c0-.6.3-1.2.8-1.6A6.5 6.5 0 0 0 12 2.5z"/></svg></span>
+            <span class="hc-end"><kbd class="hc-key"></kbd><svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </span>
+          <span class="hc-name">Learnings</span>
+          <span class="hc-desc">PDFs worth keeping: guides, courses and notes.</span>
+          <span class="hc-foot"></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-section home-more">
+      <h2 class="home-group">Stats</h2>
+        <button type="button" class="home-card is-wide" data-channel="stats" style="--accent:#4F46E5; --accent-bg:#EEEFFE;">
+          <span class="hc-top">
+            <span class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 3.5v17h17"/><path d="M7.5 15l4-4.5 3 3 5.5-6.5"/></svg></span>
+            <span class="hc-end"><kbd class="hc-key"></kbd><svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </span>
+          <span class="hc-name">Stats</span>
+          <span class="hc-desc">Posting targets, daily wins and progress across every channel.</span>
+          <span class="hc-foot"></span>
+        </button>
+    </section>
 
     <p class="home-foot" id="homeFoot">Press <kbd>1</kbd>&ndash;<kbd id="homeFootMax">7</kbd> to jump straight into a channel</p>
   </div>
@@ -2474,14 +2520,15 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
   <button type="button" class="top-tab-btn" data-tab="tracker:youtube">Stats</button>
   <button type="button" class="top-tab-btn" data-tab="os:youtube:os">YouTube OS</button>
   <button type="button" class="top-tab-btn" data-tab="tracker:linkedin">Tracker</button>
-  <button type="button" class="top-tab-btn" data-tab="stats">Content Stats</button>
-  <button type="button" class="top-tab-btn" data-tab="stats-daily">Daily Stats</button>
   <button type="button" class="top-tab-btn" data-tab="stats-all">All Stats</button>
+  <button type="button" class="top-tab-btn" data-tab="stats-daily">Daily Stats</button>
+  <button type="button" class="top-tab-btn" data-tab="stats">Content Stats</button>
   <button type="button" class="top-tab-btn" data-tab="tasks:power">Power List</button>
   <button type="button" class="top-tab-btn" data-tab="tasks:backlog">Backlog</button>
   <button type="button" class="top-tab-btn" data-tab="tasks:stats">Stats</button>
   <button type="button" class="top-tab-btn" data-tab="tasks:all">All</button>
   <button type="button" class="top-tab-btn" data-tab="books">Books</button>
+  <button type="button" class="top-tab-btn" data-tab="learnings">Learnings</button>
   <button type="button" class="top-tab-btn" data-tab="soon" id="soonTabBtn">LinkedIn</button>
 </div>
 
@@ -2501,7 +2548,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 <div class="all-shots-overlay tab-page" id="statsOverlay">
   <div class="all-shots-box">
     <div class="all-shots-head">
-      <div><h2 id="statsTitle">Content Stats</h2></div>
+      <div><h2 id="statsTitle">Stats</h2></div>
     </div>
     <div id="statsInner"></div>
   </div>
@@ -2523,6 +2570,13 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 </div>
 <input type="file" id="bkPdfInput" accept="application/pdf,.pdf" multiple hidden>
 <input type="file" id="bkCoverInput" accept="image/*" hidden>
+
+<!-- Learnings: saved PDFs. Each is a doc of kind 'learning' in Firestore. Drawn by lnRender(). -->
+<div class="cv-launcher-overlay tab-page os-overlay" id="learningsOverlay">
+  <div class="os-inner" id="learningsInner"></div>
+</div>
+<input type="file" id="lnPdfInput" accept="application/pdf,.pdf" multiple hidden>
+<input type="file" id="lnCoverInput" accept="image/*" hidden>
 
 <div class="cv-launcher-overlay tab-page tracker-overlay" id="trackerOverlay">
   <div class="tracker-inner" id="trackerInner"></div>
@@ -2869,8 +2923,9 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAhtqAa9uC7hTiAv4-G56VxvUfKTX9OiAo",
@@ -2884,6 +2939,7 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);   // Learnings PDFs live here (Firebase Storage), not in Firestore
 analyticsIsSupported().then(ok=>{
   if(ok){ try{ getAnalytics(firebaseApp); }catch(e){ console.warn('Firebase Analytics unavailable:', e); } }
 }).catch(()=>{});
@@ -7313,7 +7369,7 @@ function trCurrentLabel(id, st){
 const ST_VIEWS = {
   'stats':       { title:'Content Stats', ids:['linkedin', 'youtube', 'cine'] },
   'stats-daily': { title:'Daily Stats',   ids:['daily'] },
-  'stats-all':   { title:'All Stats',     ids:['linkedin', 'youtube', 'cine', 'daily'] },
+  'stats-all':   { title:'All Stats',     ids:['daily', 'linkedin', 'youtube', 'cine'] },
 };
 function trRenderStats(instant){
   const inner = document.getElementById('statsInner');
@@ -7495,7 +7551,7 @@ function trInit(){
 const BK_KIND = 'book';
 const BK_PDF_KIND = 'bookPdfPart';
 const BK_PDF_PART = 700000;           // base64 chars per part, well under the 1 MB doc limit
-const BK_PDF_MAX = 30 * 1024 * 1024;  // 30 MB
+const BK_PDF_MAX = 150 * 1024 * 1024; // 150 MB (shared with Learnings)
 const BK_CATEGORIES = ['Business', 'Sales', 'Marketing', 'Copywriting', 'Mindset', 'Biography', 'Finance', 'Health'];
 const BK_NEW_CATEGORY = '__new';
 const BK_SORTS = [
@@ -7630,7 +7686,7 @@ function bkDetailHtml(b){
       + '<div class="bk-panel-actions"><button type="button" class="os-btn small" data-bk-cover-upload>Change cover</button><button type="button" class="os-btn small danger" data-bk-cover-remove>Remove</button></div>'
     : '<button type="button" class="bk-cover-big bk-cover-drop" data-bk-cover-upload>' + BK_UPLOAD_SVG + '<b>Upload cover image</b><span>JPG or PNG</span></button>';
   const cats = bkCategories();
-  const catSelect = '<select class="os-input" data-bk-field="category"><option value=""' + (b.category ? '' : ' selected') + '>No category</option>'
+  const catSelect = '<select class="os-input ln-select" data-bk-field="category"><option value=""' + (b.category ? '' : ' selected') + '>No category</option>'
     + cats.map(c=> '<option value="' + escAttr(c) + '"' + (c===b.category ? ' selected' : '') + '>' + esc(c) + '</option>').join('')
     + '<option value="' + BK_NEW_CATEGORY + '">+ New category...</option></select>';
   return '<button type="button" class="os-back" data-bk-back><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>All books</button>'
@@ -8479,8 +8535,494 @@ function bkInit(){
   });
 }
 
+/* ---------- Learnings: saved PDFs. Each is a doc of kind 'learning' in the cineVlogs collection. ---------- */
+// Same shape as a book, cut down: a name, author, category, key takeaways, a cover (shape and crop set by dragging) and its PDFs. No MP3.
+// PDFs go to Firebase Storage under learnings/<id>/<fileId>.pdf; the learning keeps { id, name, size, path } for each.
+// If Storage is not switched on for the project yet, uploads fall back to kind 'learningPdfPart' docs in Firestore
+// (the way book PDFs are stored), and those older PDFs keep opening as before.
+const LN_KIND = 'learning';
+const LN_PDF_KIND = 'learningPdfPart';
+const LN_PDF_MAX = 500 * 1024 * 1024;   // 500 MB in Storage (the Firestore fallback keeps the book limit)
+let lnStorageOff = false;                // set once Storage turns out not to be set up, so later uploads skip straight to Firestore
+const LN_CATEGORIES = ['LinkedIn', 'YouTube', 'Sales', 'Marketing', 'Copywriting', 'Offers', 'Outreach', 'AI'];
+const LN_SHAPES = [{ id:'portrait', name:'Portrait' }, { id:'landscape', name:'Landscape' }, { id:'square', name:'Square' }];
+const LN_TEXT_FIELDS = ['name', 'author', 'category', 'takeaways', 'cover', 'coverPos', 'coverShape'];
+const lnState = { loaded:false, loading:null, error:false, items:[], filter:'all', search:'', active:null, uploading:null };
+let lnSaveTimer = null;
+const lnDirty = new Set();
+const lnPdfUrls = {};
+function lnItem(id){ return lnState.items.find(x=> x.id===id); }
+function lnCategories(){
+  const extra = lnState.items.map(x=> x.category).filter(c=> c && !LN_CATEGORIES.includes(c));
+  return LN_CATEGORIES.concat([...new Set(extra)].sort((a, b)=> a.localeCompare(b)));
+}
+function lnShape(x){ return LN_SHAPES.some(s=> s.id===x.coverShape) ? x.coverShape : 'portrait'; }
+// where the cover sits in its frame, as background-position percentages (dragged on the detail page)
+function lnPos(x){
+  const m = /^(\d+(?:\.\d+)?)% (\d+(?:\.\d+)?)%$/.exec(x.coverPos || '');
+  return m ? [+m[1], +m[2]] : [50, 50];
+}
+function lnCoverHtml(x, cls){
+  const url = bkCoverUrl(x), [px, py] = lnPos(x);
+  cls += ' ln-' + lnShape(x);
+  return url ? '<div class="' + cls + '" style="background-image:url(&quot;' + escAttr(url) + '&quot;); background-position:' + px + '% ' + py + '%"></div>' : '<div class="' + cls + ' is-empty">' + BK_BOOK_SVG + '</div>';
+}
+
+async function lnLoad(){
+  if(lnState.loaded) return;
+  if(!lnState.loading){
+    lnState.loading = (async ()=>{
+      const snap = await getDocs(query(collection(db, CV_COLLECTION), where('kind', '==', LN_KIND)));
+      lnState.items = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
+      lnState.loaded = true;
+    })();
+  }
+  try{ await lnState.loading; lnState.error = false; }
+  catch(e){ console.error('Failed to load learnings:', e); lnState.loading = null; lnState.error = true; }
+  if(document.getElementById('learningsOverlay').classList.contains('active')) lnRender();
+}
+function lnShow(){
+  lnRender();
+  if(!lnState.loaded) lnLoad();
+  // settle where PDFs will go, so the upload box shows the right limit
+  lnStorageReady().then(()=>{ const el = document.querySelector('#learningsInner [data-ln-pdf-upload] span'); if(el) el.textContent = 'Up to ' + bkFmtSize(lnStorageOff ? BK_PDF_MAX : LN_PDF_MAX) + ' each'; });
+}
+
+function lnRender(){
+  const box = document.getElementById('learningsInner');
+  if(!lnState.loaded){
+    box.innerHTML = '<div class="os-empty" style="margin-top:24px">' + (lnState.error ? 'Could not load your learnings. Check your connection and refresh the page.' : 'Loading your learnings...') + '</div>';
+    return;
+  }
+  const active = lnState.active && lnItem(lnState.active);
+  if(active) box.innerHTML = lnDetailHtml(active);
+  else { lnState.active = null; box.innerHTML = lnListShellHtml(); lnRenderList(); }
+}
+
+function lnListShellHtml(){
+  const n = lnState.items.length;
+  const counts = {}; lnState.items.forEach(x=> { if(x.category) counts[x.category] = (counts[x.category] || 0) + 1; });
+  const used = lnCategories().filter(c=> counts[c]);
+  if(lnState.filter!=='all' && !counts[lnState.filter]) lnState.filter = 'all';
+  return '<div class="os-head"><div><h1 class="os-title">Learnings</h1><p class="os-sub">' + n + (n===1 ? ' learning' : ' learnings') + '</p></div></div>'
+    + '<form class="bk-add ln-add" id="lnAddForm" autocomplete="off">'
+    + '<input class="os-input" name="name" placeholder="Name" aria-label="Name" required>'
+    + '<input class="os-input" name="author" placeholder="Author" aria-label="Author">'
+    + '<button type="submit" class="os-btn primary">+ Add learning</button></form>'
+    + '<div class="os-toolbar"><div class="os-chips">'
+    + '<button type="button" class="os-chip' + (lnState.filter==='all' ? ' active' : '') + '" data-ln-filter="all">All<span class="n">' + n + '</span></button>'
+    + used.map(c=> '<button type="button" class="os-chip' + (lnState.filter===c ? ' active' : '') + '" data-ln-filter="' + escAttr(c) + '">' + esc(c) + '<span class="n">' + counts[c] + '</span></button>').join('')
+    + '</div><div class="bk-toolbar-right">'
+    + '<input class="os-input os-search" id="lnSearch" type="search" placeholder="Search learnings" value="' + escAttr(lnState.search) + '">'
+    + '</div></div><div id="lnList"></div>';
+}
+function lnRenderList(){
+  const wrap = document.getElementById('lnList');
+  if(!wrap) return;
+  const q = lnState.search.trim().toLowerCase();
+  const list = lnState.items
+    .filter(x=> lnState.filter==='all' || x.category===lnState.filter)
+    .filter(x=> !q || [x.name, x.author, x.category, x.takeaways].concat(bkPdfs(x).map(f=> f.name)).some(v=> (v || '').toLowerCase().includes(q)))
+    .sort((a, b)=> (b.createdAt || 0) - (a.createdAt || 0));
+  if(!lnState.items.length){ wrap.innerHTML = '<div class="os-empty">No learnings yet. Add your first one above.</div>'; return; }
+  if(!list.length){ wrap.innerHTML = '<div class="os-empty">No learnings match.</div>'; return; }
+  let html = '<div class="os-table-wrap"><table class="os-table bk-table"><thead><tr><th>Learning</th><th>Category</th><th>PDF</th></tr></thead><tbody>';
+  list.forEach(x=>{
+    const pdfs = bkPdfs(x);
+    const pdf = !pdfs.length ? '' : pdfs.length===1
+      ? '<button type="button" class="os-link-dot bk-pdf-dot" data-ln-pdf-open="' + escAttr(pdfs[0].id) + '" data-ln-pdf-item="' + escAttr(x.id) + '">' + BK_PDF_SVG + esc(pdfs[0].name || 'PDF') + '</button>'
+      : '<span class="os-link-dot bk-pdf-dot">' + BK_PDF_SVG + pdfs.length + ' PDFs</span>';
+    html += '<tr data-ln-open="' + escAttr(x.id) + '" tabindex="0">'
+      + '<td><div class="bk-title-cell">' + lnCoverHtml(x, 'bk-cover') + '<div><span class="os-t-title">' + esc(x.name || 'Untitled') + '</span>' + (x.author ? '<span class="bk-author">' + esc(x.author) + '</span>' : '') + '</div></div></td>'
+      + '<td data-label="Category">' + (x.category ? '<span class="os-tag">' + esc(x.category) + '</span>' : '') + '</td>'
+      + '<td data-label="PDF">' + pdf + '</td></tr>';
+  });
+  wrap.innerHTML = html + '</tbody></table></div>';
+}
+
+function lnDetailHtml(x){
+  const up = lnState.uploading && lnState.uploading.id===x.id ? lnState.uploading : null;
+  const pdfs = bkPdfs(x);
+  let pdf = pdfs.map(f=> '<div class="bk-pdf-file">' + BK_PDF_SVG + '<div><b>' + esc(f.name || 'Learning.pdf') + '</b><span>' + bkFmtSize(f.size || 0)
+      + (f.addedAt ? ' · ' + new Date(f.addedAt).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }) : '') + '</span></div>'
+      + '<div class="bk-pdf-actions"><button type="button" class="os-btn small primary" data-ln-pdf-open="' + escAttr(f.id) + '" data-ln-pdf-item="' + escAttr(x.id) + '">Open</button>'
+      + '<button type="button" class="os-icon-btn" data-ln-pdf-rename="' + escAttr(f.id) + '" title="Rename PDF" aria-label="Rename PDF">' + BK_EDIT_SVG + '</button>'
+      + '<button type="button" class="os-icon-btn danger" data-ln-pdf-remove="' + escAttr(f.id) + '" title="Remove" aria-label="Remove">' + BK_TRASH_SVG + '</button></div></div>').join('');
+  if(up) pdf += '<p class="bk-pdf-note" id="lnUploadNote">' + lnUploadText(up) + '</p>';
+  pdf += '<button type="button" class="bk-pdf-drop' + (pdfs.length || up ? ' is-compact' : '') + '" data-ln-pdf-upload>' + BK_UPLOAD_SVG + '<b>' + (pdfs.length ? 'Upload another PDF' : 'Upload PDF') + '</b><span>Up to ' + bkFmtSize(lnStorageOff ? BK_PDF_MAX : LN_PDF_MAX) + ' each</span></button>';
+  const shape = lnShape(x);
+  const shapes = '<div class="os-seg ln-shape-seg" role="group" aria-label="Cover shape">'
+    + LN_SHAPES.map(s=> '<button type="button" class="' + (s.id===shape ? 'active' : '') + '" data-ln-shape="' + s.id + '" aria-pressed="' + (s.id===shape) + '">' + s.name + '</button>').join('') + '</div>';
+  const cover = bkCoverUrl(x)
+    ? '<div class="ln-cover-drag" data-ln-cover-drag title="Drag to reposition">' + lnCoverHtml(x, 'bk-cover-big') + '</div>'
+      + '<p class="ln-cover-hint">Drag the image to reposition it</p>' + shapes
+      + '<div class="bk-panel-actions"><button type="button" class="os-btn small" data-ln-cover-upload>Change cover</button><button type="button" class="os-btn small danger" data-ln-cover-remove>Remove</button></div>'
+    : '<button type="button" class="bk-cover-big bk-cover-drop ln-' + shape + '" data-ln-cover-upload>' + BK_UPLOAD_SVG + '<b>Upload cover image</b><span>JPG or PNG</span></button>' + shapes;
+  const catSelect = '<select class="os-input ln-select" data-ln-field="category"><option value=""' + (x.category ? '' : ' selected') + '>No category</option>'
+    + lnCategories().map(c=> '<option value="' + escAttr(c) + '"' + (c===x.category ? ' selected' : '') + '>' + esc(c) + '</option>').join('')
+    + '<option value="' + BK_NEW_CATEGORY + '">+ New category...</option></select>';
+  return '<button type="button" class="os-back" data-ln-back><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>All learnings</button>'
+    + '<div class="bk-detail"><div class="bk-detail-head' + (shape==='portrait' ? '' : ' is-' + shape) + '">'
+    + '<div class="bk-detail-cover">' + cover + '</div>'
+    + '<div class="bk-detail-info">'
+    + '<h1 class="bk-detail-title">' + esc(x.name || 'Untitled') + '</h1>'
+    + '<p class="bk-detail-author ln-detail-author"' + (x.author ? '' : ' hidden') + '>' + esc(x.author || '') + '</p>'
+    + '<section class="os-panel"><div class="os-fields ln-fields">'
+    + '<label class="os-field"><span class="os-label">Name</span><input class="os-input" type="text" data-ln-field="name" value="' + escAttr(x.name || '') + '"></label>'
+    + '<label class="os-field"><span class="os-label">Author</span><input class="os-input" type="text" data-ln-field="author" value="' + escAttr(x.author || '') + '"></label>'
+    + '<label class="os-field"><span class="os-label">Category</span>' + catSelect + '</label>'
+    + '</div></section>'
+    + '<section class="os-panel"><div class="os-panel-head"><h3>PDFs' + (pdfs.length ? ' <span class="bk-n">' + pdfs.length + '</span>' : '') + '</h3></div><div class="bk-pdf-list">' + pdf + '</div></section>'
+    + '</div></div>'
+    + '<section class="os-panel"><div class="os-panel-head"><h3>Key takeaways</h3></div>'
+    + '<textarea class="os-input bk-takeaways" data-ln-field="takeaways" placeholder="The ideas worth keeping" aria-label="Key takeaways">' + esc(x.takeaways || '') + '</textarea>'
+    + '</section>'
+    + '<div class="os-detail-foot"><button type="button" class="os-btn small danger" data-ln-delete>Delete learning</button><span id="lnSaveState"></span></div>'
+    + '</div>';
+}
+
+async function lnAdd(name, author){
+  name = name.trim();
+  if(!name) return;
+  const now = Date.now();
+  const rec = { kind: LN_KIND, name, author: (author || '').trim(), category: lnState.filter==='all' ? '' : lnState.filter, cover: '', coverPos: '', coverShape: 'portrait', pdfs: [], createdAt: now, updatedAt: now };
+  try{
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    lnState.items.push(Object.assign({ id: ref.id }, rec));
+    lnRender();
+    const t = document.querySelector('#lnAddForm [name="name"]'); if(t) t.focus();
+  }catch(e){
+    console.error('Failed to add learning:', e);
+    await lcAlert('Connection error', 'Could not save the learning to the database. Check your connection and try again.');
+  }
+}
+function lnSet(id, f, v){
+  const x = lnItem(id);
+  if(!x) return;
+  x[f] = v;
+  x.updatedAt = Date.now();
+  lnDirty.add(id);
+  const st = document.getElementById('lnSaveState'); if(st) st.textContent = 'Saving...';
+  clearTimeout(lnSaveTimer);
+  lnSaveTimer = setTimeout(lnSaveNow, 500);
+}
+async function lnSaveNow(){
+  clearTimeout(lnSaveTimer);
+  lnSaveTimer = null;
+  const ids = [...lnDirty];
+  lnDirty.clear();
+  try{
+    await Promise.all(ids.map(id=>{
+      const x = lnItem(id);
+      if(!x) return null;
+      const data = { updatedAt: x.updatedAt };
+      LN_TEXT_FIELDS.forEach(f=> data[f] = x[f] == null ? '' : x[f]);
+      return updateDoc(doc(db, CV_COLLECTION, id), data);
+    }));
+    const st = document.getElementById('lnSaveState'); if(st) st.textContent = 'Saved';
+  }catch(e){
+    ids.forEach(id=> lnDirty.add(id));
+    console.error('Failed to save learning:', e);
+    await lcAlert('Connection error', 'Could not save your changes to the database. Check your connection and try again.');
+  }
+}
+async function lnCoverUpload(id, file){
+  if(!file) return;
+  try{ lnSet(id, 'cover', await bkShrinkCover(file)); lnSet(id, 'coverPos', ''); }
+  catch(e){ console.error(e); await lcAlert('Could not read that image', 'Try a JPG or PNG file.'); return; }
+  lnSaveNow();
+  if(lnState.active===id) lnRender();
+}
+
+/* Learnings: PDF parts */
+async function lnPdfDeleteParts(itemId, fileId){
+  const snap = await getDocs(query(collection(db, CV_COLLECTION), where('learningId', '==', itemId)));
+  await Promise.all(snap.docs.filter(d=> d.data().kind===LN_PDF_KIND && (!fileId || d.data().fileId===fileId)).map(d=> deleteDoc(d.ref)));
+}
+async function lnPdfSavePdfs(x){
+  x.updatedAt = Date.now();
+  await updateDoc(doc(db, CV_COLLECTION, x.id), { pdfs: bkPdfs(x), updatedAt: x.updatedAt });
+}
+function lnUploadText(up){
+  return 'Uploading ' + esc(up.name) + '... ' + (up.pct!=null ? Math.round(up.pct) + '%' : up.done + ' of ' + up.total)
+    + (up.queued ? ' (' + up.queued + ' more waiting)' : '');
+}
+function lnUploadTick(itemId){
+  const el = lnState.active===itemId && document.getElementById('lnUploadNote');
+  if(el) el.innerHTML = lnUploadText(lnState.uploading);
+}
+// Is Storage switched on? Asked once per visit. The Storage SDK retries a missing bucket quietly for minutes, so this asks
+// the REST API directly for a one-item listing of learnings/: 200 means ready, anything else (no bucket, rules say no) means Firestore.
+let lnStorageCheck = null;
+function lnStorageReady(){
+  if(!lnStorageCheck){
+    const url = 'https://firebasestorage.googleapis.com/v0/b/' + firebaseConfig.storageBucket + '/o?prefix=learnings%2F&maxResults=1';
+    lnStorageCheck = fetch(url).then(r=> r.ok, ()=> false).then(ok=>{
+      if(!ok){ lnStorageOff = true; console.warn('Firebase Storage is not set up, Learnings PDFs will be saved to Firestore instead.'); }
+      return ok;
+    });
+  }
+  return lnStorageCheck;
+}
+async function lnPdfUploadStorage(itemId, fileId, file, queued){
+  const path = 'learnings/' + itemId + '/' + fileId + '.pdf';
+  lnState.uploading = { id: itemId, name: file.name, pct: 0, queued };
+  if(lnState.active===itemId) lnRender();
+  const task = uploadBytesResumable(storageRef(storage, path), file, {
+    contentType: 'application/pdf',
+    contentDisposition: 'inline; filename="' + file.name.replace(/[^\w .()-]/g, '_') + '"',
+  });
+  task.on('state_changed', snap=>{ lnState.uploading.pct = snap.totalBytes ? snap.bytesTransferred / snap.totalBytes * 100 : 0; lnUploadTick(itemId); });
+  await task;
+  return path;
+}
+// the Firestore fallback: the PDF as base64 split across kind 'learningPdfPart' docs. Returns how many parts.
+async function lnPdfUploadParts(itemId, fileId, file, queued){
+  const data = await bkReadBase64(file);
+  const total = Math.max(1, Math.ceil(data.length / BK_PDF_PART));
+  lnState.uploading = { id: itemId, name: file.name, done: 0, total, queued };
+  if(lnState.active===itemId) lnRender();
+  for(let i = 0; i < total; i++){
+    await addDoc(collection(db, CV_COLLECTION), { kind: LN_PDF_KIND, learningId: itemId, fileId, idx: i, data: data.slice(i * BK_PDF_PART, (i + 1) * BK_PDF_PART) });
+    lnState.uploading.done = i + 1;
+    lnUploadTick(itemId);
+  }
+  return total;
+}
+// uploads one after another; each is added to the learning's list once it is fully saved
+async function lnPdfUploadMany(itemId, files){
+  const x = lnItem(itemId);
+  if(!x || !files.length) return;
+  const ok = [];
+  for(const f of files){
+    if(f.type!=='application/pdf' && !/\.pdf$/i.test(f.name)){ await lcAlert('Not a PDF', '"' + f.name + '" is not a PDF file.'); continue; }
+    const max = lnStorageOff ? BK_PDF_MAX : LN_PDF_MAX;
+    if(f.size > max){ await lcAlert('PDF too large', '"' + f.name + '" is ' + bkFmtSize(f.size) + '. The limit is ' + bkFmtSize(max) + '.'); continue; }
+    ok.push(f);
+  }
+  if(ok.length){ lnState.uploading = { id: itemId, name: ok[0].name, pct: 0, queued: ok.length - 1 }; if(lnState.active===itemId) lnRender(); }
+  for(let n = 0; n < ok.length; n++){
+    const file = ok[n], queued = ok.length - n - 1;
+    const fileId = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const entry = { id: fileId, name: file.name, size: file.size, addedAt: Date.now() };
+    try{
+      if(await lnStorageReady()) entry.path = await lnPdfUploadStorage(itemId, fileId, file, queued);
+      else{
+        if(file.size > BK_PDF_MAX){
+          await lcAlert('PDF too large', '"' + file.name + '" is ' + bkFmtSize(file.size) + '. Until Firebase Storage is switched on, the limit is ' + bkFmtSize(BK_PDF_MAX) + '.');
+          continue;
+        }
+        entry.parts = await lnPdfUploadParts(itemId, fileId, file, queued);
+      }
+      entry.addedAt = Date.now();
+      x.pdfs = bkPdfs(x).concat(entry);
+      await lnPdfSavePdfs(x);
+    }catch(e){
+      console.error('Failed to upload PDF:', e);
+      if(entry.path) deleteObject(storageRef(storage, entry.path)).catch(()=>{});
+      else lnPdfDeleteParts(itemId, fileId).catch(()=>{});
+      await lcAlert('Upload failed', 'Could not save "' + file.name + '". Check your connection and try again.');
+    }
+  }
+  lnState.uploading = null;
+  if(lnState.active===itemId) lnRender();
+}
+async function lnPdfOpen(itemId, fileId){
+  const x = lnItem(itemId);
+  const f = x && bkPdfs(x).find(p=> p.id===fileId);
+  if(!f) return;
+  // open the tab now, while the click still counts, then point it at the PDF once it has downloaded
+  const w = window.open('', '_blank');
+  if(w) w.document.write('<title>' + esc(f.name || 'PDF') + '</title><p style="font:15px system-ui;margin:40px;color:#555">Loading PDF...</p>');
+  try{
+    if(f.path && !lnPdfUrls[fileId]) lnPdfUrls[fileId] = await getDownloadURL(storageRef(storage, f.path));
+    if(!lnPdfUrls[fileId]){
+      const snap = await getDocs(query(collection(db, CV_COLLECTION), where('learningId', '==', itemId)));
+      const parts = snap.docs.map(d=> d.data()).filter(p=> p.kind===LN_PDF_KIND && p.fileId===fileId).sort((a, b)=> a.idx - b.idx);
+      if(!parts.length) throw new Error('No PDF parts found');
+      const bin = atob(parts.map(p=> p.data).join(''));
+      const bytes = new Uint8Array(bin.length);
+      for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      lnPdfUrls[fileId] = URL.createObjectURL(new Blob([bytes], { type:'application/pdf' }));
+    }
+    const url = lnPdfUrls[fileId];
+    if(w) w.location.href = url;
+    else{ const a = document.createElement('a'); a.href = url; a.download = f.name || 'learning.pdf'; a.click(); }
+  }catch(e){
+    if(w) w.close();
+    console.error('Failed to open PDF:', e);
+    await lcAlert('Could not open PDF', 'Could not load the PDF. Check your connection and try again.');
+  }
+}
+// a PDF's stored bytes: the Storage file, or its Firestore parts
+async function lnPdfDeleteData(itemId, f){
+  if(!f.path) return lnPdfDeleteParts(itemId, f.id);
+  try{ await deleteObject(storageRef(storage, f.path)); }
+  catch(e){ if(e && e.code!=='storage/object-not-found') throw e; }
+}
+async function lnPdfRename(itemId, fileId){
+  const x = lnItem(itemId);
+  const f = x && bkPdfs(x).find(p=> p.id===fileId);
+  if(!f) return;
+  const name = await lcPrompt('PDF name', f.name || '', { confirmText: 'Save' });
+  if(name===null || !name.trim()) return;
+  f.name = name.trim();
+  try{ await lnPdfSavePdfs(x); }
+  catch(e){ console.error('Failed to rename PDF:', e); await lcAlert('Connection error', 'Could not save the new name. Check your connection and try again.'); }
+  lnRender();
+}
+async function lnPdfRemove(itemId, fileId){
+  const x = lnItem(itemId);
+  const f = x && bkPdfs(x).find(p=> p.id===fileId);
+  if(!f) return;
+  const ok = await lcConfirm('Remove this PDF?', 'Remove "' + (f.name || 'the PDF') + '"? This cannot be undone.', { confirmText: 'Remove', danger: true });
+  if(!ok) return;
+  try{
+    await lnPdfDeleteData(itemId, f);
+    x.pdfs = bkPdfs(x).filter(p=> p.id!==fileId);
+    await lnPdfSavePdfs(x);
+    if(lnPdfUrls[fileId]){ if(lnPdfUrls[fileId].startsWith('blob:')) URL.revokeObjectURL(lnPdfUrls[fileId]); delete lnPdfUrls[fileId]; }
+    lnRender();
+  }catch(e){
+    console.error('Failed to remove PDF:', e);
+    await lcAlert('Connection error', 'Could not remove the PDF. Check your connection and try again.');
+  }
+}
+async function lnDelete(id){
+  const x = lnItem(id);
+  if(!x) return;
+  const n = bkPdfs(x).length;
+  const ok = await lcConfirm('Delete this learning?', 'Delete "' + (x.name || 'Untitled') + '"' + (n ? ' and its ' + (n===1 ? 'PDF' : n + ' PDFs') : '') + '? This cannot be undone.', { confirmText: 'Delete', danger: true });
+  if(!ok) return;
+  try{
+    await Promise.all(bkPdfs(x).filter(f=> f.path).map(f=> lnPdfDeleteData(id, f)));
+    if(bkPdfs(x).some(f=> !f.path)) await lnPdfDeleteParts(id);
+    await deleteDoc(doc(db, CV_COLLECTION, id));
+    lnDirty.delete(id);
+    lnState.items = lnState.items.filter(p=> p.id!==id);
+    lnState.active = null;
+    lnRender();
+  }catch(e){
+    console.error('Failed to delete learning:', e);
+    await lcAlert('Connection error', 'Could not delete the learning. Check your connection and try again.');
+  }
+}
+function lnBack(){
+  if(lnSaveTimer) lnSaveNow();
+  lnState.active = null;
+  lnRender();
+  document.getElementById('learningsOverlay').scrollTop = 0;
+}
+
+function lnInit(){
+  const box = document.getElementById('learningsInner');
+  const pdfInput = document.getElementById('lnPdfInput');
+  const coverInput = document.getElementById('lnCoverInput');
+  pdfInput.addEventListener('change', ()=>{
+    const files = [...pdfInput.files];
+    pdfInput.value = '';
+    if(files.length && lnState.active) lnPdfUploadMany(lnState.active, files);
+  });
+  coverInput.addEventListener('change', ()=>{
+    const f = coverInput.files[0];
+    coverInput.value = '';
+    if(f && lnState.active) lnCoverUpload(lnState.active, f);
+  });
+  box.addEventListener('submit', (e)=>{
+    if(e.target.id!=='lnAddForm') return;
+    e.preventDefault();
+    lnAdd(e.target.elements.name.value, e.target.elements.author.value);
+  });
+  box.addEventListener('click', (e)=>{
+    const t = e.target;
+    const open = t.closest('[data-ln-pdf-open]');
+    if(open){ e.stopPropagation(); lnPdfOpen(open.dataset.lnPdfItem, open.dataset.lnPdfOpen); return; }
+    const lf = t.closest('[data-ln-filter]');
+    if(lf){ lnState.filter = lf.dataset.lnFilter; lnRender(); return; }
+    const row = t.closest('[data-ln-open]');
+    if(row){ lnState.active = row.dataset.lnOpen; lnRender(); document.getElementById('learningsOverlay').scrollTop = 0; return; }
+    if(t.closest('[data-ln-back]')){ lnBack(); return; }
+    if(!lnState.active) return;
+    if(t.closest('[data-ln-cover-upload]')){ coverInput.click(); return; }
+    if(t.closest('[data-ln-cover-remove]')){ lnSet(lnState.active, 'cover', ''); lnSet(lnState.active, 'coverPos', ''); lnRender(); return; }
+    const sh = t.closest('[data-ln-shape]');
+    if(sh){ lnSet(lnState.active, 'coverShape', sh.dataset.lnShape); lnRender(); return; }
+    if(t.closest('[data-ln-pdf-upload]')){ if(!lnState.uploading) pdfInput.click(); return; }
+    const rn = t.closest('[data-ln-pdf-rename]');
+    if(rn){ lnPdfRename(lnState.active, rn.dataset.lnPdfRename); return; }
+    const rm = t.closest('[data-ln-pdf-remove]');
+    if(rm){ lnPdfRemove(lnState.active, rm.dataset.lnPdfRemove); return; }
+    if(t.closest('[data-ln-delete]')) lnDelete(lnState.active);
+  });
+  box.addEventListener('keydown', (e)=>{
+    const row = e.target.matches && e.target.matches('tr[data-ln-open]') ? e.target : null;
+    if(row && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); row.click(); }
+  });
+  box.addEventListener('input', (e)=>{
+    const t = e.target;
+    if(t.id==='lnSearch'){ lnState.search = t.value; lnRenderList(); return; }
+    if(t.dataset.lnField==='name' && lnState.active && t.tagName!=='SELECT'){
+      lnSet(lnState.active, 'name', t.value);
+      const h = box.querySelector('.bk-detail-title'); if(h) h.textContent = t.value || 'Untitled';
+    }
+    if(t.dataset.lnField==='takeaways' && lnState.active){ lnSet(lnState.active, 'takeaways', t.value); return; }
+    if(t.dataset.lnField==='author' && lnState.active){
+      lnSet(lnState.active, 'author', t.value);
+      const a = box.querySelector('.ln-detail-author'); if(a){ a.textContent = t.value; a.hidden = !t.value.trim(); }
+    }
+  });
+  box.addEventListener('change', async (e)=>{
+    const t = e.target;
+    if(t.dataset.lnField!=='category' || !lnState.active) return;
+    const id = lnState.active;
+    let v = t.value;
+    if(v===BK_NEW_CATEGORY){
+      const name = await lcPrompt('New category', '', { message: 'Name the category.', confirmText: 'Add' });
+      v = (name || '').trim();
+      if(!v){ lnRender(); return; }
+    }
+    lnSet(id, 'category', v);
+    lnRender();
+  });
+  // drag the cover to choose which part of the image shows in the frame
+  box.addEventListener('pointerdown', (e)=>{
+    const wrap = e.target.closest('[data-ln-cover-drag]');
+    const x = wrap && e.button===0 && lnState.active && lnItem(lnState.active);
+    if(!x || !x.cover) return;
+    e.preventDefault();
+    const el = wrap.firstElementChild, r = el.getBoundingClientRect();
+    const img = new Image(); img.src = bkCoverUrl(x);
+    const [x0, y0] = lnPos(x), sx = e.clientX, sy = e.clientY;
+    let px = x0, py = y0;
+    wrap.setPointerCapture(e.pointerId);
+    wrap.classList.add('is-dragging');
+    const move = (ev)=>{
+      if(!img.naturalWidth) return;
+      const k = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+      const ox = img.naturalWidth * k - r.width, oy = img.naturalHeight * k - r.height;
+      if(ox > 0.5) px = Math.min(100, Math.max(0, x0 - (ev.clientX - sx) / ox * 100));
+      if(oy > 0.5) py = Math.min(100, Math.max(0, y0 - (ev.clientY - sy) / oy * 100));
+      el.style.backgroundPosition = px.toFixed(1) + '% ' + py.toFixed(1) + '%';
+    };
+    const up = ()=>{
+      wrap.removeEventListener('pointermove', move);
+      wrap.removeEventListener('pointerup', up);
+      wrap.removeEventListener('pointercancel', up);
+      wrap.classList.remove('is-dragging');
+      if(px!==x0 || py!==y0) lnSet(x.id, 'coverPos', px.toFixed(1) + '% ' + py.toFixed(1) + '%');
+    };
+    wrap.addEventListener('pointermove', move);
+    wrap.addEventListener('pointerup', up);
+    wrap.addEventListener('pointercancel', up);
+  });
+  window.addEventListener('beforeunload', (e)=>{
+    if(lnSaveTimer || lnState.uploading){ if(lnSaveTimer) lnSaveNow(); e.preventDefault(); e.returnValue = ''; }
+  });
+}
+
 /* ---------- Daily Tasks: the Power List and the Backlog (replaces the Notion Tasks & Trackers page) ---------- */
 // One kind 'dailyTasks' doc in the cineVlogs collection: { power:[{ id, name, due:'2026-10-07' }], backlog:[{ id, name }] }.
+// Tasks pulled in from Close also carry closeId and closeUrl; closeSynced (written only by close-sync/sync.mjs) lists every Close task already pulled in.
 // The Stats tab (and the bottom of the All tab) is the 'daily' tracker above.
 const DT_KIND = 'dailyTasks';
 const dtState = { loaded:false, loading:null, error:false, rec:null, view:'power' };
@@ -8488,7 +9030,8 @@ let dtSaveTimer = null;
 const DT_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const DT_DOWN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
 const DT_UP_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
-const DT_BIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
+const DT_LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+const DT_BIN_SVG ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
 
 const dtNewId = ()=> Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 // What the Notion page held on 8 Oct 2026, written to the database on first load.
@@ -8507,6 +9050,7 @@ function dtDue(due){
   return { text: days===1 ? 'Due tomorrow' : 'Due in ' + days + ' days', cls: days <= 3 ? 'is-soon' : '', days };
 }
 const dtLateCount = ()=> dtState.loaded ? dtState.rec.power.filter(x=> dtDue(x.due).late).length : 0;
+const dtDueTodayCount = ()=> dtState.loaded ? dtState.rec.power.filter(x=> dtDue(x.due).days===0).length : 0;
 
 async function dtLoad(){
   if(dtState.loaded) return;
@@ -8524,12 +9068,25 @@ async function dtLoad(){
       }
       dtState.loaded = true;
       dtState.error = false;
+      dtWatch();
     })();
   }
   try{ await dtState.loading; }
   catch(e){ console.error('Failed to load the daily tasks:', e); dtState.loading = null; dtState.error = true; }
   if(document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
   homeCards().forEach(homeRenderFoot);
+}
+// The Close sync (close-sync/sync.mjs) adds tasks to the same doc while the page is open, so keep dtState.rec live:
+// a save from stale state would drop them. Changes waiting to save win; a redraw waits while you are typing in the list.
+function dtWatch(){
+  onSnapshot(doc(db, CV_COLLECTION, dtState.rec.id), (snap)=>{
+    if(snap.metadata.hasPendingWrites || dtSaveTimer || !snap.exists()) return;
+    const d = snap.data();
+    dtState.rec = { id: snap.id, ...d, power: d.power || [], backlog: d.backlog || [] };
+    const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
+    if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
+    homeCards().forEach(homeRenderFoot);
+  }, (e)=> console.error('Lost the live link to the daily tasks:', e));
 }
 function dtSave(){
   dtState.rec.updatedAt = Date.now();
@@ -8594,6 +9151,7 @@ function dtListHtml(which){
       + (power ? '<td data-label="Due date"><input class="os-input dt-date" type="date" data-dt-field="due" value="' + escAttr(x.due || '') + '" aria-label="Due date"></td>'
         + '<td data-label="When"><span class="dt-due ' + due.cls + '">' + due.text + '</span></td>' : '')
       + '<td><span class="dt-actions">'
+      + (x.closeUrl ? '<a class="os-icon-btn" href="' + escAttr(x.closeUrl) + '" target="_blank" rel="noopener" title="Open in Close" aria-label="Open in Close">' + DT_LINK_SVG + '</a>' : '')
       + (power
         ? '<button type="button" class="os-btn small" data-dt-act="done" title="Done: take it off the list">' + DT_CHECK_SVG + 'Done</button>'
           + '<button type="button" class="os-icon-btn" data-dt-act="to-backlog" title="Move to Backlog" aria-label="Move to Backlog">' + DT_DOWN_SVG + '</button>'
@@ -8680,8 +9238,9 @@ function dtInit(){
     const act = b.dataset.dtAct, r = dtState.rec;
     if(act==='delete' && !(await lcConfirm('Delete task?', '"' + hit.item.name + '" will be removed from the Backlog.', { confirmText:'Delete', danger:true }))) return;
     hit.list.splice(hit.i, 1);
-    if(act==='to-backlog') r.backlog.unshift({ id: hit.item.id, name: hit.item.name });
-    if(act==='to-power') r.power.push({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()) });
+    const close = hit.item.closeUrl ? { closeId: hit.item.closeId, closeUrl: hit.item.closeUrl } : {};
+    if(act==='to-backlog') r.backlog.unshift({ id: hit.item.id, name: hit.item.name, ...close });
+    if(act==='to-power') r.power.push({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()), ...close });
     dtSave();
     dtRender(true);
     homeCards().forEach(homeRenderFoot);
@@ -8698,10 +9257,10 @@ const CHANNELS = {
   business:   { name:'Dan James (Business)', tabs:['os:youtube:items','os:youtube:ideas','business','business-thumbs','tracker:youtube','os:youtube:os'] },
   builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','styles','effects','thumbs','buckets','tracker:cine'] },
   linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','os:linkedin:os','tracker:linkedin'] },
-  stats:      { name:'Content Stats',        tabs:['stats','stats-daily','stats-all'] },
+  stats:      { name:'Stats',        tabs:['stats-all','stats-daily','stats'] },
   books:      { name:'Books',                tabs:['books'] },
+  learnings:  { name:'Learnings',            tabs:['learnings'] },
   daily:      { name:'Daily Tasks',          tabs:['tasks:power','tasks:backlog','tasks:stats','tasks:all'] },
-  misc:       { name:'Misc.',                tabs:['soon'], items:['Newsletter','Webinar','Live Stream','Instagram'] },
 };
 let activeChannel = null;
 
@@ -8717,6 +9276,7 @@ function openChannel(ch, opts){
   document.body.classList.toggle('channel-outreach', ch==='outreach');
   document.body.classList.toggle('channel-stats', ch==='stats');
   document.body.classList.toggle('channel-books', ch==='books');
+  document.body.classList.toggle('channel-learnings', ch==='learnings');
   document.body.classList.toggle('channel-business', ch==='business');
   document.getElementById('homeOverlay').classList.remove('active');
   document.querySelectorAll('.top-tab-btn[data-tab]').forEach(b=> b.hidden = !c.tabs.includes(b.dataset.tab));  document.getElementById('soonTabBtn').textContent = c.name;
@@ -8738,7 +9298,7 @@ function goHome(opts){
     history[opts && opts.replace ? 'replaceState' : 'pushState'](null, '', location.pathname + location.search);
   }
   document.body.classList.add('on-home');
-  document.body.classList.remove('channel-outreach', 'channel-business', 'channel-stats', 'channel-books');
+  document.body.classList.remove('channel-outreach', 'channel-business', 'channel-stats', 'channel-books', 'channel-learnings');
   homeRender();
   document.getElementById('homeOverlay').classList.add('active');
 }
@@ -8763,8 +9323,10 @@ function homeRenderFoot(card){
   if(ch==='daily'){
     let html = '';
     if(dtState.loaded){
-      const late = dtLateCount();
-      html += '<span class="hc-meta hc-status is-' + (late ? 'behind' : 'on-track') + '">' + (late ? late + (late===1 ? ' task' : ' tasks') + ' late' : 'Nothing late') + '</span>';
+      const late = dtLateCount(), due = dtDueTodayCount();
+      const st = late ? 'behind' : due ? 'due' : 'on-track';
+      const say = late ? late + (late===1 ? ' task' : ' tasks') + ' late' : due ? (due===1 ? 'Task due' : due + ' tasks due') : 'Nothing late';
+      html += '<span class="hc-meta hc-status is-' + st + '">' + say + '</span>';
     }
     if(trState.loaded){
       const v = trMarks('daily')[trYmd(new Date())];
@@ -8850,6 +9412,8 @@ function switchTab(tab){
   if(isStats){ trState.statsView = tab; trRenderStats(); document.getElementById('statsOverlay').scrollTop = 0; }
   document.getElementById('booksOverlay').classList.toggle('active', tab==='books');
   if(tab==='books') bkShow();
+  document.getElementById('learningsOverlay').classList.toggle('active', tab==='learnings');
+  if(tab==='learnings') lnShow();
   // Titles and Thumbnails are both pages of the one embedded Title Researcher; tell it which to show.
   if(isBiz){
     const bf = document.getElementById('businessFrame');
@@ -8965,6 +9529,7 @@ function switchTab(tab){
   trInit();
   dtInit();
   bkInit();
+  lnInit();
   bkAudioInit();
   homeInit();
 
