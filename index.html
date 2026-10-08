@@ -2073,7 +2073,7 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   .shot-table-wrap{overflow-x:visible; overflow-y:visible; border:none; box-shadow:none; background:transparent; border-radius:0;}
   table.shot-table{display:block; min-width:0; width:100%; table-layout:auto;}
   table.shot-table thead{
-    position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+    position:absolute; top:0; left:0; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
     clip:rect(0,0,0,0); white-space:nowrap; border:0;
   }
   table.shot-table tbody{display:block;}
@@ -2087,7 +2087,7 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   table.shot-table tbody tr:hover{background:var(--paper-raised);}
   table.shot-table tbody tr:last-child{margin-bottom:0;}
   table.shot-table td{display:block; padding:0; border-bottom:none; width:auto;}
-  table.shot-table td.col-num{grid-area:num; padding-top:2px; width:auto;}
+  table.shot-table td.col-num{grid-area:num; padding-top:2px; width:auto; text-align:left; justify-self:start;}
   table.shot-table td.col-del{grid-area:del; text-align:right; width:auto;}
   table.shot-table td.col-type{grid-area:type; margin-top:12px; width:auto;}
   table.shot-table td.col-location{grid-area:location; margin-top:12px; width:auto;}
@@ -2503,6 +2503,82 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
   .app-dock a{width:40px; height:40px; border-radius:11px;}
   .app-dock a svg, .app-dock a img{width:22px; height:22px;}
   .app-dock a::after, .app-dock a::before{display:none;}
+}
+
+/* ================= Phone layout =================
+   Loaded last, so it refines the rules above for narrow screens. The aims: nothing can be dragged sideways,
+   every label reads in full, and cards stack in the order you scan them. */
+
+/* Bugs at every width: the ring rule used to size the trend chip's arrow too; a long PDF name ran out of its card. */
+.st-over-card svg{width:auto; height:auto; transform:none;}
+.st-over-card > svg{width:52px; height:52px; transform:rotate(-90deg);}
+.trend-chip svg{width:13px; height:13px;}
+.bk-pdf-dot{max-width:100%; min-width:0;}
+.bk-pdf-dot span, .bk-pdf-dot{overflow:hidden; text-overflow:ellipsis;}
+
+/* Pages scroll up and down only: a stray wide child can never drag the page sideways. */
+.tab-page, .home-overlay{overflow-x:hidden; overscroll-behavior-x:none;}
+
+/* Power List task names wrap (one-row textareas that grow with the text). */
+textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; min-height:0; height:auto; font-family:inherit;}
+
+/* Tab bar: a soft fade on the side that has more tabs past the edge. */
+.top-tabs.more-right{-webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent);}
+.top-tabs.more-left{-webkit-mask-image:linear-gradient(90deg, transparent, #000 40px); mask-image:linear-gradient(90deg, transparent, #000 40px);}
+.top-tabs.more-left.more-right{-webkit-mask-image:linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image:linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);}
+
+@media (max-width:900px){
+  /* Power List / Backlog rows as cards: name across the top (tag under it), then date and when, then the actions. */
+  .dt-table tbody tr{grid-template-columns:minmax(0,1fr) auto; gap:10px 12px; padding:12px 14px 10px;}
+  .dt-table td[data-label]::before{display:none;}
+  .dt-table td:first-child{grid-column:1 / -1;}
+  .dt-table td[data-label="Due date"]{grid-column:1;}
+  .dt-table td[data-label="When"]{grid-column:2; align-self:center; justify-self:end;}
+  .dt-table td:last-child{grid-column:1 / -1; width:auto; white-space:normal; text-align:left; padding-top:8px; border-top:1px solid var(--line);}
+  .dt-task{flex-wrap:wrap; align-items:flex-start; gap:6px;}
+  .dt-task .dt-name{flex:1 1 100%; min-width:0; margin-left:-8px; font-size:15px;}
+  .dt-actions{display:flex; width:100%; gap:8px;}
+  .dt-actions [data-dt-act="done"], .dt-actions [data-dt-act="to-power"]{order:5; margin-left:auto;}
+  .dt-date{min-width:0; max-width:100%; padding:7px 11px; font-size:13px;}
+  .dt-date span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+}
+
+@media (max-width:640px){
+  /* Home: compact cards - icon, then name and line, then the status row underneath. */
+  .home-card{display:grid; grid-template-columns:44px minmax(0,1fr) 20px; column-gap:14px; align-items:center; padding:16px 16px 14px;}
+  .home-card .hc-top{display:contents;}
+  .home-card .hc-icon{grid-column:1; grid-row:1 / span 2; align-self:start; width:44px; height:44px; border-radius:12px;}
+  .home-card .hc-end{grid-column:3; grid-row:1 / span 2; width:20px; height:20px;}
+  .home-card .hc-arrow{inset:1px;}
+  .home-card .hc-name{grid-column:2; grid-row:1; font-size:16.5px;}
+  .home-card .hc-desc{grid-column:2; grid-row:2; margin-top:2px; padding-bottom:0; font-size:13px; line-height:1.45;}
+  .home-card .hc-foot{grid-column:1 / -1; grid-row:3; margin-top:14px; padding-top:12px; flex-wrap:wrap; row-gap:4px; white-space:normal;}
+  .home-card .hc-meta{overflow:visible;}
+  /* Quick-launch dock: wraps onto two rows instead of running off both edges. */
+  .app-dock{flex-wrap:wrap; gap:12px; padding-left:max(12px, calc(50% - 150px)); padding-right:max(12px, calc(50% - 150px));}
+  .app-dock-sep{display:none;}
+
+  /* Power List week: seven compact days that fit side by side. */
+  .dt-week{padding:14px 10px 12px;}
+  .dt-week-head{padding:0 4px;}
+  .dt-week-hint{display:none;}
+  .dt-week-days{gap:5px;}
+  .dt-day{padding:9px 0 8px; gap:6px; border-radius:11px;}
+  .dt-day-name{font-size:10px; letter-spacing:.03em;}
+  .dt-day-date{font-size:16px;}
+  .dt-day-box{width:26px; height:26px; border-radius:7px;}
+
+  /* Stats overview: two tiles a row on a phone. */
+  .st-over.is-4, .st-over{grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;}
+  .st-over-card{flex-direction:column; align-items:flex-start; gap:10px; padding:14px;}
+  .st-over-card > svg{width:44px; height:44px;}
+
+  /* Learnings add form: one field a row, like Books. */
+  .bk-add.ln-add{grid-template-columns:1fr;}
+}
+/* A text field under 16px makes iPhone zoom the page in when tapped. */
+@media (max-width:900px) and (pointer:coarse){
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea{font-size:16px;}
 }
 </style>
 </head>
@@ -9535,7 +9611,7 @@ function dtWatch(){
       return;
     }
     dtState.rec = { id: snap.id, ...d, power: d.power || [], backlog: d.backlog || [] };
-    const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
+    const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input, textarea');
     if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
     homeCards().forEach(homeRenderFoot);
     dtSyncCo();
@@ -9602,7 +9678,7 @@ function dtSyncCo(){
   });
   if(!changed) return;
   dtSave();
-  const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
+  const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input, textarea');
   if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
   homeCards().forEach(homeRenderFoot);
 }
@@ -9645,7 +9721,12 @@ function dtRender(instant){
     else if(dtState.loaded) html += dtListHtml(k);
   });
   box.innerHTML = html;
+  dtFitNames(box);
   if(trState.loaded) trAnimateRings(box, instant);
+}
+// Task names are one-row textareas that grow with the text, so a long name wraps instead of being cut off.
+function dtFitNames(root){
+  root.querySelectorAll('textarea.dt-name').forEach(t=>{ t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; });
 }
 // The due date opens the app's calendar (lcPickDate) instead of the browser's own picker.
 const DT_CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
@@ -9673,7 +9754,7 @@ function dtListHtml(which){
   rows.forEach(x=>{
     const due = dtDue(x.due);
     html += '<tr class="' + (power && due.late ? 'is-late' : '') + '" data-dt-id="' + escAttr(x.id) + '">'
-      + '<td><div class="dt-task"><input class="dt-name" data-dt-field="name" value="' + escAttr(x.name) + '" aria-label="Task name">'
+      + '<td><div class="dt-task"><textarea class="dt-name" data-dt-field="name" rows="1" aria-label="Task name">' + esc(x.name) + '</textarea>'
       + (x.coTask ? '<span class="dt-src is-co">Creative Outreach</span>' : '') + '</div></td>'
       + (power ? '<td data-label="Due date">' + dtDateBtn(x.due, 'data-dt-date') + '</td>'
         + '<td data-label="When"><span class="dt-due ' + due.cls + '">' + due.text + '</span></td>' : '')
@@ -9704,7 +9785,7 @@ function dtWeekHtml(){
       + '<i class="dt-day-box">' + (v==='hit' ? TR_CHECK_SVG : v==='miss' ? TR_X_SVG : '') + '</i>'
       + '<span class="dt-day-state">' + say + '</span></button>';
   }).join('');
-  return '<div class="dt-week"><div class="dt-week-head"><b>This week</b><span>' + won + ' of 7 days won. Click a day: won, lost, clear.</span></div>'
+  return '<div class="dt-week"><div class="dt-week-head"><b>This week</b><span>' + won + ' of 7 days won.<span class="dt-week-hint"> Click a day: won, lost, clear.</span></span></div>'
     + '<div class="dt-week-days">' + days + '</div></div>';
 }
 // Stats: tick today Won or Lost right here, then the same panel as the Daily Stats page (ring, trend, every day of the year).
@@ -9751,7 +9832,9 @@ function dtInit(){
     hit.item.name = v;
     dtSave();
   });
-  box.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.classList.contains('dt-name')) e.target.blur(); });
+  box.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.classList.contains('dt-name')){ e.preventDefault(); e.target.blur(); } });
+  box.addEventListener('input', (e)=>{ if(e.target.matches('textarea.dt-name')) dtFitNames(e.target.parentNode); });
+  window.addEventListener('resize', ()=>{ if(document.getElementById('tasksOverlay').classList.contains('active')) dtFitNames(box); });
   box.addEventListener('click', async (e)=>{
     const addDate = e.target.closest('[data-dt-add-date]');
     if(addDate){
@@ -9942,6 +10025,29 @@ function homeRender(){
   document.getElementById('homeResumeName').textContent = CHANNELS[last].name;
 }
 
+/* ---------- tab bar on a narrow screen: keep the open tab in view, fade the edge that has more tabs past it ---------- */
+function topTabsFade(){
+  const bar = document.getElementById('topTabs');
+  if(!bar) return;
+  const more = bar.scrollWidth - bar.clientWidth;
+  bar.classList.toggle('more-left', more > 2 && bar.scrollLeft > 2);
+  bar.classList.toggle('more-right', more > 2 && bar.scrollLeft < more - 2);
+}
+function topTabsReveal(){
+  const bar = document.getElementById('topTabs'), act = bar && bar.querySelector('.top-tab-btn.active');
+  if(!act) return;
+  requestAnimationFrame(()=>{
+    if(bar.scrollWidth > bar.clientWidth){
+      const left = act.offsetLeft - (bar.clientWidth - act.offsetWidth) / 2;
+      bar.scrollTo({ left: Math.max(0, left), behavior: bar.dataset.ready ? 'smooth' : 'auto' });
+      bar.dataset.ready = '1';
+    }
+    topTabsFade();
+  });
+}
+document.getElementById('topTabs').addEventListener('scroll', topTabsFade, { passive:true });
+window.addEventListener('resize', topTabsFade);
+
 /* ---------- tab switching ---------- */
 function switchTab(tab){
   const isCv = tab==='cine' || tab==='outreach';
@@ -9951,6 +10057,7 @@ function switchTab(tab){
   const isBiz = tab==='business' || tab==='business-thumbs';
   if(tab!=='soon' && !isBiz){ try{ localStorage.setItem('lcActiveTab', tab); }catch(e){} }
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
+  topTabsReveal();
   document.getElementById('soonOverlay').classList.toggle('active', tab==='soon');
   document.getElementById('businessOverlay').classList.toggle('active', isBiz);
   const otOverlay = document.getElementById('outreachTrackerOverlay');

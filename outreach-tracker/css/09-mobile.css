@@ -1,0 +1,481 @@
+    /* ============================================================
+       Phone and small-tablet layout. Loaded last, so it refines the
+       sheets above for narrow screens:
+       - the sidebar becomes a bottom tab bar (it was simply hidden,
+         leaving no way to change view),
+       - toolbars wrap or scroll inside themselves instead of widening
+         the page (a page wider than the screen makes the phone zoom
+         the whole tracker out),
+       - Inbox and Board drop the large desktop type and stack.
+       ============================================================ */
+
+    /* Never let one wide child drag the page sideways. */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      /* ---------- Bottom tab bar (the sidebar's nav items) ---------- */
+      .crm-sidebar {
+        display: flex;
+        position: fixed;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 90;
+        height: auto;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 2px;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+        border-right: none;
+        border-top: 1px solid var(--border);
+        background: rgba(255, 255, 255, .92);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        box-shadow: 0 -6px 20px -14px rgba(20, 24, 27, .35);
+        overflow: visible;
+      }
+
+      .crm-sidebar > .crm-brand,
+      .crm-sidebar > div:not(.crm-nav-group),
+      .crm-nav-heading {
+        display: none;
+      }
+
+      .crm-nav-group {
+        display: contents;
+      }
+
+      .crm-nav-item {
+        position: relative;
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 50px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 2px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-align: center;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .crm-nav-item span:not(.crm-nav-badge) {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .crm-nav-item svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .crm-nav-item:hover {
+        background: transparent;
+      }
+
+      .crm-nav-item.active {
+        background: var(--green-tint);
+      }
+
+      .crm-nav-badge {
+        position: absolute;
+        top: 3px;
+        left: calc(50% + 5px);
+        margin: 0;
+      }
+
+      /* Room for the tab bar under the last row. */
+      .crm-main {
+        padding-bottom: calc(84px + env(safe-area-inset-bottom));
+      }
+
+      /* ---------- Heading, toolbar, filters ---------- */
+      .crm-topbar {
+        padding: 20px 16px 0;
+      }
+
+      .crm-title {
+        font-size: 24px;
+      }
+
+      .crm-toolbar {
+        padding: 14px 16px 0;
+        gap: 10px;
+      }
+
+      /* "Table View" is a label, not a control: drop it to save a row. */
+      .crm-view-pill {
+        display: none;
+      }
+
+      /* The actions scroll sideways in their own strip, New first. */
+      .crm-toolbar-actions {
+        width: calc(100% + 32px);
+        margin: 0 -16px;
+        padding: 2px 16px 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .crm-toolbar-actions::-webkit-scrollbar {
+        display: none;
+      }
+
+      .crm-toolbar-actions .btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        box-shadow: none;
+      }
+
+      .crm-toolbar-actions .btn-primary {
+        order: -1;
+      }
+
+      .crm-filter-row {
+        padding: 10px 16px 0;
+        gap: 8px;
+      }
+
+      .crm-search-input-wrap {
+        flex: 1 1 100%;
+        min-width: 0;
+        padding: 9px 14px;
+      }
+
+      .crm-search-input-wrap input {
+        min-width: 0;
+        width: 100%;
+        font-size: 16px; /* 16px stops iOS zooming in on focus */
+      }
+
+      .col-toggle-divider {
+        display: none;
+      }
+
+      .col-toggle-group {
+        flex-wrap: wrap;
+      }
+
+      /* ---------- Table: scrolls sideways inside its card ---------- */
+      .crm-table-wrap {
+        padding: 12px 16px 0;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* ---------- Inbox: one stacked card per task ---------- */
+      .inbox-wrap,
+      #inbox-wrap {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .inbox-section-title {
+        font-size: 14px;
+      }
+
+      .inbox-section-count {
+        font-size: 13px;
+        line-height: 22px;
+        min-width: 22px;
+      }
+
+      .inbox-row {
+        flex-wrap: wrap;
+        gap: 10px 12px;
+        padding: 14px 16px;
+      }
+
+      .inbox-row-main {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+      }
+
+      .inbox-company {
+        flex: 1 1 100%;
+        font-size: 16px;
+        white-space: normal;
+        text-align: left;
+      }
+
+      .inbox-row .crm-pill {
+        font-size: 12px;
+      }
+
+      .inbox-touch {
+        font-size: 14px;
+        white-space: normal;
+      }
+
+      .inbox-due {
+        font-size: 14px;
+      }
+
+      .inbox-actions {
+        margin-left: auto;
+      }
+
+      /* ---------- Board: columns snap side by side ---------- */
+      .board-wrap {
+        padding: 12px 16px 24px;
+        font-size: 14px;
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 16px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .board-column {
+        width: min(300px, calc(100vw - 56px));
+        flex: 0 0 min(300px, calc(100vw - 56px));
+        scroll-snap-align: start;
+        padding: 12px;
+      }
+
+      .board-column-title {
+        font-size: 13px;
+      }
+
+      .board-count {
+        font-size: 13px;
+        padding: 1px 9px;
+      }
+
+      .board-card {
+        padding: 12px 14px;
+        gap: 5px;
+      }
+
+      .board-card-name {
+        font-size: 15.5px;
+      }
+
+      .board-card-contact,
+      .board-card-step,
+      .board-card-due {
+        font-size: 13.5px;
+      }
+
+      .board-card .crm-pill {
+        font-size: 12px;
+      }
+
+      .inbox-wrap {
+        font-size: 15px;
+      }
+
+      .inbox-empty {
+        font-size: 15px;
+      }
+
+      .inbox-actions .btn {
+        font-size: 13px;
+        padding: 8px 14px;
+      }
+    }
+
+    /* ============================================================
+       Company page on a phone
+       ============================================================ */
+    @media (max-width: 760px) {
+      /* The desktop column is zoomed up a step; on a phone that only costs room. */
+      .company-layout {
+        zoom: 1;
+      }
+
+      .company-layout .prospect-summary-wrap,
+      .company-layout .status-bar-wrap {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .company-layout #diagram-root {
+        padding: 0 12px 20px;
+      }
+
+      .prospect-summary {
+        padding: 16px;
+      }
+
+      .contacts-card {
+        padding: 14px 14px 10px;
+      }
+
+      /* Contact details wrap instead of being cut off. */
+      .contact-meta {
+        white-space: normal;
+        overflow: visible;
+        overflow-wrap: anywhere;
+      }
+
+      /* Prospect status: one readable pill a row. */
+      .status-bar-pills,
+      .status-bar-pills.status-bar-pills-single {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+      }
+
+      .status-bar-pills .status-pill:last-child:nth-child(odd) {
+        justify-self: stretch;
+      }
+
+      .status-pill {
+        justify-content: flex-start;
+        white-space: normal;
+        text-align: left;
+        padding: 9px 12px;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      /* Activity log: each entry is a small card. */
+      .followup-log-row {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+      }
+
+      .followup-type-btn {
+        flex: 0 0 auto;
+      }
+
+      .followup-detail-cell {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+      }
+
+      .followup-method-btn,
+      .followup-response-method-btn {
+        max-width: none;
+      }
+
+      .followup-notes-btn {
+        flex: 1 1 0;
+      }
+
+      /* Follow-up rows: the Day / date tick on top (it was hidden below 760px,
+         so a touch couldn't be ticked or dated on a phone), the touch under it. */
+      .touch-row {
+        flex-wrap: wrap;
+        gap: 2px 10px;
+        padding: 8px 10px;
+      }
+
+      .touch-row > .touch-cadence-wrap {
+        display: block;
+        flex: 1 1 100%;
+        max-width: none;
+      }
+
+      .touch-row .touch-cadence-row {
+        max-width: none;
+        padding: 6px 4px;
+      }
+
+      .touch-row:not(:has(> .touch-cadence-wrap, > .col-head))::before {
+        display: none;
+      }
+
+      .touch-row > .chip {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        gap: 4px 10px;
+        padding: 2px 0 4px;
+      }
+
+      .touch-row .chip-top-row {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .touch-row .chip-label {
+        white-space: normal;
+        font-size: 14px;
+      }
+
+      .touch-row .chip-sub-row {
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 6px 10px;
+      }
+
+      .touch-row .chip-sub {
+        white-space: nowrap;
+      }
+
+      .touch-row > .manual-check-row {
+        flex: 1 1 100%;
+        justify-content: flex-start;
+      }
+
+      .mech-section .touch-row > .col-head {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Header: Back pinned top-left, the name and tier centred under it. */
+      .sequence-modal-header {
+        padding: 10px 14px 12px;
+      }
+
+      .sequence-modal-heading {
+        width: 100%;
+      }
+
+      .sequence-modal-header .sequence-back-btn {
+        margin: 0 0 6px;
+      }
+
+      .sequence-modal-heading h2 {
+        font-size: 19px;
+        line-height: 1.25;
+      }
+    }
+
+    /* ============================================================
+       Pop-ups and small screens
+       ============================================================ */
+    @media (max-width: 600px) {
+      /* Forms and detail windows rise from the bottom as a sheet. */
+      .modal-overlay:not(#sequence-overlay) {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-overlay:not(#sequence-overlay) .modal-card {
+        max-width: none;
+        max-height: 90vh;
+        border-radius: 24px 24px 0 0;
+        padding: 22px 20px calc(20px + env(safe-area-inset-bottom));
+      }
+
+      .reports-wrap {
+        padding: 12px 16px 24px;
+      }
+
+      .reports-grid {
+        gap: 10px;
+      }
+    }
+
+    /* A text field under 16px makes iPhone zoom the page in when tapped. */
+    @media (max-width: 900px) and (pointer: coarse) {
+      input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+      select,
+      textarea {
+        font-size: 16px;
+      }
+    }
