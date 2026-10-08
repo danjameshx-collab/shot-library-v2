@@ -1,0 +1,737 @@
+    /* ============================================================
+       Company page layout — loaded last, so it refines the earlier
+       sheets rather than rewriting them.
+       - The company's details keep the original centred column, led by
+         a Next Up summary strip.
+       - The sequence: each mechanism is one card (header + touches),
+         and each touch is one compact row instead of three stacked boxes.
+       ============================================================ */
+
+    /* ---------- Header: name centred, tier badge below ----------
+       Layout comes from css/04-sequence.css; only the background is set here. */
+    .sequence-modal-header {
+      align-items: center;
+      background: var(--surface);
+    }
+
+    /* ---------- Width and scale ----------
+       The original sheets centre every block at 900px; the company page
+       uses a wider column, and zoom scales its text and controls up a
+       step without re-tuning every font size. */
+    .company-layout {
+      zoom: 1.08;
+    }
+
+    .company-layout .prospect-summary-wrap,
+    .company-layout .status-bar-wrap,
+    .company-layout #diagram-root {
+      max-width: 1200px;
+    }
+
+    /* ---------- Summary: Next Up on top, then the four fields in one row ---------- */
+    .company-layout .prospect-summary {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px 20px;
+    }
+
+    .company-layout .prospect-summary .next-up {
+      flex: 1 1 100%;
+      margin: 0;
+    }
+
+    .company-layout .summary-row {
+      flex: 1 1 0;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .company-layout .prospect-summary .startdate-btn {
+      font-size: 12.5px;
+      padding: 5px 12px;
+      white-space: nowrap;
+    }
+
+    .next-up {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 100%;
+      padding: 12px 14px;
+      margin: -2px 0 0;
+      font-family: inherit;
+      text-align: left;
+      border-radius: var(--radius-sm);
+      background: var(--green-tint);
+      border: 1px solid var(--green-tint-strong);
+      border-left: 4px solid var(--green);
+    }
+
+    button.next-up {
+      cursor: pointer;
+    }
+
+    button.next-up:hover {
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    .next-up .summary-label {
+      color: var(--green-dark);
+    }
+
+    .next-up-main {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .next-up-mech {
+      color: var(--green);
+    }
+
+    .next-up-mech::after {
+      content: "·";
+      margin: 0 6px;
+      color: var(--muted-soft);
+    }
+
+    .next-up-sub {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .next-up.is-today {
+      background: var(--accent-tint);
+      border-color: #f6dcb6;
+      border-left-color: var(--accent);
+    }
+
+    .next-up.is-today .summary-label,
+    .next-up.is-today .next-up-sub {
+      color: #8a5a12;
+    }
+
+    .next-up.is-overdue {
+      background: var(--red-tint);
+      border-color: #f3cfc6;
+      border-left-color: var(--red);
+    }
+
+    .next-up.is-overdue .summary-label,
+    .next-up.is-overdue .next-up-sub {
+      color: var(--red);
+    }
+
+    .next-up.is-idle {
+      background: #f6f8f6;
+      border-color: var(--border);
+      border-left-color: var(--muted-soft);
+    }
+
+    .next-up.is-idle .summary-label,
+    .next-up.is-idle .next-up-sub {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ---------- Sequence ---------- */
+    /* Same column as the details above. */
+    .company-layout #diagram-root {
+      padding: 0 32px 20px;
+    }
+
+    .company-layout .sequence {
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    .company-layout .sequence-end {
+      align-self: center;
+      margin-top: 0;
+    }
+
+    .mech-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 1px 2px rgba(13, 19, 15, .04);
+      overflow: hidden;
+      scroll-margin-top: 16px;
+    }
+
+    /* Mechanism header: one horizontal band —
+       [step] [icon] Title ............ Admin | Medium */
+    .mech-section .send-card-wrap {
+      max-width: none;
+      align-items: stretch;
+      flex-direction: row;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .mech-section .node-box.send,
+    .mech-section .node-box.send.send-hero {
+      flex: 1 1 100%;
+      max-width: none;
+      display: grid;
+      grid-template-columns: auto auto auto minmax(0, 1fr);
+      grid-template-areas: "step icon title controls";
+      align-items: center;
+      column-gap: 14px;
+      row-gap: 8px;
+      padding: 14px 18px;
+      text-align: left;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: #fbfcfb;
+    }
+
+    .mech-section .node-box.send:hover {
+      box-shadow: none;
+      background: var(--green-tint);
+    }
+
+    .mech-section .node-box.send.is-seen {
+      border: 0;
+      box-shadow: inset 4px 0 0 var(--green);
+      background: var(--green-tint);
+    }
+
+    /* Same precedence as the original cards: Replied over Posted over Seen. */
+    .mech-section .node-box.send.is-posted {
+      background: var(--blue-tint);
+    }
+
+    .mech-section .node-box.send.is-replied-card {
+      background: var(--purple-tint);
+    }
+
+    .mech-section .hero-step-badge {
+      grid-area: step;
+      position: static;
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+      box-shadow: none;
+    }
+
+    .mech-section .hero-title {
+      grid-area: title;
+      font-size: 17px;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    /* The 3-ring orbit badge becomes a single icon dot. */
+    .mech-section .medium-orbit.medium-orbit-lg {
+      grid-area: icon;
+      width: auto;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mech-section .medium-orbit-lg .medium-orbit-stage {
+      width: 34px;
+      height: 34px;
+      perspective: none;
+    }
+
+    .mech-section .orbit-ring,
+    .mech-section .medium-orbit-label {
+      display: none;
+    }
+
+    .mech-section .medium-orbit-lg .orbit-core {
+      width: 34px;
+      height: 34px;
+      box-shadow: 0 0 0 4px var(--green-tint);
+    }
+
+    .mech-section .medium-orbit-lg .orbit-core-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .mech-section .hero-status-pills,
+    .mech-section .hero-columns {
+      grid-area: controls;
+      margin: 0;
+      width: auto;
+      justify-content: flex-end;
+    }
+
+    .mech-section .hero-columns {
+      gap: 8px 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .mech-section .hero-col {
+      flex: 0 0 auto;
+      max-width: none;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mech-section .hero-col-head {
+      font-size: 9.5px;
+    }
+
+    .mech-section .hero-col-buttons {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mech-section .pill,
+    .mech-section .seen-toggle {
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+
+    /* Plain send card (no orbit badge): same band. */
+    .mech-section .send-card-columns {
+      grid-column: 1 / -1;
+      align-items: center;
+    }
+
+    .mech-section .send-card-col {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mech-section .send-status-pills,
+    .mech-section .send-card-col-right .send-pills {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    /* The send's own manual + Day/date rows: a slim strip under the header. */
+    .mech-section .send-card-wrap > .manual-check-row,
+    .mech-section .send-card-wrap > .touch-cadence-wrap {
+      flex: 1 1 220px;
+      max-width: none;
+      margin: 0;
+    }
+
+    .mech-section .send-card-wrap > .manual-check-row {
+      border-radius: 0;
+      border-width: 0 1px 0 0;
+      border-style: solid;
+      border-color: var(--border-soft);
+      padding: 9px 18px;
+    }
+
+    .mech-section .send-card-wrap > .touch-cadence-wrap .touch-cadence-row {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      padding: 9px 18px;
+      background: var(--surface);
+    }
+
+    .mech-section .send-card-wrap.is-next > .touch-cadence-wrap .touch-cadence-row {
+      background: var(--green-tint);
+      box-shadow: inset 4px 0 0 var(--green);
+    }
+
+    /* Divider between the send and its follow-ups ("Follow-Up Via Cold Email"). */
+    .mech-section > .medium-divider {
+      border: 0;
+      border-bottom: 1px solid var(--border-soft);
+      border-radius: 0;
+      box-shadow: none;
+      padding: 8px 18px;
+      background: #fbfcfb;
+    }
+
+    .mech-section > .medium-divider .medium-divider-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .mech-section > .medium-divider .medium-divider-label {
+      font-size: 10.5px;
+    }
+
+    /* Follow-up block: flat, inside the section. */
+    .mech-section .mech-block {
+      max-width: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .mech-section .mech-block:not(.is-seen) .followup-col,
+    .mech-section .mech-block.is-seen .opened-col {
+      padding: 12px 18px 14px;
+    }
+
+    .mech-section .mech-block.is-seen .opened-col {
+      box-shadow: none;
+      background: #f7fbf8;
+    }
+
+    .mech-section .mech-block .chip-stack,
+    .mech-section .mech-block .opened-steps,
+    .mech-section .mech-block:not(.is-seen) .chip-stack,
+    .mech-section .mech-block.is-seen .opened-steps {
+      max-width: none;
+      gap: 0;
+    }
+
+    .mech-section .col-head,
+    .mech-section .mech-block:not(.is-seen) .col-head,
+    .mech-section .mech-block.is-seen .col-head {
+      justify-content: flex-start;
+      font-size: 10.5px;
+      padding: 2px 0 8px;
+    }
+
+    .mech-section .col-head-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    .mech-section .opened-caption,
+    .mech-section .mech-block.is-seen .opened-caption {
+      text-align: left;
+      font-size: 12px;
+      margin: 0 0 10px;
+    }
+
+    .mech-section .refs-row,
+    .mech-section .mech-block:not(.is-seen) .followup-col .refs-row {
+      max-width: none;
+      justify-content: flex-start;
+      margin: 0 0 10px;
+    }
+
+    /* ---------- Touch row: [✓ Day 4 · date] [Touch name · 2 of 6 ... badges] [manual] ---------- */
+    .touch-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 6px 10px;
+      margin: 0 -10px;
+      border-radius: var(--radius-sm);
+      border-bottom: 1px solid var(--border-soft);
+      transition: background-color .15s ease;
+    }
+
+    .touch-row:last-child {
+      border-bottom: 0;
+    }
+
+    .touch-row:hover {
+      background: #f8faf8;
+    }
+
+    .touch-row > .touch-cadence-wrap {
+      flex: 0 0 200px;
+      order: 0;
+    }
+
+    .touch-row > .chip {
+      order: 1;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .touch-row > .manual-check-row {
+      order: 2;
+      flex: 0 0 auto;
+      width: auto;
+      margin: 0;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    /* The tick-off pill already says it's manual; drop the chip's own badge. */
+    .touch-row:has(> .manual-check-row) .chip .chip-badge-red {
+      display: none;
+    }
+
+    .touch-row > .manual-check-row .manual-check-text {
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* A touch with no cadence date (e.g. Instant Reply) keeps the name column aligned. */
+    .touch-row:not(:has(> .touch-cadence-wrap, > .col-head))::before {
+      content: "";
+      flex: 0 0 200px;
+    }
+
+    /* Seen column heading on the Instant Reply line, in the Day/date slot. */
+    .mech-section .touch-row > .col-head {
+      flex: 0 0 200px;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    /* The green Seen header already says where the prospect is. */
+    .mech-section .touch-row > .opened-head::after {
+      display: none;
+    }
+
+    .touch-row .touch-cadence-row {
+      margin: 0;
+      padding: 6px 8px;
+      border: 0;
+      background: transparent;
+      border-radius: var(--radius-sm);
+    }
+
+    .touch-row .touch-cadence-row:hover {
+      background: var(--green-tint);
+    }
+
+    .touch-cadence-text {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .touch-day {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ink);
+      min-width: 44px;
+      white-space: nowrap;
+      flex: none;
+    }
+
+    .touch-date {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .touch-cadence-row.cadence-done .touch-cadence-text {
+      text-decoration: none;
+    }
+
+    .touch-cadence-row.cadence-done .touch-day,
+    .touch-cadence-row.cadence-done .touch-date {
+      color: var(--green-dark);
+      text-decoration: line-through;
+    }
+
+    .touch-cadence-row.due-today:not(.cadence-done) .touch-day,
+    .touch-cadence-row.due-today:not(.cadence-done) .touch-date {
+      color: #8a5a12;
+    }
+
+    .touch-cadence-row.due-overdue:not(.cadence-done) .touch-day,
+    .touch-cadence-row.due-overdue:not(.cadence-done) .touch-date {
+      color: var(--red);
+    }
+
+    .touch-row .touch-cadence-row.cadence-done {
+      background: transparent;
+    }
+
+    .touch-row:has(.touch-cadence-row.cadence-done) .chip-label {
+      color: var(--muted);
+    }
+
+    /* The chip itself: flat, one line. */
+    .touch-row > .chip {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 0;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .touch-row > .chip:hover {
+      box-shadow: none;
+    }
+
+    .touch-row > .chip:hover .chip-label {
+      color: var(--green);
+    }
+
+    .touch-row > .chip.has-eye {
+      padding-left: 28px;
+    }
+
+    .touch-row > .chip .chip-eye-badge {
+      left: 0;
+    }
+
+    .touch-row .chip-label {
+      font-size: 13.5px;
+      white-space: nowrap;
+    }
+
+    .touch-row .chip-sub-row {
+      flex: 1 1 auto;
+      margin: 0;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+
+    .touch-row .chip-sub {
+      font-size: 10.5px;
+    }
+
+    .touch-row .chip-sub-actions {
+      flex: 0 0 auto;
+    }
+
+    .touch-row .chip-sub-actions .chip-badge-replied {
+      max-width: none;
+      padding: 3px 10px;
+    }
+
+    /* Highlighted chips keep their colour, sized to the row. */
+    .touch-row > .chip.chip-terminal,
+    .touch-row > .chip.chip-instant,
+    .touch-row > .chip.social-chip {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .touch-row > .chip.chip-terminal {
+      background: var(--green);
+    }
+
+    .touch-row > .chip.chip-terminal:hover .chip-label {
+      color: #fff;
+    }
+
+    /* Next touch to do. */
+    .touch-row.is-next {
+      background: var(--green-tint);
+      box-shadow: inset 4px 0 0 var(--green);
+    }
+
+    .touch-row.is-next .chip-label::after {
+      content: "Next";
+      margin-left: 6px;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--green);
+      color: #fff;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      vertical-align: 1px;
+    }
+
+    .touch-row.flash,
+    .send-card-wrap.flash {
+      animation: touch-flash 1.2s ease;
+    }
+
+    @keyframes touch-flash {
+      0%, 40% { box-shadow: inset 4px 0 0 var(--green), 0 0 0 3px var(--green-light); }
+      100% { box-shadow: inset 4px 0 0 var(--green), 0 0 0 0 transparent; }
+    }
+
+    /* "New Thread" break inside a mechanism: a thin labelled rule. */
+    .mech-section .chip-stack .new-thread-divider,
+    .mech-section .opened-steps .new-thread-divider {
+      align-self: stretch;
+      margin: 6px 0;
+      padding: 0;
+      gap: 8px;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .mech-section .new-thread-divider::after {
+      content: "";
+      flex: 1 1 auto;
+      height: 1px;
+      background: #f1d9b5;
+    }
+
+    .mech-section .new-thread-divider .medium-divider-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mech-section .new-thread-divider .medium-divider-icon svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .mech-section .new-thread-divider .medium-divider-label {
+      font-size: 10px;
+    }
+
+    .mech-section .opened-stem,
+    .mech-section .mobile-divider {
+      display: none !important;
+    }
+
+    /* ---------- Danger zone: quiet until hovered ---------- */
+    .company-layout .danger-zone {
+      opacity: .75;
+    }
+
+    .company-layout .danger-zone:hover {
+      opacity: 1;
+    }
+
+    /* ---------- Narrower screens ---------- */
+    @media (max-width: 760px) {
+      .company-layout .prospect-summary {
+        flex-wrap: wrap;
+      }
+
+      .company-layout .prospect-summary .next-up,
+      .company-layout .summary-row {
+        flex-basis: 100%;
+      }
+
+      .company-layout #diagram-root {
+        padding: 0 14px 20px;
+      }
+
+      .mech-section .node-box.send,
+      .mech-section .node-box.send.send-hero {
+        grid-template-columns: auto auto minmax(0, 1fr);
+        grid-template-areas: "step icon title" "controls controls controls";
+        row-gap: 10px;
+      }
+
+      .mech-section .hero-columns,
+      .mech-section .hero-status-pills {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .touch-row {
+        flex-wrap: wrap;
+        row-gap: 0;
+      }
+
+      .touch-row > .touch-cadence-wrap,
+      .touch-row:not(:has(> .touch-cadence-wrap, > .col-head))::before {
+        display: none;
+      }
+
+      .touch-row .chip-label {
+        white-space: normal;
+      }
+    }

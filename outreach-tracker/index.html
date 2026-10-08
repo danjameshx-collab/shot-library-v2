@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Lincko Outreach Tracker</title>
+  <link rel="icon" type="image/png"
+    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAABAAAAAQBPJcTWAAAEsElEQVR4nO1aMWwcRRSdmb9eX24vd5GPIkpBQtxZQSnSgC4CCQuQKCBUgGiIKGgoUIAimCo2Fg0pUqWio4EKCQWUyBKRIEgURtAgKIxokBCKydm3tz7fzg7/795GTgDvXHb3vuPsk/b2dm9u5s+bP3/+/PnSGCMeZDjcAnCjIoBbAG5UBHALwI2KAG4BuGFNQBRFiq7dygCAllLedix0FIERRuYR8F6gpIyUVJFNWSsC0FmSSqmILpuyRALdQSltU38ZSOXIKpdJAI06dXxlZeXpK1e+fMbzGvpuTcDfTRD01dmzr308Nzf3c6i14wCEn3z/1cvfrf10ynMP6Mjsrj1FgOTsbfXh+ZNPXH127vFr1GaWJtgQAFTxN9/emL948aN3Go2WCMPwjjKo+sL3N0Sn07lBBGitgQj4/MfrL3329adnROMQVjQBZVDYnY2bolU/qGMCIgMKRD4CELEaefW673lN3W63cYD1Hf8DUDjkDkxPTw/oWY5mfbPmdcXBGT3jtUId6dINLpF+UxjHc2t+/EKK/FMgBak9jjxg50kDYOdvxoDEd4rmXfw8eq9NhPyHEOLoIwHwr0rLAGpfZIz1dKuWQW4BuFERwC0ALjFoMmi9JsuRz2dCk6+FAqks1v8U7ARsBL5ECytz9j2GVOAKvyuC4aAWv7CggY0Akg1HSlx+9fwbD88c/m0QDmtKSCv39f9Ant8g3FYnjsz+Qs82nigLATTYZqTyL5x88ovDzfYfRbdRmCtcBnZK1Q16LSJgqMMp2sQUUTe6v8a2LnYbgCYrVlMyYEUQMC7YCeBGRQC3ANyoCOAWgBsVAdwCpHv3JGSW1x9OXCz0q42NE0RgJ+CAO70VC6IgzCprh4REkwSm9qYnmCAR9Nc/fz+Gt36wPajndoSwyzrS4qHGoW7ba3Vt9pdsBMTKaow4c/ndq8Jq35YN0qJbm387iy++ufj+c68vURwyS7PYpwDagKmC+o91qSlhIpr81v1iJ0Du+Mxdl5QaPxybuZ+CnYBCQVFpM54+7S8C7gEVAWVWHi9ruM93JnRICmTxFYhxltNSCfAHQUP4XViXdEJXPgfYDIyCovX4BVdQVIrEDX3skUev3wp6slnz6HS49KMxii5he3DiyOwPsRxcMUGKxlJixFvzr1yiq4w2smCbn1AoAXSUTnc6Ho+fcaOTRGeLbGV3UOIrnVbHhyQWKIwAcmvr9fomfXddd5vuyML9nyFi25jjOGJ1dbXTajW3Njd7TcWQHkMdHg6H8vjs8bVjR4+u2ZBQCAGo+tLzPLG8/OHihQtLixPV+R2gQVhf/0ssLX2wvLDw3kKcqeI4k9kM0RSo1WppIIKFAezsMAi2plw3yVSx+k+RApDKpVkiHCAjHEV6LBn2qStsvx3apwTYoyLAtiDlCqKR0QBFBS+LB8lGK4FNRmsKGwJig+L3+57vbwBaebg7UXKvgHIVKWGzj7KOXmUaw0wCUofmdKezcu7c2/BfqbJ7BTTyvt+DDso6es6/F6BKaVmZn3/qGl1FCDoJpAneWeWsbAA5Nzbp8nsFtpnthLGM4DjG5X5BtQxyC8CNigBuAbhREcAtADceeAL+Ab2135EQy7CfAAAAAElFTkSuQmCC" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/01-shell.css">
+  <link rel="stylesheet" href="css/02-views.css">
+  <link rel="stylesheet" href="css/03-modals.css">
+  <link rel="stylesheet" href="css/04-sequence.css">
+  <link rel="stylesheet" href="css/05-misc.css">
+  <link rel="stylesheet" href="css/06-active.css">
+  <link rel="stylesheet" href="css/07-layout.css">
+  <link rel="stylesheet" href="css/08-step-card.css">
+</head>
+
+<body>
+
+  <!-- ================= Auth gate ================= -->
+  <div class="auth-gate" id="auth-gate">
+    <div class="auth-card">
+      <img class="auth-brand-mark" src="logo.png" alt="Lincko" />
+      <h1 class="auth-title">Lincko Outreach Tracker</h1>
+      <p class="auth-loading" id="auth-loading">Loading…</p>
+    </div>
+  </div>
+
+  <div class="crm-shell" id="crm-shell" style="display:none;">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="crm-sidebar">
+      <div class="crm-brand">
+        <img class="brand-mark" src="logo.png" alt="Lincko" />
+        <div class="brand-text">
+          <span class="brand-name">Lincko</span>
+          <span class="brand-sub">Outreach Tracker</span>
+        </div>
+      </div>
+
+      <div style="position:relative;">
+        <label class="crm-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input type="text" placeholder="Search everything…" id="quick-search-input" autocomplete="off" />
+        </label>
+        <div class="global-search-results" id="global-search-results"></div>
+      </div>
+
+      <div class="crm-nav-group">
+        <span class="crm-nav-heading">Records</span>
+        <div class="crm-nav-item active" id="nav-companies" data-view="companies">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="7" width="18" height="14" rx="2"></rect>
+            <path d="M8 7V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3"></path>
+            <path d="M3 12h18"></path>
+          </svg>
+          <span>Companies</span>
+        </div>
+        <div class="crm-nav-item" id="nav-people" data-view="people">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+            <circle cx="10" cy="7" r="4"></circle>
+            <path d="M21 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>People</span>
+        </div>
+      </div>
+
+      <div class="crm-nav-group">
+        <span class="crm-nav-heading">Workspace</span>
+        <div class="crm-nav-item" id="nav-active" data-view="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+          <span>Active</span>
+        </div>
+        <div class="crm-nav-item" id="nav-inbox" data-view="inbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 12h-6l-2 3h-4l-2-3H2"></path>
+            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+          </svg>
+          <span>Inbox</span>
+          <span class="crm-nav-badge" id="nav-inbox-badge" style="display:none;"></span>
+        </div>
+        <div class="crm-nav-item" id="nav-board" data-view="board">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="5" height="18" rx="1"></rect>
+            <rect x="9.5" y="3" width="5" height="12" rx="1"></rect>
+            <rect x="16" y="3" width="5" height="8" rx="1"></rect>
+          </svg>
+          <span>Board</span>
+        </div>
+        <div class="crm-nav-item" id="nav-reports" data-view="reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 20V10M12 20V4M6 20v-6"></path>
+          </svg>
+          <span>Reports</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+    <main class="crm-main">
+      <div class="crm-topbar">
+        <div>
+          <h1 class="crm-title" id="crm-title">Companies</h1>
+          <p class="crm-title-sub" id="prospect-count-label">— companies</p>
+        </div>
+      </div>
+
+      <div class="crm-toolbar">
+        <span class="crm-view-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          <span id="view-pill-label">Table View</span>
+        </span>
+        <div class="crm-toolbar-actions">
+          <button class="btn btn-secondary" id="columns-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <path d="M9 4v16M15 4v16"></path>
+            </svg>
+            Columns
+          </button>
+          <button class="btn btn-secondary" id="import-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 21V9"></path>
+              <path d="m7 14 5-5 5 5"></path>
+              <path d="M5 21h14"></path>
+            </svg>
+            Import
+          </button>
+          <button class="btn btn-secondary" id="export-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 3v12"></path>
+              <path d="m7 10 5 5 5-5"></path>
+              <path d="M5 21h14"></path>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-secondary" id="find-duplicates-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+              <path d="M4 16V5a1 1 0 0 1 1-1h11"></path>
+            </svg>
+            Find Duplicates
+          </button>
+          <button class="btn btn-secondary" id="download-pdf-btn" type="button" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+              <path d="M14 2v5h5"></path>
+              <path d="M9 15h6M9 11h3"></path>
+            </svg>
+            Download PDF
+          </button>
+          <button class="btn btn-primary" id="new-prospect-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            <span id="new-record-btn-label">New Company</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="crm-filter-row" id="filter-row">
+        <div class="crm-search-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input type="text" placeholder="Search name, company, email…" id="search-input" />
+        </div>
+        <button class="filter-chip" id="filter-tier-btn" type="button" data-field="tier">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 2 2 7l10 5 10-5-10-5z"></path>
+            <path d="m2 17 10 5 10-5"></path>
+            <path d="m2 12 10 5 10-5"></path>
+          </svg>
+          <span>Tier</span>
+        </button>
+        <button class="filter-chip" id="filter-status-btn" type="button" data-field="status">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+          </svg>
+          <span>Status</span>
+        </button>
+        <button class="filter-chip" id="filter-companyof-btn" type="button" data-field="companyOf"
+          style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="7" width="18" height="14" rx="2"></rect>
+            <path d="M8 7V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3"></path>
+          </svg>
+          <span>Company</span>
+        </button>
+        <button class="filter-chip" id="filter-dealstage-btn" type="button" data-field="dealStage"
+          style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+          </svg>
+          <span>Stage</span>
+        </button>
+        <div class="col-toggle-group" id="col-toggle-group">
+          <span class="col-toggle-divider"></span>
+          <span class="col-toggle-label">Show:</span>
+          <button type="button" class="col-toggle-btn" id="coltoggle-tier" data-toggle-col="tier"
+            title="Show/hide the Tier column">
+            <span class="col-toggle-icon"></span><span>Tier</span>
+          </button>
+          <button type="button" class="col-toggle-btn" id="coltoggle-status" data-toggle-col="status"
+            title="Show/hide the Status column">
+            <span class="col-toggle-icon"></span><span>Status</span>
+          </button>
+          <button type="button" class="col-toggle-btn" id="coltoggle-lastInteraction" data-toggle-col="lastInteraction"
+            title="Show/hide the Last Interaction column">
+            <span class="col-toggle-icon"></span><span>Interaction</span>
+          </button>
+          <button type="button" class="col-toggle-btn active-only" id="coltoggle-currentStep" data-toggle-col="currentStep"
+            title="Show/hide the Current Step column" style="display:none;">
+            <span class="col-toggle-icon"></span><span>Step</span>
+          </button>
+          <button type="button" class="col-toggle-btn active-only" id="coltoggle-nextDue" data-toggle-col="nextDue"
+            title="Show/hide the Next Due column" style="display:none;">
+            <span class="col-toggle-icon"></span><span>Next Due</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="active-filters-row" id="active-filters-row"></div>
+
+      <div class="kanban-mode-toggle subtab-scroll" id="status-subtabs" style="display:none; margin:16px 32px 0;"></div>
+
+      <div class="bulk-action-bar" id="bulk-action-bar" style="display:none;"></div>
+
+      <div class="crm-table-wrap" id="table-view-wrap">
+        <table class="crm-table">
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none;">No prospects match these filters.</div>
+
+      <div class="board-wrap" id="board-wrap" style="display:none;">
+        <div class="board-columns" id="board-columns"></div>
+      </div>
+
+      <div class="inbox-wrap" id="inbox-wrap" style="display:none;"></div>
+      <div class="reports-wrap" id="reports-wrap" style="display:none;"></div>
+      <div class="reports-wrap" id="analytics-wrap" style="display:none;"></div>
+    </main>
+  </div>
+
+  <!-- ================= Node detail modal (ported) ================= -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow" id="modal-eyebrow">Tier 1 · Email</span>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title" id="modal-title">Super Loom</h2>
+      <div class="modal-meta" id="modal-meta"></div>
+      <p class="modal-notes" id="modal-notes"></p>
+    </div>
+  </div>
+
+  <!-- ================= Sequence full-screen modal ================= -->
+  <div class="modal-overlay" id="sequence-overlay">
+    <div class="modal-card sequence-modal-card">
+      <div class="sequence-modal-header">
+        <div class="sequence-modal-heading">
+          <button class="sequence-back-btn" id="sequence-modal-close" type="button" title="Back (Esc)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H5"></path>
+              <path d="M11 18l-6-6 6-6"></path>
+            </svg>
+            <span>Back</span>
+          </button>
+          <h2 id="sequence-modal-title">Prospect Name</h2>
+          <span class="eyebrow-badge"><span class="eyebrow-dot"></span><span id="sequence-modal-eyebrow">Tier 1 · Whale
+              / High-Touch</span></span>
+        </div>
+      </div>
+      <div class="sequence-modal-body">
+        <!-- Details keep the original single centred column (summary strip with Next Up first); the
+             sequence below uses the compact row layout (css/07-layout.css). -->
+        <div class="company-layout">
+        <div class="prospect-summary-wrap">
+          <div class="prospect-summary" id="prospect-summary"></div>
+          <div class="contacts-card" id="prospect-contacts"></div>
+          <div class="creative-outreach" id="creative-outreach"></div>
+          <div class="prospect-notes">
+            <span class="summary-label">Notes</span>
+            <textarea id="prospect-notes-input" class="prospect-notes-textarea"
+              placeholder="Add notes about this prospect…" rows="3"></textarea>
+          </div>
+          <div class="quick-access-grid" id="quick-access-grid"></div>
+        </div>
+        <div class="status-bar-wrap" id="meeting-card-wrap" style="display:none;">
+          <div class="meeting-card" id="meeting-card"></div>
+        </div>
+        <div class="status-bar-wrap">
+          <div class="followup-log-card" id="followup-log-card"></div>
+        </div>
+        <div class="status-bar-wrap" id="tiered-status-bar-wrap">
+          <div class="status-bar" id="status-bar"></div>
+        </div>
+        <div id="diagram-root"></div>
+        <div class="status-bar-wrap" id="closing-room-wrap" style="display:none;">
+          <div class="status-bar" id="closing-status-bar"></div>
+          <div class="closing-table" id="closing-table"></div>
+          <button type="button" class="btn btn-primary closing-reset-btn" id="closing-reset-btn">Followed-Up
+            Today</button>
+        </div>
+        <!-- Kept at the very bottom on purpose: deleting needs a deliberate scroll, not a stray click by the header. -->
+        <div class="status-bar-wrap">
+          <div class="danger-zone">
+            <div class="danger-zone-text">
+              <span class="danger-zone-title">Delete this company</span>
+              <span class="danger-zone-desc">Permanently removes the company, its contacts and its deals. This can't be undone.</span>
+            </div>
+            <button type="button" class="danger-zone-btn" id="sequence-delete-company-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 6h18"></path>
+                <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+                <path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"></path>
+              </svg>
+              Delete Company
+            </button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Creative Outreach: movie editor / Physical Good, opened inside the company =================
+       The Operating System's own page in a frame, in its embedded mode (?embed=movie|pg&prospect=ID), so the
+       editors are the same ones Active Creative Movies shows. Its "Back to company" closes this page. -->
+  <div class="co-page" id="co-embed-page" aria-hidden="true">
+    <div class="co-embed-loading" id="co-embed-loading">
+      <span class="co-spinner" aria-hidden="true"></span>
+      <span id="co-embed-loading-text">Opening…</span>
+    </div>
+    <iframe id="co-embed-frame" title="Creative Outreach"></iframe>
+  </div>
+
+  <!-- ================= Creative Outreach: Strategy Doc, written here inside the company ================= -->
+  <div class="co-page co-doc-page" id="co-doc-page" aria-hidden="true">
+    <div class="co-doc-header">
+      <button class="sequence-back-btn" id="co-doc-back" type="button" title="Back to company (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5"></path>
+          <path d="M11 18l-6-6 6-6"></path>
+        </svg>
+        <span>Back to company</span>
+      </button>
+      <div class="co-doc-heading">
+        <h2>Strategy Doc</h2>
+        <span class="co-doc-company" id="co-doc-company"></span>
+      </div>
+      <span class="co-doc-save" id="co-doc-save" aria-live="polite"></span>
+    </div>
+    <div class="co-doc-body" id="co-doc-body"></div>
+  </div>
+
+  <!-- ================= Full Notes modal (opened from the sequence modal's notes box) ================= -->
+  <div class="modal-overlay" id="notes-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Notes · <span id="notes-modal-name"></span></span>
+        <button class="modal-close" id="notes-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title">All Notes</h2>
+      <textarea id="notes-modal-textarea" class="notes-modal-textarea"
+        placeholder="Add notes about this prospect…"></textarea>
+    </div>
+  </div>
+
+  <!-- ================= Activity & Follow-Up Log entry notes modal (bullet-point only) ================= -->
+  <div class="modal-overlay" id="activity-notes-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Notes · <span id="activity-notes-context"></span></span>
+        <button class="modal-close" id="activity-notes-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title">Entry Notes</h2>
+      <textarea id="activity-notes-textarea" class="notes-modal-textarea" placeholder="• Add a note…"></textarea>
+    </div>
+  </div>
+
+  <!-- ================= Call Prep modal (Calendly embed + pre-call checklist) ================= -->
+  <div class="modal-overlay" id="callprep-overlay">
+    <div class="modal-card callprep-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Call Prep · <span id="callprep-context"></span></span>
+        <button class="modal-close" id="callprep-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title" id="callprep-title">Call #2</h2>
+
+      <div class="callprep-section">
+        <span class="summary-label callprep-headline">What key documentation needs to be sent after the call?</span>
+        <textarea id="callprep-docs-textarea" class="notes-modal-textarea callprep-docs-textarea"
+          placeholder="• Add a document…"></textarea>
+      </div>
+
+      <div class="callprep-embed" id="callprep-embed">
+        <div class="callprep-embed-loading">Loading Calendly…</div>
+      </div>
+
+      <div class="callprep-section">
+        <span class="summary-label callprep-headline">Checklist</span>
+        <div class="callprep-checklist">
+          <label class="callprep-check-row" data-key="stakeholders">
+            <input type="checkbox" class="callprep-checkbox" />
+            <span>Have all relevant stakeholders been added?</span>
+          </label>
+          <label class="callprep-check-row" data-key="docsListed">
+            <input type="checkbox" class="callprep-checkbox" />
+            <span>Have all the key documents that need to be sent after the call been listed?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= New / Edit Prospect modal ================= -->
+  <div class="modal-overlay" id="prospect-form-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow" id="form-modal-eyebrow">New Prospect</span>
+        <button class="modal-close" id="form-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title" id="form-modal-title">Add Prospect</h2>
+      <form id="prospect-form">
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Company Name</span>
+            <input class="form-input" type="text" id="f-company" required />
+          </div>
+          <div class="form-row">
+            <span class="form-label">Tier</span>
+            <select class="form-select" id="f-tier"></select>
+          </div>
+        </div>
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Status</span>
+            <select class="form-select" id="f-status"></select>
+          </div>
+          <div class="form-row">
+            <span class="form-label">Start Day</span>
+            <input class="form-input" type="date" id="f-startday" />
+          </div>
+        </div>
+        <div class="form-duplicate-warning" id="f-duplicate-warning" style="display:none;"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="form-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="form-submit-btn">Save Company</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= New / Edit Person modal ================= -->
+  <div class="modal-overlay" id="person-form-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow" id="person-form-modal-eyebrow">New Person</span>
+        <button class="modal-close" id="person-form-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title" id="person-form-modal-title">Add Person</h2>
+      <form id="person-form">
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Name</span>
+            <input class="form-input" type="text" id="p-name" required />
+          </div>
+          <div class="form-row">
+            <span class="form-label">Company</span>
+            <select class="form-select" id="p-company" required></select>
+          </div>
+        </div>
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Job Title</span>
+            <input class="form-input" type="text" id="p-jobtitle" placeholder="VP of Sales" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">LinkedIn</span>
+            <input class="form-input" type="text" id="p-linkedin" placeholder="linkedin.com/in/username" />
+          </div>
+        </div>
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Email</span>
+            <input class="form-input" type="email" id="p-email" placeholder="name@company.com" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">Phone</span>
+            <input class="form-input" type="text" id="p-phone" placeholder="+1 555 000 0000" />
+          </div>
+        </div>
+        <label class="form-row" style="flex-direction:row; align-items:center; gap:8px;">
+          <input type="checkbox" id="p-primary" style="margin:0;" />
+          <span class="form-label" style="text-transform:none; font-size:13px;">Primary contact for this company</span>
+        </label>
+        <div class="form-duplicate-warning" id="p-duplicate-warning" style="display:none;"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="person-form-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="person-form-submit-btn">Save Person</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= New / Edit Deal modal ================= -->
+  <div class="modal-overlay" id="deal-form-overlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow" id="deal-form-modal-eyebrow">New Deal</span>
+        <button class="modal-close" id="deal-form-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title" id="deal-form-modal-title">Add Deal</h2>
+      <form id="deal-form">
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Deal Name</span>
+            <input class="form-input" type="text" id="d-name" required placeholder="e.g. Annual contract" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">Company</span>
+            <select class="form-select" id="d-company" required></select>
+          </div>
+        </div>
+        <div class="form-row-pair">
+          <div class="form-row">
+            <span class="form-label">Value ($)</span>
+            <input class="form-input" type="number" id="d-value" min="0" step="1" placeholder="10000" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">Close Date</span>
+            <input class="form-input" type="date" id="d-closedate" />
+          </div>
+        </div>
+        <div class="form-row">
+          <span class="form-label">Stage</span>
+          <select class="form-select" id="d-stage"></select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="deal-form-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="deal-form-submit-btn">Save Deal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= Import CSV modal ================= -->
+  <div class="modal-overlay" id="import-overlay">
+    <div class="modal-card" style="max-width:600px;">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Import Data</span>
+        <button class="modal-close" id="import-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title">Import CSV</h2>
+
+      <div id="import-step-select">
+        <div class="form-row">
+          <span class="form-label">Import as</span>
+          <select class="form-select" id="import-type-select">
+            <option value="companies">Companies</option>
+            <option value="people">People</option>
+          </select>
+        </div>
+        <p class="import-hint" id="import-hint"></p>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="import-cancel-btn">Cancel</button>
+          <button type="button" class="btn btn-primary" id="import-choose-file-btn">Choose CSV File…</button>
+        </div>
+      </div>
+
+      <div id="import-step-summary" style="display:none;">
+        <div class="import-summary-stats" id="import-summary-stats"></div>
+        <div id="import-summary-dupes"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="import-back-btn">Back</button>
+          <button type="button" class="btn btn-primary" id="import-confirm-btn">Import Records</button>
+        </div>
+      </div>
+
+      <div class="import-example-row">
+        <button type="button" class="import-example-btn" id="import-example-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 3v12"></path>
+            <path d="m7 10 5 5 5-5"></path>
+            <path d="M5 21h14"></path>
+          </svg>
+          Example CSV
+        </button>
+        <span class="import-example-sub">(See how to structure your data)</span>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="import-file-input" accept=".csv" style="display:none;" />
+
+  <!-- ================= Merge Duplicates modal ================= -->
+  <div class="modal-overlay" id="merge-overlay">
+    <div class="modal-card" style="max-width:680px;">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Data Cleanup</span>
+        <button class="modal-close" id="merge-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <h2 class="modal-title">Merge Duplicates</h2>
+      <div class="form-row">
+        <span class="form-label">Scan</span>
+        <select class="form-select" id="merge-type-select">
+          <option value="companies">Companies</option>
+          <option value="people">People</option>
+        </select>
+      </div>
+      <p class="import-hint" id="merge-hint"></p>
+      <div id="merge-results"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="merge-close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Confirm / Delete modal (shared) ================= -->
+  <div class="modal-overlay confirm-overlay" id="confirm-overlay">
+    <div class="modal-card confirm-card">
+      <div class="confirm-icon" id="confirm-icon">
+        <svg id="confirm-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"></path>
+          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <path d="M19 6l-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"></path>
+          <path d="M10 11v6"></path>
+          <path d="M14 11v6"></path>
+        </svg>
+      </div>
+      <h2 class="modal-title confirm-title" id="confirm-title">Delete this record?</h2>
+      <p class="confirm-message" id="confirm-message"></p>
+      <ul class="confirm-detail-list" id="confirm-detail-list" style="display:none;"></ul>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Quick-Access link modal ================= -->
+  <div class="modal-overlay" id="quicklink-overlay">
+    <div class="modal-card quicklink-card">
+      <div class="modal-top">
+        <span class="modal-eyebrow">Quick-Access Link</span>
+        <button class="modal-close" id="quicklink-modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="quicklink-heading">
+        <span class="quicklink-icon" id="quicklink-icon"></span>
+        <h2 class="modal-title" id="quicklink-title">Super Loom</h2>
+      </div>
+      <form id="quicklink-form">
+        <div class="form-row">
+          <span class="form-label">Link URL</span>
+          <input class="form-input" type="url" id="quicklink-input" placeholder="https://…" autocomplete="off" />
+        </div>
+        <div class="form-actions quicklink-actions">
+          <button type="button" class="btn btn-secondary quicklink-remove-btn" id="quicklink-remove-btn"
+            style="display:none;">Remove Link</button>
+          <div style="flex:1;"></div>
+          <button type="button" class="btn btn-secondary" id="quicklink-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="quicklink-save-btn">Save Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase: the tracker keeps its records in the Operating System's Firestore project, as docs in the
+       shared 'cineVlogs' collection with kind 'crmCompany' / 'crmPerson' / 'crmDeal'. Each record is stored
+       whole as JSON in `json` (no top-level `name`, so the Cine Vlogs list, which orders by name, never sees them).
+       Module scripts run before DOMContentLoaded, which is what 00-session-gate.js waits for. -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const db = getFirestore(initializeApp({
+      apiKey: "AIzaSyAhtqAa9uC7hTiAv4-G56VxvUfKTX9OiAo",
+      authDomain: "script-database-655e8.firebaseapp.com",
+      projectId: "script-database-655e8",
+      storageBucket: "script-database-655e8.firebasestorage.app",
+      messagingSenderId: "628911233172",
+      appId: "1:628911233172:web:a83a1b726cb296a4efbc81"
+    }));
+    const COLLECTION = "cineVlogs";
+    const KINDS = { companies: "crmCompany", people: "crmPerson", deals: "crmDeal" };
+    const docId = (name, id) => "crm-" + name + "-" + String(id).replace(/\//g, "_");
+    const BATCH_SIZE = 400;   // Firestore allows 500 writes per batch
+
+    window.crmStore = {
+      async list(name) {
+        const snap = await getDocs(query(collection(db, COLLECTION), where("kind", "==", KINDS[name])));
+        return snap.docs.map(d => { try { return JSON.parse(d.data().json); } catch (e) { return null; } }).filter(Boolean);
+      },
+      async sync(name, records, deleteIds) {
+        const ops = [
+          ...deleteIds.map(id => b => b.delete(doc(db, COLLECTION, docId(name, id)))),
+          ...records.map(r => b => b.set(doc(db, COLLECTION, docId(name, r.id)), { kind: KINDS[name], json: JSON.stringify(r), updatedAt: Date.now() }))
+        ];
+        for (let i = 0; i < ops.length; i += BATCH_SIZE) {
+          const batch = writeBatch(db);
+          ops.slice(i, i + BATCH_SIZE).forEach(op => op(batch));
+          await batch.commit();
+        }
+      }
+    };
+
+    /* Creative Outreach: the Operating System's "Active Creative Movies" records live in the same collection —
+       a prospect (kind 'prospect', linked back here by companyId), its movie (kind 'outreach') and its
+       Physical Good (kind 'physicalGood'), both linked to the prospect by prospectId. */
+    window.creativeStore = {
+      async create(company) {
+        const now = Date.now();
+        const ref = await addDoc(collection(db, COLLECTION), {
+          kind: "prospect", name: company.name || "Untitled Prospect", companyId: company.id,
+          createdAt: now, updatedAt: now, completed: false
+        });
+        return ref.id;
+      },
+      // null when the prospect no longer exists (deleted from Active Creative Movies).
+      async state(prospectId) {
+        const [pSnap, itemsSnap] = await Promise.all([
+          getDoc(doc(db, COLLECTION, prospectId)),
+          getDocs(query(collection(db, COLLECTION), where("prospectId", "==", prospectId)))
+        ]);
+        if (!pSnap.exists()) return null;
+        const items = itemsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        return {
+          prospect: { id: pSnap.id, ...pSnap.data() },
+          movie: items.find(r => r.kind === "outreach") || null,
+          physicalGood: items.find(r => r.kind === "physicalGood") || null,
+          strategyDoc: items.find(r => r.kind === "strategyDoc") || null
+        };
+      },
+      // The Strategy Doc is written in the tracker (see openStrategyDoc); the OS only displays it.
+      async createStrategyDoc(prospectId) {
+        const now = Date.now();
+        const rec = {
+          kind: "strategyDoc", prospectId, status: "Drafting", gammaUrl: "", loomUrl: "", angle: "", outline: "",
+          emailSubject: "", emailBody: "", notes: "", sentAt: null, createdAt: now, updatedAt: now
+        };
+        const ref = await addDoc(collection(db, COLLECTION), rec);
+        return { id: ref.id, ...rec };
+      },
+      async saveStrategyDoc(id, fields) {
+        await updateDoc(doc(db, COLLECTION, id), fields);
+      },
+      async touchProspect(prospectId) {
+        await updateDoc(doc(db, COLLECTION, prospectId), { updatedAt: Date.now() });
+      },
+      // Deletes the prospect and everything linked to it (movie, Physical Good, Strategy Doc).
+      async remove(prospectId) {
+        const itemsSnap = await getDocs(query(collection(db, COLLECTION), where("prospectId", "==", prospectId)));
+        const batch = writeBatch(db);
+        itemsSnap.docs.forEach(d => batch.delete(d.ref));
+        batch.delete(doc(db, COLLECTION, prospectId));
+        await batch.commit();
+      }
+    };
+  </script>
+  <script src="js/00-session-gate.js"></script>
+  <script src="js/01-sequence-engine.js"></script>
+  <script src="js/02-data.js"></script>
+  <script src="js/03-views.js"></script>
+  <script src="js/04-popovers.js"></script>
+  <script src="js/05-sequence-modal.js"></script>
+  <script src="js/06-forms.js"></script>
+  <script src="js/07-import-export.js"></script>
+  <script src="js/08-active.js"></script>
+  <script src="js/11-search-boot.js"></script>
+</body>
+
+</html>

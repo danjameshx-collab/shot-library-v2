@@ -1,0 +1,295 @@
+    /* ============================================================
+       Active work surface — Active tab columns (Inbox + Board follow)
+       ============================================================ */
+    .step-cell {
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .step-cell .step-mech {
+      font-weight: 700;
+    }
+    .due-cell {
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .due-cell.today {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .due-cell.overdue {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* ---------------- Inbox ---------------- */
+    .crm-nav-badge {
+      margin-left: auto;
+      min-width: 22px;
+      padding: 0 7px;
+      border-radius: var(--radius-pill);
+      background: var(--red);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 800;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .inbox-wrap {
+      padding: 16px 32px 40px;
+      font-size: 18px;
+    }
+
+    .inbox-empty {
+      padding: 48px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .inbox-section {
+      margin-bottom: 28px;
+    }
+
+    .inbox-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .inbox-overdue .inbox-section-title { color: var(--red); }
+    .inbox-today .inbox-section-title { color: var(--yellow); }
+    .inbox-upcoming .inbox-section-title { color: var(--green); }
+
+    .inbox-section-count {
+      min-width: 26px;
+      padding: 0 8px;
+      border-radius: var(--radius-pill);
+      background: var(--green-tint);
+      color: var(--green);
+      font-size: 18px;
+      line-height: 26px;
+      text-align: center;
+    }
+    .inbox-overdue .inbox-section-count { background: var(--red-tint); color: var(--red); }
+    .inbox-today .inbox-section-count { background: var(--yellow-tint); color: var(--yellow); }
+
+    .inbox-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+    }
+    .inbox-row.inbox-overdue {
+      border-color: var(--red-light);
+    }
+    .inbox-row.inbox-today {
+      border-color: var(--yellow-light);
+    }
+
+    .inbox-row-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .inbox-company {
+      appearance: none;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .inbox-company:hover {
+      color: var(--green);
+      text-decoration: underline;
+    }
+
+    .inbox-row .crm-pill {
+      font-size: 18px;
+      line-height: 1.4;
+      cursor: default;
+    }
+
+    .inbox-touch {
+      font-size: 18px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .inbox-mech {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .inbox-due {
+      font-size: 18px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+    .inbox-row.inbox-overdue .inbox-due { color: var(--red); }
+    .inbox-row.inbox-today .inbox-due { color: var(--yellow); }
+    .inbox-row.inbox-upcoming .inbox-due { color: var(--green); }
+
+    .inbox-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .inbox-actions .btn {
+      font-size: 18px;
+      padding: 8px 18px;
+    }
+
+    /* ---------------- Board ---------------- */
+    .board-wrap {
+      padding: 16px 32px 40px;
+      overflow-x: auto;
+      font-size: 18px;
+    }
+
+    .board-columns {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      min-width: fit-content;
+    }
+
+    .board-column {
+      background: #f2f4f2;
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      width: 340px;
+      flex: 0 0 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 160px;
+    }
+    .board-column.drag-over {
+      background: var(--green-tint);
+      outline: 2px dashed var(--green-light);
+    }
+
+    .board-column-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 0;
+    }
+    .board-column-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      color: var(--muted);
+    }
+    .board-count {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 2px 11px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--muted-soft);
+    }
+
+    .board-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 60px;
+    }
+
+    .board-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      cursor: grab;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .board-card:hover {
+      box-shadow: 0 0 0 3px var(--green-tint), var(--shadow);
+    }
+    .board-card:active {
+      cursor: grabbing;
+    }
+    .board-card.dragging {
+      opacity: .35;
+    }
+    .board-card.row-alert {
+      border-color: var(--red-light);
+    }
+
+    .board-card-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .board-card-contact {
+      font-size: 18px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .board-card-step {
+      font-size: 18px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .board-card-step .step-mech {
+      color: var(--ink);
+    }
+
+    .board-card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .board-card .crm-pill {
+      font-size: 18px;
+      line-height: 1.4;
+    }
+    .board-card-due {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .board-card-due.overdue { color: var(--red); }
+    .board-card-due.today { color: var(--accent); }
+
+    .board-empty-col {
+      text-align: center;
+      padding: 18px 6px;
+      color: var(--muted-soft);
+      font-size: 18px;
+      font-weight: 600;
+    }

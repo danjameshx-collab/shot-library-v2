@@ -1,0 +1,511 @@
+    /* ---------- Prospect form modal ---------- */
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-row-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted-soft);
+    }
+
+    .form-input,
+    .form-select {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 13.5px;
+      color: var(--ink);
+      background: var(--surface);
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .form-duplicate-warning {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #8a5a12;
+      background: var(--accent-tint);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ---------- Import CSV modal ---------- */
+    .import-hint {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 2px 0 4px;
+    }
+
+    .import-summary-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .import-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      padding: 11px 14px;
+      background: #f4f6f4;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .import-summary-row .import-count {
+      font-weight: 800;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .import-summary-row.import-count-dupe .import-count {
+      color: var(--accent, #b98423);
+    }
+
+    .import-summary-row.import-count-error .import-count {
+      color: var(--red);
+    }
+
+    .import-dupe-list {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 10px;
+      line-height: 1.7;
+    }
+
+    .import-example-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .import-example-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--green-dark);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .import-example-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .import-example-btn:hover {
+      text-decoration: underline;
+    }
+
+    .import-example-btn:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .import-example-sub {
+      font-size: 12px;
+      color: var(--muted-soft);
+    }
+
+    /* ---------- Merge Duplicates modal ---------- */
+    .merge-empty {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 24px 4px;
+      text-align: center;
+    }
+
+    .merge-results-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 420px;
+      overflow-y: auto;
+      margin-top: 4px;
+    }
+
+    .merge-group {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: #fbfcfb;
+    }
+
+    .merge-group-head {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted-soft);
+      margin-bottom: 10px;
+    }
+
+    .merge-group-records {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .merge-record {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      background: var(--surface);
+    }
+
+    .merge-record:has(input:checked),
+    .merge-record.selected {
+      border-color: var(--green);
+      background: var(--green-tint);
+    }
+
+    .merge-record input[type="radio"] {
+      margin-top: 3px;
+      accent-color: var(--green);
+    }
+
+    .merge-record-name {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--ink);
+      display: block;
+    }
+
+    .merge-record-meta {
+      font-size: 11.5px;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    .merge-group-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .merge-btn {
+      font-size: 12.5px;
+      padding: 7px 14px;
+    }
+
+    /* ---------- Confirm / Delete modal ---------- */
+    .confirm-card {
+      max-width: 420px;
+      text-align: center;
+      padding-top: 36px;
+    }
+
+    .confirm-icon {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: var(--red-tint);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-icon.neutral {
+      background: var(--green-tint);
+      color: var(--green-dark);
+    }
+
+    .confirm-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .confirm-title {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .confirm-message {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 34ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .confirm-detail-list {
+      text-align: left;
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 12px 14px;
+      background: #f4f6f4;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .confirm-detail-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .confirm-detail-list li::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      flex: 0 0 auto;
+    }
+
+    .confirm-card .form-actions {
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    #confirm-overlay {
+      z-index: 200;
+    }
+
+    /* ---------- Quick-access link modal ---------- */
+    .quicklink-card {
+      max-width: 420px;
+    }
+
+    .quicklink-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 10px 0 20px;
+    }
+
+    .quicklink-heading .modal-title {
+      margin: 0;
+    }
+
+    .quicklink-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green-tint);
+      color: var(--green);
+    }
+
+    .quicklink-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    #quicklink-input {
+      font-size: 14.5px;
+      padding: 12px 14px;
+    }
+
+    .quicklink-actions {
+      align-items: center;
+    }
+
+    .quicklink-remove-btn {
+      color: var(--red);
+    }
+
+    .quicklink-remove-btn:hover {
+      border-color: var(--red);
+      background: var(--red-tint);
+    }
+
+    /* ---------- "Book Calendly" trigger (sits between the next-meeting date
+       and the manual booking actions in the meeting card) ---------- */
+    .btn-calendly {
+      background: var(--surface);
+      color: var(--blue);
+      border: 1.5px solid var(--blue-tint);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-calendly:hover {
+      border-color: var(--blue);
+      background: var(--blue-tint);
+    }
+
+    .btn-calendly svg {
+      opacity: .9;
+    }
+
+    /* ---------- Call Prep modal (Calendly embed + pre-call checklist) ----------
+       Opens full-screen by default (unlike the other, smaller modals) —
+       the Calendly embed reads best with room to breathe. Content still
+       caps at a comfortable reading width and centers itself. */
+    #callprep-overlay {
+      padding: 0;
+    }
+
+    .callprep-card {
+      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      overflow-y: auto;
+      padding: 32px 32px 48px;
+    }
+
+    .callprep-card .modal-top,
+    .callprep-card .modal-title,
+    .callprep-section {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .callprep-embed {
+      width: 100%;
+      max-width: 1320px;
+      min-height: 760px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #f8faf8;
+      border: 1px solid var(--border);
+    }
+
+    .callprep-embed-loading {
+      height: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-soft);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .summary-label.callprep-headline {
+      font-size: 17px;
+      font-weight: 800;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--ink);
+    }
+
+    .callprep-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .callprep-docs-textarea {
+      min-height: 120px;
+    }
+
+    .callprep-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .callprep-check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      background: #f8faf8;
+      border: 1.5px dashed var(--border);
+      cursor: pointer;
+    }
+
+    .callprep-check-row:hover {
+      border-color: var(--green);
+      background: var(--green-tint);
+    }
+
+    .callprep-check-row:has(.callprep-checkbox:checked) {
+      background: var(--green-tint);
+      border-style: solid;
+      border-color: var(--green-tint-strong);
+    }
+
+    .callprep-check-row:has(.callprep-checkbox:checked) span {
+      color: var(--green-dark);
+      text-decoration: line-through;
+    }
+
+    .callprep-checkbox {
+      width: 19px;
+      height: 19px;
+      margin: 2px 0 0;
+      flex: 0 0 auto;
+      cursor: pointer;
+      accent-color: var(--green);
+    }
+
+    .callprep-check-row span {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.45;
+    }

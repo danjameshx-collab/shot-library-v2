@@ -4,7 +4,8 @@
 //      shows up on its due day, and ticking it Done or deleting it in the app keeps it gone.
 //   2. marks Close tasks complete once you tick them Done (or delete them from the Backlog) in the app: the app lists
 //      them in closeDone, and closeCompleted records the ones already completed here.
-//   3. adds the RECURRING tasks below on their days of the month (recurringAdded records each one added).
+//   3. adds the RECURRING tasks below on their days (recurringAdded records each one added). This part runs even
+//      without a Close key.
 // Run by hand with `node sync.mjs` (add --dry-run to only print what it would do), or every 5 minutes by Windows Task
 // Scheduler (see install-schedule.ps1).
 import { readFileSync, appendFileSync } from 'node:fs';
@@ -35,10 +36,11 @@ const FB_PROJECT = env.FIREBASE_PROJECT_ID || 'script-database-655e8';
 const COLLECTION = 'cineVlogs', KIND = 'dailyTasks';
 const FS = 'https://firestore.googleapis.com/v1/projects/' + FB_PROJECT + '/databases/(default)/documents';
 
-// Added to the Power List on these days of the month, due `window` days later. If the PC was off on the day, it is
-// still added on the next run as long as the due date has not passed.
+// Added to the Power List on these days of the month (days) or of the week (weekdays, 0 = Sunday), due `dueIn` days
+// later. If the PC was off on the day, it is added on the next run (marked late once the due date has passed).
 const RECURRING = [
-  { name: 'Review Sales Calls', days: [5, 15], window: 5 },
+  { name: 'Review Sales Calls', days: [5, 15], dueIn: 3 },
+  { name: 'Fill in the weekly call log tracker', weekdays: [0], dueIn: 0 },
 ];
 
 function log(msg){
@@ -120,21 +122,21 @@ async function loadTasksDoc(){
 
 /* ---------- recurring ---------- */
 // The most recent scheduled day on or before today.
-function latestOccurrence(days, today){
+function latestOccurrence(t, today){
   for(let back = 0; back < 62; back++){
     const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - back);
-    if(days.includes(d.getDate())) return d;
+    if((t.days || []).includes(d.getDate()) || (t.weekdays || []).includes(d.getDay())) return d;
   }
   return null;
 }
-// Each task's current occurrence that is still open: { key:'Review Sales Calls|2026-10-05', name, due }.
+// Each task's latest occurrence: { key:'Review Sales Calls|2026-10-05', name, due }.
 function recurringDue(){
   const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   return RECURRING.map(t=>{
-    const start = latestOccurrence(t.days, today);
+    const start = latestOccurrence(t, today);
     if(!start) return null;
-    const due = new Date(start.getFullYear(), start.getMonth(), start.getDate() + t.window);
-    return today > due ? null : { key: t.name + '|' + ymd(start), name: t.name, due: ymd(due) };
+    const due = new Date(start.getFullYear(), start.getMonth(), start.getDate() + t.dueIn);
+    return { key: t.name + '|' + ymd(start), name: t.name, due: ymd(due) };
   }).filter(Boolean);
 }
 
@@ -142,8 +144,9 @@ function recurringDue(){
 const newId = ()=> Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
 async function main(){
-  if(!CLOSE_KEY || CLOSE_KEY.startsWith('paste')){ log('No CLOSE_KEY in the .env yet, nothing to do.'); return; }
-  const due = await closeDueTasks();
+  const hasClose = CLOSE_KEY && !CLOSE_KEY.startsWith('paste');
+  if(!hasClose) log('No CLOSE_KEY in the .env yet: skipping Close, adding recurring tasks only.');
+  const due = hasClose ? await closeDueTasks() : [];
   // The app can save the doc at any moment, so write only if it has not changed since we read it; retry if it has.
   for(let attempt = 1; ; attempt++){
     const docu = await loadTasksDoc();
@@ -164,7 +167,7 @@ async function main(){
     // 2. ticked Done in the app: complete in Close
     const completed = new Set(docu.closeCompleted);
     const finished = [];
-    for(const id of docu.closeDone.filter(id=> !completed.has(id))){
+    for(const id of hasClose ? docu.closeDone.filter(id=> !completed.has(id)) : []){
       if(DRY){ msgs.push('Would complete ' + id + ' in Close (done in the app)'); continue; }
       try{ msgs.push((await completeInClose(id)) === 'completed' ? 'Completed ' + id + ' in Close (done in the app)' : 'Skipped ' + id + ': already gone in Close'); finished.push(id); }
       catch(e){ log('Could not complete ' + id + ' in Close, will retry next run: ' + e.message); }
@@ -172,11 +175,11 @@ async function main(){
 
     // 3. recurring tasks. The first run (no recurringAdded yet) counts an occurrence already on the list by name as
     // added, so the one the Notion script made does not appear twice.
-    const listed = new Set([...docu.power, ...docu.backlog].map(x=> x.name));
+    const listed = new Set([...docu.power, ...docu.backlog].map(x=> x.name.toLowerCase()));
     let recAdded = docu.recurringAdded;
     const recNew = [];
     for(const r of recurringDue()){
-      if(recAdded ? recAdded.includes(r.key) : listed.has(r.name)){ if(!recAdded) recNew.push(r.key); continue; }
+      if(recAdded ? recAdded.includes(r.key) : listed.has(r.name.toLowerCase())){ if(!recAdded) recNew.push(r.key); continue; }
       recNew.push(r.key);
       add.push({ id: newId(), name: r.name, due: r.due });
       msgs.push('Added recurring: ' + r.name + ' (due ' + r.due + ')');

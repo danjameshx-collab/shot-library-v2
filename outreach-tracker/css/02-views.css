@@ -1,0 +1,589 @@
+    /* ---------- Table ---------- */
+    .crm-table-wrap {
+      padding: 16px 32px 0;
+      overflow-x: auto;
+    }
+
+    .crm-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-width: 1180px;
+    }
+
+    .crm-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      /* A material the rows scroll under, not an opaque strip. */
+      background: rgba(249, 250, 249, .86);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      backdrop-filter: blur(12px) saturate(160%);
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted-soft);
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: default;
+    }
+
+    .crm-table thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .crm-table thead th.sortable:hover {
+      color: var(--green-dark);
+    }
+
+    .sort-arrow {
+      display: inline-block;
+      margin-left: 4px;
+      font-size: 9px;
+      opacity: .7;
+    }
+
+    /* Drag-to-reorder columns — the identity column (Company/Person/Deal) and
+     the trailing actions column are never draggable, only .col-draggable
+     (COLUMN_DEFS) headers are. */
+    .crm-table thead th.col-draggable {
+      cursor: grab;
+    }
+
+    .crm-table thead th.col-draggable:active {
+      cursor: grabbing;
+    }
+
+    .crm-table thead th.col-dragging {
+      opacity: .4;
+    }
+
+    .crm-table thead th.col-drag-over {
+      box-shadow: inset 3px 0 0 var(--green);
+      color: var(--green-dark);
+    }
+
+    .crm-table tbody td {
+      padding: 13px 16px;
+      font-size: 13px;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border-soft);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .crm-table tbody tr {
+      cursor: pointer;
+    }
+
+    .crm-table tbody tr:hover {
+      background: #f8faf8;
+    }
+
+    .crm-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Action-needed row flag: Closing Room follow-up overdue, or the current
+     mechanism opened/watched with its manual step not yet checked off — a
+     red edge on the row plus a faint wash, so it reads at a glance without
+     drowning the row's text and pills in colour. */
+    .crm-table tbody tr.row-alert td {
+      background: var(--red-light-tint);
+    }
+
+    .crm-table tbody tr.row-alert td:first-child {
+      box-shadow: inset 4px 0 0 var(--red);
+    }
+
+    .crm-table tbody tr.row-alert:hover td {
+      background: var(--red-tint);
+    }
+
+    .prospect-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prospect-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 11.5px;
+      box-shadow: 0 2px 6px rgba(13, 19, 15, .15);
+    }
+
+    .prospect-name-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      line-height: 1.25;
+      width: 220px;
+      min-width: 0;
+    }
+
+    .prospect-name {
+      font-weight: 700;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prospect-company {
+      font-size: 11.5px;
+      color: var(--muted-soft);
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .muted-cell {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .crm-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .crm-pill:hover {
+      box-shadow: 0 0 0 3px rgba(20, 92, 52, .10);
+    }
+
+    .crm-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .edit-icon-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-soft);
+    }
+
+    .edit-icon-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .edit-icon-btn:hover {
+      background: var(--green-tint);
+      color: var(--green-dark);
+      border-color: var(--green-tint-strong);
+    }
+
+    .delete-icon-btn:hover {
+      background: var(--red-tint);
+      color: var(--red);
+      border-color: var(--red-tint);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted-soft);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    /* ---------- Pipeline Board (Kanban) ---------- */
+    .kanban-mode-toggle {
+      display: inline-flex;
+      gap: 2px;
+      background: #f1f4f1;
+      border-radius: var(--radius-pill);
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+
+    .kanban-mode-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .kanban-mode-btn:hover {
+      color: var(--green-dark);
+    }
+
+    .kanban-mode-btn.active {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .subtab-scroll {
+      max-width: calc(100% - 64px);
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      scrollbar-width: thin;
+    }
+
+    .subtab-scroll .kanban-mode-btn {
+      flex: 0 0 auto;
+    }
+
+    /* Tiers / Status filtered boards: buttons stretch to fill the full row */
+    #tier-subtabs,
+    #status-subtabs {
+      width: calc(100% - 64px);
+      max-width: calc(100% - 64px);
+    }
+
+    #tier-subtabs .kanban-mode-btn,
+    #status-subtabs .kanban-mode-btn {
+      flex: 1 1 0;
+      text-align: center;
+      padding: 12px 10px;
+      font-size: 13px;
+    }
+
+    /* ---------- Reports ---------- */
+    .reports-wrap {
+      padding: 16px 32px 40px;
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted-soft);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--muted-soft);
+      font-weight: 600;
+    }
+
+    .report-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+
+    .report-section h3 {
+      margin: 0 0 16px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .bar-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .bar-label {
+      width: 170px;
+      flex: 0 0 170px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bar-track {
+      flex: 1;
+      background: #f2f4f2;
+      border-radius: var(--radius-pill);
+      height: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .bar-value {
+      width: 36px;
+      flex: 0 0 36px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .bar-conv {
+      width: 80px;
+      flex: 0 0 80px;
+      text-align: right;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .funnel-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .funnel-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .funnel-bar {
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--green);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    /* ================= MODALS (shared base, ported) ================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(13, 19, 15, 0.42);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Explicit stacking order: the small node-detail modal must always appear
+     ABOVE the full-screen sequence modal (a chip clicked inside the sequence
+     modal opens the detail modal on top of it), and both above the form modal. */
+    #sequence-overlay {
+      z-index: 100;
+    }
+
+    #prospect-form-overlay {
+      z-index: 105;
+    }
+
+    #modal-overlay {
+      z-index: 110;
+    }
+
+    #notes-overlay {
+      z-index: 115;
+    }
+
+    #notes-overlay .modal-card {
+      max-width: 560px;
+      width: 100%;
+    }
+
+    #activity-notes-overlay {
+      z-index: 116;
+    }
+
+    #callprep-overlay {
+      z-index: 117;
+    }
+
+    #activity-notes-overlay .modal-card {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .notes-modal-textarea {
+      width: 100%;
+      min-height: 360px;
+      resize: vertical;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--surface);
+      box-sizing: border-box;
+    }
+
+    .notes-modal-textarea:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    #activity-notes-textarea {
+      min-height: 260px;
+    }
+
+    .modal-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 560px;
+      max-height: 82vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border-radius: 28px;
+      box-shadow: var(--shadow-lg);
+      padding: 32px 32px 28px;
+    }
+
+    .modal-card::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-card::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .modal-card::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    .modal-card::-webkit-scrollbar-thumb:hover {
+      background: var(--muted-soft);
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-eyebrow {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted-soft);
+    }
+
+    .modal-close {
+      appearance: none;
+      border: none;
+      background: #f1f4f1;
+      color: var(--muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      background: var(--green-tint);
+      color: var(--green-dark);
+    }
+
+    .modal-title {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      margin: 10px 0 16px;
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .modal-notes {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 0;
+    }

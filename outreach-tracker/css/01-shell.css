@@ -1,0 +1,940 @@
+    :root {
+      --bg: #fbfdfb;
+      --surface: #ffffff;
+      --ink: #0d130f;
+      --muted: #5c6b62;
+      --muted-soft: #8b968f;
+      --green: #145c34;
+      --green-dark: #0e3f24;
+      --green-light: #3fa66b;
+      --green-tint: #e7f3ec;
+      --green-tint-strong: #d3ead9;
+      --accent: #e8952e;
+      --accent-tint: #fdf1e0;
+      --border: rgba(13, 19, 15, 0.10);
+      --border-soft: rgba(13, 19, 15, 0.07);
+      --shadow: 0 10px 30px rgba(13, 19, 15, 0.06);
+      --shadow-lg: 0 24px 60px rgba(13, 19, 15, 0.14);
+      --radius-pill: 999px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --red: #b3452e;
+      --red-tint: #fbeae6;
+      --red-light: #d97a63;
+      --red-light-tint: #fdf1ee;
+      --yellow: #a67c00;
+      --yellow-tint: #fff6d6;
+      --yellow-light: #f2c200;
+      --purple: #6b3fa0;
+      --purple-tint: #f4eefb;
+      --blue: #2c4f9e;
+      --blue-tint: #eaf1fc;
+      --teal: #0e8a7d;
+      --teal-dark: #0a6459;
+      --teal-tint: #e2f5f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    body.modal-lock {
+      overflow: hidden;
+    }
+
+    ::selection {
+      background: var(--green-tint-strong);
+      color: var(--green-dark);
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* ---------- Global scrollbars ---------- */
+    /* Replaces the default OS/browser scrollbar (thick, square, gray) with a
+     slim rounded one in the app's own palette — applies everywhere,
+     including horizontal-scroll strips like the table wrap, kanban board,
+     and subtab row, which had no scrollbar styling of their own. */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    ::-webkit-scrollbar {
+      width: 9px;
+      height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted-soft);
+    }
+
+    ::-webkit-scrollbar-button {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    /* ================= CRM SHELL ================= */
+    .crm-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ---------- Auth gate (sign-in screen) ---------- */
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      padding: 36px 32px 32px;
+      text-align: center;
+    }
+
+    .auth-brand-mark {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 18px;
+      border-radius: 12px;
+      background: #fff;
+      object-fit: contain;
+      padding: 4px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(14, 63, 36, 0.35);
+    }
+
+    .auth-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 0 0 6px;
+    }
+
+    .auth-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 26px;
+    }
+
+    .auth-card .form-row {
+      text-align: left;
+    }
+
+    .auth-error {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--red);
+      background: var(--red-tint);
+      border: 1px solid var(--red);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      margin: 2px 0 16px;
+      text-align: left;
+    }
+
+    .auth-loading {
+      font-size: 12.5px;
+      color: var(--muted-soft);
+      margin-top: 14px;
+    }
+
+    .auth-submit-btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .auth-submit-btn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    /* ---------- Sidebar ---------- */
+    .crm-sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .crm-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 2px 4px;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      flex: 0 0 auto;
+      background: #fff;
+      object-fit: contain;
+      padding: 3px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(14, 63, 36, 0.35);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .brand-name {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted-soft);
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+
+    .crm-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      background: #f4f6f4;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 9px;
+      color: var(--muted-soft);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .crm-search:focus-within {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    .crm-search svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+    }
+
+    /* min-width:0 lets the input actually shrink inside the flex row instead
+     of holding to its browser-default intrinsic width, which was what
+     forced the sidebar into a horizontal scroll at 260px. */
+    .crm-search input {
+      border: none;
+      background: none;
+      outline: none;
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 12.5px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .crm-search input::placeholder {
+      color: var(--muted-soft);
+      font-weight: 600;
+    }
+
+    .global-search-results {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      z-index: 70;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 8px;
+      display: none;
+    }
+
+    .global-search-results.open {
+      display: block;
+    }
+
+    .gs-group-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted-soft);
+      padding: 8px 8px 4px;
+    }
+
+    .gs-result {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .gs-result:hover {
+      background: #f4f6f4;
+    }
+
+    .gs-result-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .gs-result-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gs-result-sub {
+      font-size: 11px;
+      color: var(--muted-soft);
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gs-empty {
+      padding: 14px 8px;
+      font-size: 12.5px;
+      color: var(--muted-soft);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ---------- Bulk action bar ---------- */
+    .bulk-action-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 32px 0;
+      padding: 10px 16px;
+      background: var(--green-tint);
+      border: 1px solid var(--green-tint-strong);
+      border-radius: var(--radius-md);
+    }
+
+    .bulk-count {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--green-dark);
+      white-space: nowrap;
+    }
+
+    .bulk-action-bar .btn {
+      padding: 7px 13px;
+      font-size: 12px;
+    }
+
+    .bulk-clear-btn {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 6px 8px;
+    }
+
+    .bulk-clear-btn:hover {
+      color: var(--ink);
+    }
+
+    .bulk-th,
+    .bulk-td {
+      width: 36px;
+      padding-right: 0 !important;
+    }
+
+    .row-select-checkbox,
+    #select-all-checkbox {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .crm-nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .crm-nav-heading {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted-soft);
+      padding: 8px 10px 4px;
+    }
+
+    .crm-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .crm-nav-item svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      color: var(--muted-soft);
+    }
+
+    .crm-nav-item:hover {
+      background: #f4f6f4;
+    }
+
+    .crm-nav-item.active {
+      background: var(--green-tint);
+      color: var(--green-dark);
+    }
+
+    .crm-nav-item.active svg {
+      color: var(--green);
+    }
+
+    .crm-nav-item.disabled {
+      cursor: default;
+      opacity: .55;
+    }
+
+    .crm-nav-item.disabled:hover {
+      background: transparent;
+    }
+
+    /* ---------- Main ---------- */
+    .crm-main {
+      min-width: 0;
+      padding: 0 0 60px;
+    }
+
+    .crm-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 26px 32px 0;
+    }
+
+    .crm-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .crm-title-sub {
+      font-size: 13px;
+      color: var(--muted-soft);
+      font-weight: 600;
+      margin: 4px 0 0;
+    }
+
+    .crm-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: linear-gradient(155deg, var(--green), var(--green-dark));
+      color: #fff;
+      font-weight: 800;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(14, 63, 36, 0.3);
+      cursor: pointer;
+    }
+
+    .crm-avatar:hover {
+      box-shadow: 0 4px 14px rgba(14, 63, 36, 0.5);
+    }
+
+    .crm-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .crm-view-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    .crm-view-pill svg {
+      width: 14px;
+      height: 14px;
+      color: var(--green);
+    }
+
+    .crm-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 9px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(20, 92, 52, .28);
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(179, 69, 46, .28);
+    }
+
+    .btn-danger:hover {
+      background: #8f3721;
+    }
+
+    /* ---------- Filter row ---------- */
+    .crm-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 7px 12px 7px 13px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .filter-chip:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .filter-chip.active-filter {
+      background: var(--green-tint);
+      border-color: var(--green-tint-strong);
+      color: var(--green-dark);
+    }
+
+    .filter-chip svg {
+      width: 12px;
+      height: 12px;
+      color: var(--muted-soft);
+    }
+
+    .filter-chip.active-filter svg {
+      color: var(--green);
+    }
+
+    /* ---------- Column show/hide toggles ---------- */
+    .col-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .col-toggle-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+
+    .col-toggle-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted-soft);
+      white-space: nowrap;
+    }
+
+    .col-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px 6px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted-soft);
+    }
+
+    .col-toggle-btn:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .col-toggle-icon {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+      display: flex;
+    }
+
+    .col-toggle-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .col-toggle-btn.col-visible {
+      background: var(--green-tint);
+      border-color: var(--green-tint-strong);
+      color: var(--green-dark);
+    }
+
+    .col-toggle-btn.col-visible .col-toggle-icon {
+      color: var(--green);
+    }
+
+    .col-toggle-btn.col-hidden {
+      color: var(--muted-soft);
+      opacity: .62;
+    }
+
+    .col-toggle-btn.col-hidden span:last-child {
+      text-decoration: line-through;
+      text-decoration-color: var(--muted-soft);
+    }
+
+    .col-toggle-btn.col-hidden .col-toggle-icon {
+      color: var(--muted-soft);
+    }
+
+    .crm-search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font-size: 12.5px;
+      color: var(--muted);
+      min-width: 200px;
+    }
+
+    .crm-search-input-wrap:focus-within {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    .crm-search-input-wrap svg {
+      width: 13px;
+      height: 13px;
+      color: var(--muted-soft);
+      flex: 0 0 auto;
+    }
+
+    .crm-search-input-wrap input {
+      border: none;
+      outline: none;
+      background: none;
+      font-size: 12.5px;
+      flex: 1;
+      color: var(--ink);
+    }
+
+    .active-filters-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .active-filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: var(--green-tint);
+      color: var(--green-dark);
+      border: 1px solid var(--green-tint-strong);
+      border-radius: var(--radius-pill);
+      padding: 5px 8px 5px 11px;
+      cursor: pointer;
+    }
+
+    .active-filter-tag:hover {
+      background: var(--green-tint-strong);
+    }
+
+    /* ---------- Popover ---------- */
+    .crm-popover {
+      position: absolute;
+      z-index: 60;
+      min-width: 190px;
+      max-width: 260px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 8px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .crm-popover.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popover-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 9px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .popover-option:hover {
+      background: #f4f6f4;
+    }
+
+    .popover-option.selected {
+      background: var(--green-tint);
+      color: var(--green-dark);
+      font-weight: 700;
+    }
+
+    .popover-option input[type="checkbox"] {
+      margin: 0;
+    }
+
+    .popover-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .popover-clear {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted-soft);
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .popover-clear:hover {
+      background: #f4f6f4;
+      color: var(--muted);
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Craft pass (2026-09-23) — the same rules the rest of admin.lincko.co
+       follows, expressed in the CRM's own tokens: feedback on pointer-down,
+       one visible focus ring, chrome as a material the content scrolls
+       under, and reduced-motion / -transparency / -contrast equivalents.
+
+       The type scale is deliberately NOT raised to the 18px admin floor:
+       this is a dense pipeline tool where columns-per-screen is the point.
+       ══════════════════════════════════════════════════════════════════ */
+
+    /* Response: every control answers on the press, not on the release. */
+    .btn,
+    .crm-nav-item,
+    .crm-avatar,
+    .crm-view-pill,
+    .crm-tab,
+    .crm-chip {
+      transition: background-color .18s cubic-bezier(.2,.8,.2,1),
+                  border-color .18s cubic-bezier(.2,.8,.2,1),
+                  color .18s cubic-bezier(.2,.8,.2,1),
+                  box-shadow .18s cubic-bezier(.2,.8,.2,1),
+                  transform .1s ease-out;
+    }
+    .btn { min-height: 36px; }
+    .btn:active,
+    .crm-nav-item:active,
+    .crm-avatar:active,
+    .crm-tab:active,
+    .crm-chip:active { transform: scale(.97); }
+    .btn:disabled,
+    .btn[disabled] { opacity: .5; cursor: default; transform: none; }
+    .crm-nav-item.disabled:active { transform: none; }
+    .crm-nav-item { min-height: 40px; }
+
+    /* One visible ring, keyboard only, everywhere. */
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* Accessibility: the three signals. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 1ms !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+      .btn:active,
+      .crm-nav-item:active,
+      .crm-avatar:active,
+      .crm-tab:active,
+      .crm-chip:active { transform: none; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .crm-table thead th { background: #f9faf9; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    }
+    @media (prefers-contrast: more) {
+      :root { --border: rgba(13,19,15,.28); --border-soft: rgba(13,19,15,.18); --muted: #3f4a43; }
+      .btn-primary { box-shadow: none; }
+      .crm-table thead th { background: #f9faf9; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    }

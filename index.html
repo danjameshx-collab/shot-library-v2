@@ -13,7 +13,23 @@
   }
 })();
 </script>
-<title>All Shot Types - Reference Library</title>
+<script>
+// Embedded mode (?embed=movie|pg&prospect=ID): the Outreach Tracker shows one Creative Outreach item
+// (the movie editor or the Physical Good page) inside a company, using this page in a frame.
+// The open tab / channel / movie memory belongs to the full app, so this copy neither reads nor writes it.
+(function(){
+  var q = new URLSearchParams(location.search);
+  if(!q.get('embed') || !q.get('prospect')) return;
+  window.CO_EMBED = { item: q.get('embed'), prospectId: q.get('prospect') };
+  document.documentElement.classList.add('co-embed');
+  var nav = /^(lcActive|lcLast)/, proto = Storage.prototype;
+  var get = proto.getItem, set = proto.setItem, rem = proto.removeItem;
+  proto.getItem = function(k){ return nav.test(k) ? null : get.call(this, k); };
+  proto.setItem = function(k, v){ if(!nav.test(k)) return set.call(this, k, v); };
+  proto.removeItem = function(k){ if(!nav.test(k)) return rem.call(this, k); };
+})();
+</script>
+<title>Operating System</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -167,14 +183,15 @@ img{max-width:100%;}
 body.tabs-hidden .top-tabs{display:none;}
 body.tabs-hidden .all-shots-overlay{top:0;}
 body.on-home .top-tabs{display:none;}
+/* Embedded in the Outreach Tracker: no tab bar, the page fills the frame. */
+html.co-embed .top-tabs{display:none;}
+html.co-embed .cv-detail-overlay, html.co-embed .cv-launcher-overlay{top:0;}
 /* Channel scoping: the tab bar starts with a Home button and only shows the open channel's tabs. */
 .top-tab-btn[hidden]{display:none;}
 .top-tab-home{display:inline-flex; align-items:center; gap:8px; color:var(--ink); padding-left:8px; margin-right:6px;}
 .top-tab-home img{width:24px; height:24px; border-radius:6px; border:1px solid var(--line); object-fit:cover;}
 .top-tab-home svg{width:14px; height:14px; color:var(--ink-soft);}
 .top-tab-sep{flex:0 0 1px; align-self:stretch; margin:12px 6px 12px 0; background:var(--line);}
-/* Creative Outreach has one page only, so its one tab is a label, not a button you can press. */
-body.channel-outreach .top-tab-btn[data-tab="outreach"]{cursor:default;}
 body.channel-outreach [data-cv-shot-action="all-shots"]{display:none;}
 
 /* ---------- Operating System landing page (pick a channel) ---------- */
@@ -539,7 +556,7 @@ button.ws-box:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
   .dt-day-box svg{width:13px; height:13px;}
   .dt-day-state{display:none;}
 }
-.dt-add{display:grid; grid-template-columns:minmax(0,1fr) 170px auto; gap:8px; margin-bottom:18px;}
+.dt-add{display:grid; grid-template-columns:minmax(0,1fr) 190px auto; gap:8px; margin-bottom:18px;}
 .dt-add.is-backlog{grid-template-columns:minmax(0,1fr) auto;}
 .dt-table{min-width:620px;}
 .dt-table tbody tr{cursor:default;}
@@ -550,13 +567,27 @@ button.ws-box:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
 }
 .dt-name:hover{border-color:var(--line-strong);}
 .dt-name:focus{outline:none; background:var(--paper); border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg);}
-.dt-date{width:auto; padding:6px 8px;}
+.dt-date{
+  display:inline-flex; align-items:center; gap:8px; width:auto; min-width:150px; padding:7px 12px; cursor:pointer; text-align:left;
+  font-weight:600; font-variant-numeric:tabular-nums; transition:border-color .15s ease, background-color .15s ease, color .15s ease;
+}
+.dt-date svg{width:15px; height:15px; flex:none; color:var(--ink-faint); transition:color .15s ease;}
+.dt-date:hover, .dt-date[aria-expanded="true"]{border-color:var(--bespoke); color:var(--bespoke);}
+.dt-date:hover svg, .dt-date[aria-expanded="true"] svg{color:var(--bespoke);}
+.dt-date:focus-visible{outline:none; border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg);}
+.dt-date.is-empty{color:var(--ink-faint); font-weight:500;}
+.dt-add .dt-date{width:100%; min-width:0;}
 .dt-due{display:inline-flex; align-items:center; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:#EEF1EF; color:var(--ink-soft); white-space:nowrap;}
 .dt-due.is-late{background:#FDECEA; color:#B42318;}
 .dt-due.is-today{background:#FEF3E2; color:#9A5512;}
 .dt-due.is-soon{background:var(--bespoke-bg); color:var(--bespoke);}
 .dt-table tbody tr.is-late td:first-child{box-shadow:inset 3px 0 0 #D92D20;}
 .dt-actions{display:inline-flex; gap:6px; align-items:center;}
+/* A Creative Outreach follow-up is tagged beside its name */
+.dt-task{display:flex; align-items:center; gap:10px;}
+.dt-task .dt-name{flex:1 1 auto;}
+.dt-src{flex:none; font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap; background:#EEF1EF; color:var(--ink-soft);}
+.dt-src.is-co{background:#FEF3E2; color:#B45309;}
 @media (max-width:760px){
   .dt-add, .dt-add.is-backlog{grid-template-columns:1fr;}
   .dt-name{min-width:0; margin-left:0;}
@@ -1469,6 +1500,38 @@ textarea.bk-takeaways{min-height:360px; font-size:14px; line-height:1.65;}
 .pg-also .pg-k{margin:0; flex:0 0 auto;}
 .pg-also p{font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0;}
 .pg-pick-empty{padding:40px 26px; text-align:center; color:var(--ink-faint); font-size:14px;}
+/* Adding / editing a pick by hand */
+.pg-box-tier-end{display:inline-flex; align-items:center; gap:8px;}
+.pg-edit-pick{
+  display:inline-flex; align-items:center; gap:5px; font-family:var(--font-display); font-weight:700; font-size:11px;
+  letter-spacing:.02em; text-transform:none; color:var(--ink-soft); background:var(--mimeo-ink); border:1px solid var(--line);
+  border-radius:999px; padding:4px 11px; cursor:pointer; transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.pg-edit-pick svg{width:11px; height:11px;}
+.pg-edit-pick:hover{color:var(--bespoke); border-color:var(--bespoke); background:var(--bespoke-bg);}
+.pg-add-pick{
+  display:inline-flex; align-items:center; gap:10px; font:inherit; font-family:var(--font-display); font-weight:700; font-size:14px;
+  color:var(--ink); background:var(--mimeo-ink); border:1.5px dashed var(--line-strong); border-radius:14px; padding:14px 22px; cursor:pointer;
+  transition:background-color .15s ease, border-color .15s ease;
+}
+.pg-add-pick span{width:26px; height:26px; border-radius:50%; background:var(--bespoke); color:#fff; display:grid; place-items:center; font-size:16px; line-height:1;}
+.pg-add-pick:hover{border-color:var(--bespoke); background:var(--bespoke-bg);}
+.pg-box.is-editing{border-color:var(--bespoke); box-shadow:0 0 0 3px rgba(30,107,69,.12), var(--shadow);}
+.pg-form{display:flex; flex-direction:column; gap:14px; padding:12px 20px 20px;}
+.pg-f{display:flex; flex-direction:column; min-width:0;}
+.pg-f input, .pg-f textarea, .pg-f select{
+  width:100%; font:inherit; font-size:14px; color:var(--ink); background:#fff; border:1px solid var(--line-strong);
+  border-radius:10px; padding:9px 12px; transition:border-color .15s ease, box-shadow .15s ease;
+}
+.pg-f textarea{resize:none; line-height:1.55; min-height:44px; overflow:hidden;}
+.pg-f input:focus, .pg-f textarea:focus, .pg-f select:focus{outline:none; border-color:var(--bespoke); box-shadow:0 0 0 3px rgba(30,107,69,.14);}
+.pg-form-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+.pg-f-check{display:inline-flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); cursor:pointer;}
+.pg-f-check input{width:16px; height:16px; accent-color:var(--bespoke);}
+.pg-form-actions{display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid var(--line);}
+.pg-form-actions .pg-form-btns{display:inline-flex; gap:8px; margin-top:12px;}
+.pg-form-actions .pg-remove-pick{margin-top:12px; color:var(--warn);}
+@media (max-width:600px){ .pg-form-row{grid-template-columns:1fr;} }
 
 /* sections below the picks */
 .pg-section-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:0 0 12px;}
@@ -1629,6 +1692,20 @@ textarea.bk-takeaways{min-height:360px; font-size:14px; line-height:1.65;}
   padding-right:30px; overflow-wrap:break-word;
 }
 .launcher-card .lc-meta{font-size:12px; color:var(--ink-faint); margin:0;}
+/* Active Creative Movies <-> Outreach Tracker links */
+.launcher-card .co-linked{display:inline-flex; align-items:center; gap:6px; margin:0 0 2px; color:var(--bespoke); font-weight:600;}
+.launcher-card .co-linked::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--bespoke);}
+.co-tracker-link{
+  display:inline-flex; align-items:center; gap:7px; margin-top:10px; padding:7px 14px; font:inherit; font-size:12.5px; font-weight:700;
+  color:var(--bespoke); background:var(--bespoke-bg); border:none; border-radius:999px; cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+.co-tracker-link svg{width:14px; height:14px; flex:0 0 auto;}
+.co-tracker-link svg:last-child{transition:transform .15s ease;}
+.co-tracker-link:hover{background:var(--bespoke); color:#fff;}
+.co-tracker-link:hover svg:last-child{transform:translateX(2px);}
+.co-tracker-link[hidden]{display:none;}
+.launcher-empty.co-empty{display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1.5;}
 .launcher-card .lc-status{list-style:none; margin:6px 0 10px; padding:0; display:flex; flex-direction:column; gap:3px; font-size:12.5px; color:var(--ink);}
 .launcher-card .lc-status .is-yes{color:var(--bespoke); font-weight:600;}
 .launcher-card .lc-status .is-no{color:var(--ink-faint);}
@@ -1684,6 +1761,9 @@ textarea.bk-takeaways{min-height:360px; font-size:14px; line-height:1.65;}
 .lc-dp-foot{display:flex; justify-content:flex-end; margin-top:8px; padding-top:8px; border-top:1px solid var(--line);}
 .lc-dp-today{font-family:inherit; font-size:12.5px; font-weight:700; color:var(--bespoke); background:none; border:none; padding:5px 12px; border-radius:999px; cursor:pointer;}
 .lc-dp-today:hover{background:var(--bespoke-bg);}
+.lc-dp-foot:has(.lc-dp-clear){justify-content:space-between;}
+.lc-dp-clear{color:var(--ink-faint);}
+.lc-dp-clear:hover{background:#EEF1EF; color:var(--ink-soft);}
 /* completed but the checklist was not cleared: the same red as the Business videos */
 .launcher-card.is-complete.is-missed{background:#FFF6F5; border-left-color:#D92D20;}
 .launcher-card.is-complete.is-missed:hover{background:#FDECEA;}
@@ -2375,6 +2455,55 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
   .launcher-card .lc-icon-btn{width:32px; height:32px;}
   .os-chip, .os-seg button{padding:7px 12px;}
 }
+
+/* ---------- quick-launch footer: square app shortcuts at the end of the home page (not sticky) ---------- */
+.home-overlay.active{flex-wrap:wrap; align-content:space-between; padding-bottom:0;}
+.app-dock{
+  flex:0 0 100%; display:flex; align-items:center; justify-content:center; gap:10px;
+  margin-top:48px; padding:28px 16px calc(32px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line);
+}
+.app-dock-sep{width:1px; height:24px; background:var(--line); margin:0 4px;}
+.app-dock a{
+  position:relative; display:grid; place-items:center; flex:none; width:44px; height:44px; border-radius:12px;
+  background:#fff; border:1px solid var(--line); text-decoration:none; overflow:visible;
+  box-shadow:0 1px 0 rgba(20,24,27,.03), 0 4px 10px -6px rgba(20,24,27,.18);
+  transition:transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.app-dock a svg, .app-dock a img{width:24px; height:24px; display:block;}
+.app-dock a .fill{width:100%; height:100%; border-radius:11px; object-fit:cover;}
+.app-dock a:hover{
+  transform:translateY(-3px); border-color:var(--line-strong);
+  box-shadow:0 1px 0 rgba(20,24,27,.03), 0 14px 24px -12px rgba(20,24,27,.35);
+}
+.app-dock a:active{transform:scale(.95); transition-duration:var(--dur-fast);}
+.app-dock a:focus-visible{outline:2px solid var(--stamp); outline-offset:3px; border-radius:12px;}
+/* label bubble that rises above the icon on hover / keyboard focus */
+.app-dock a::after{
+  content:attr(data-label); position:absolute; bottom:calc(100% + 12px); left:50%;
+  transform:translate(-50%,4px); opacity:0; pointer-events:none; white-space:nowrap;
+  background:var(--ink); color:#fff; font-size:12px; font-weight:600; line-height:1; padding:7px 10px; border-radius:8px;
+  box-shadow:var(--shadow); transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.app-dock a::before{
+  content:''; position:absolute; bottom:calc(100% + 6px); left:50%; width:0; height:0; margin-left:-5px;
+  border:5px solid transparent; border-top-color:var(--ink); border-bottom:0;
+  opacity:0; transform:translateY(4px); pointer-events:none; transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.app-dock a:hover::after, .app-dock a:focus-visible::after{opacity:1; transform:translate(-50%,0);}
+.app-dock a:hover::before, .app-dock a:focus-visible::before{opacity:1; transform:translateY(0);}
+.app-dock .dock-fallback{font-weight:800; font-size:17px; color:var(--ink);}
+@media (prefers-reduced-motion: reduce){
+  .app-dock a, .app-dock a::after, .app-dock a::before{transition:none;}
+  .app-dock a:hover{transform:none;}
+}
+/* phones: smaller tiles and no hover labels, so all six fit on one row */
+@media (max-width:480px){
+  .app-dock{gap:8px; margin-top:32px; padding-top:22px;}
+  .app-dock a{width:40px; height:40px; border-radius:11px;}
+  .app-dock a svg, .app-dock a img{width:22px; height:22px;}
+  .app-dock a::after, .app-dock a::before{display:none;}
+}
 </style>
 </head>
 <body>
@@ -2448,7 +2577,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
             <span class="hc-end"><kbd class="hc-key"></kbd><svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </span>
           <span class="hc-name">Creative Outreach</span>
-          <span class="hc-desc">Prospects and personalised outreach movies.</span>
+          <span class="hc-desc">Prospects, personalised outreach movies and the outreach tracker.</span>
           <span class="hc-foot"></span>
         </button>
       </div>
@@ -2493,6 +2622,69 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 
     <p class="home-foot" id="homeFoot">Press <kbd>1</kbd>&ndash;<kbd id="homeFootMax">7</kbd> to jump straight into a channel</p>
   </div>
+  <!-- Quick-launch footer (home page only): square shortcuts to the apps used every day. Each opens in a new tab. -->
+  <nav class="app-dock" id="appDock" aria-label="Quick launch">
+    <a href="https://calendly.com/app/scheduling/meeting_types/user/me" target="_blank" rel="noopener" data-label="Calendly" aria-label="Calendly">
+      <img src="https://www.google.com/s2/favicons?domain=calendly.com&amp;sz=128" alt="" onerror="this.outerHTML='&lt;span class=&quot;dock-fallback&quot;&gt;C&lt;/span&gt;'">
+    </a>
+    <a href="https://app.close.com/opportunities/pipeline/" target="_blank" rel="noopener" data-label="CRM" aria-label="CRM">
+      <img src="https://www.google.com/s2/favicons?domain=close.com&amp;sz=128" alt="" onerror="this.outerHTML='&lt;span class=&quot;dock-fallback&quot;&gt;C&lt;/span&gt;'">
+    </a>
+    <a href="https://us06web.zoom.us/j/85194639131" target="_blank" rel="noopener" data-label="Daily Standup" aria-label="Daily Standup">
+      <svg class="fill" viewBox="0 0 48 48" aria-hidden="true">
+        <rect width="48" height="48" rx="11" fill="#0B5CFF"/>
+        <rect x="9" y="16" width="21" height="16" rx="4" fill="#fff"/>
+        <path fill="#fff" d="M32 21.6l5.9-4.1c.8-.5 1.8 0 1.8 1v11c0 1-1 1.5-1.8 1L32 26.4z"/>
+      </svg>
+    </a>
+    <span class="app-dock-sep" aria-hidden="true"></span>
+    <a href="https://calendar.google.com/calendar/u/0/r?pli=1" target="_blank" rel="noopener" data-label="Google Calendar" aria-label="Google Calendar">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <rect x="6" y="6" width="36" height="36" rx="4" fill="#fff"/>
+        <path fill="#1967D2" d="M10 6h4v8H6v-4a4 4 0 0 1 4-4zM6 14h8v20H6z"/>
+        <path fill="#4285F4" d="M14 6h20v8H14z"/>
+        <path fill="#1A73E8" d="M34 6h4a4 4 0 0 1 4 4v4h-8z"/>
+        <path fill="#FBBC04" d="M34 14h8v20h-8z"/>
+        <path fill="#34A853" d="M14 34h20v8H14z"/>
+        <path fill="#188038" d="M6 34h8v8h-4a4 4 0 0 1-4-4z"/>
+        <path fill="#EA4335" d="M34 34h8l-8 8z"/>
+        <text x="24" y="29.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="12.5" fill="#1A73E8">31</text>
+      </svg>
+    </a>
+    <a href="https://docs.google.com/document/d/10zm2_vYKFPALTpvRQKu10s44mY0fEsEQxCKKQV0wnSA/edit?pli=1&amp;tab=t.0#heading=h.h28f0mas0szf" target="_blank" rel="noopener" data-label="Google Doc" aria-label="Google Doc">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#2684FC" d="M29 4H13a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V14z"/>
+        <path fill="#A1C2FA" d="M29 4v7a3 3 0 0 0 3 3h7z"/>
+        <path fill="#fff" d="M16 22h16v2.6H16zM16 27.4h16V30H16zM16 32.8h11v2.6H16z"/>
+      </svg>
+    </a>
+    <a href="https://drive.google.com/drive/home" target="_blank" rel="noopener" data-label="Google Drive" aria-label="Google Drive">
+      <svg viewBox="0 0 87.3 78" aria-hidden="true">
+        <path fill="#0066DA" d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z"/>
+        <path fill="#00AC47" d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z"/>
+        <path fill="#EA4335" d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z"/>
+        <path fill="#00832D" d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z"/>
+        <path fill="#2684FC" d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z"/>
+        <path fill="#FFBA00" d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z"/>
+      </svg>
+    </a>
+    <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" rel="noopener" data-label="Gmail" aria-label="Gmail">
+      <svg viewBox="52 42 88 66" aria-hidden="true">
+        <path fill="#4285F4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"/>
+        <path fill="#34A853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"/>
+        <path fill="#FBBC04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"/>
+        <path fill="#EA4335" d="M72 74V48l24 18 24-18v26L96 92"/>
+        <path fill="#C5221F" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"/>
+      </svg>
+    </a>
+    <a href="https://docs.google.com/spreadsheets/d/1elO2795eNDK1b6Co9_XXve8PBCfq6VdoAiiVC-IAQD8/edit" target="_blank" rel="noopener" data-label="Lincko Sales &amp; Marketing Scoreboard" aria-label="Lincko Sales &amp; Marketing Scoreboard">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#0F9D58" d="M29 4H13a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V14z"/>
+        <path fill="#87CEAC" d="M29 4v7a3 3 0 0 0 3 3h7z"/>
+        <path fill="#fff" d="M15 21h18v15H15zm2.4 2.4v2.8h5.4v-2.8zm7.8 0v2.8h5.4v-2.8zm-7.8 5.2v2.8h5.4v-2.8zm7.8 0v2.8h5.4v-2.8z"/>
+      </svg>
+    </a>
+  </nav>
 </div>
 
 <div class="top-tabs" id="topTabs">
@@ -2501,7 +2693,8 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
     <img src="brand-logo.png" alt=""><span>Operating System</span>
   </button>
   <span class="top-tab-sep" aria-hidden="true"></span>
-  <button type="button" class="top-tab-btn" data-tab="outreach">Creative Outreach Movie</button>
+  <button type="button" class="top-tab-btn" data-tab="outreach-tracker">Outreach Tracker</button>
+  <button type="button" class="top-tab-btn" data-tab="outreach">Active Creative Movies</button>
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
@@ -2535,6 +2728,11 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 <!-- Dan James (Business): the YouTube Title Researcher (title-researcher/), shown in place. src is set on first open. -->
 <div class="business-overlay tab-page" id="businessOverlay">
   <iframe id="businessFrame" title="YouTube Title Researcher" data-src="title-researcher/index.html"></iframe>
+</div>
+
+<!-- Creative Outreach: the Outreach Tracker CRM (outreach-tracker/), shown in place. src is set on first open. -->
+<div class="business-overlay tab-page" id="outreachTrackerOverlay">
+  <iframe id="outreachTrackerFrame" title="Outreach Tracker" data-src="outreach-tracker/index.html"></iframe>
 </div>
 
 <!-- Content OS: Dan James (Business) YouTube and LinkedIn. One page, drawn by osRender() for whichever channel and tab is open. -->
@@ -2783,7 +2981,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 <div class="cv-launcher-overlay tab-page" id="coProspectsOverlay">
   <div class="launcher-inner">
     <div class="launcher-header">
-      <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span>Creative Outreach</span></h1>
+      <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span>Active Creative Movies</span></h1>
     </div>
     <div class="launcher-sort" id="coProspectsSort">
       <span class="ls-label" id="coProspectsSortLabel">Sort by</span>
@@ -2806,10 +3004,15 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 <div class="cv-launcher-overlay tab-page" id="coProspectOverlay">
   <div class="launcher-inner">
     <div class="launcher-header">
-      <button type="button" class="back-link" id="coBackToProspectsLink">&larr; Creative Outreach</button>
+      <button type="button" class="back-link" id="coBackToProspectsLink">&larr; Active Creative Movies</button>
       <h1 class="launcher-title"><img class="logo-mark-img" src="brand-logo.png" alt="Lincko"><span id="coProspectTitle">Prospect</span>
         <button type="button" class="lc-icon-btn" id="coProspectRenameBtn" title="Rename this prospect" aria-label="Rename this prospect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
       </h1>
+      <button type="button" class="co-tracker-link" id="coOpenInTrackerBtn" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 4v16"/></svg>
+        <span>Open company in Outreach Tracker</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
     </div>
     <div class="launcher-grid" id="coProspectItemsGrid"></div>
   </div>
@@ -2923,7 +3126,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot, arrayUnion
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot, arrayUnion, arrayRemove, waitForPendingWrites
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
@@ -3561,7 +3764,8 @@ function lcPrompt(title, defaultValue, opts){ return lcDialogOpen(Object.assign(
 function lcConfirm(title, message, opts){ return lcDialogOpen(Object.assign({type:'confirm', title, message}, opts||{})); }
 
 /* ---------- date picker: a small calendar under a button, in the app's style (the browser's own picker cannot be styled) ---------- */
-// lcPickDate(anchor, timestamp, onPick): onPick gets a Date at midnight for the chosen day. Clicking the anchor again closes it.
+// lcPickDate(anchor, timestamp, onPick, opts): onPick gets a Date at midnight for the chosen day. Clicking the anchor again closes it.
+// opts.onClear adds a Clear button (for a date that can be left empty).
 const LC_DP_PREV_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
 const LC_DP_NEXT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>';
 let lcDp = null; // { el, anchor, cleanup }
@@ -3572,7 +3776,8 @@ function lcDpClose(){
   lcDp.anchor.setAttribute('aria-expanded', 'false');
   lcDp = null;
 }
-function lcPickDate(anchor, ts, onPick){
+function lcPickDate(anchor, ts, onPick, opts){
+  const onClear = opts && opts.onClear;
   if(lcDp && lcDp.anchor===anchor){ lcDpClose(); return; }
   lcDpClose();
   const dayKey = d=> d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
@@ -3599,7 +3804,7 @@ function lcPickDate(anchor, ts, onPick){
       + '</div>'
       + '<div class="lc-dp-week" aria-hidden="true">' + ['Mo','Tu','We','Th','Fr','Sa','Su'].map(w=> '<span>' + w + '</span>').join('') + '</div>'
       + '<div class="lc-dp-grid">' + cells + '</div>'
-      + '<div class="lc-dp-foot"><button type="button" class="lc-dp-today">Today</button></div>';
+      + '<div class="lc-dp-foot">' + (onClear ? '<button type="button" class="lc-dp-today lc-dp-clear">Clear</button>' : '') + '<button type="button" class="lc-dp-today">Today</button></div>';
   };
   const pick = d=>{ lcDpClose(); anchor.focus({ preventScroll:true }); onPick(d); };
   // Clicks stay inside the picker, so re-rendering a month never reads as an outside click.
@@ -3609,6 +3814,7 @@ function lcPickDate(anchor, ts, onPick){
     if(nav){ view = new Date(view.getFullYear(), view.getMonth() + Number(nav.dataset.nav), 1); render(); el.querySelector('[data-nav="' + nav.dataset.nav + '"]').focus(); return; }
     const day = e.target.closest('.lc-dp-day');
     if(day) return pick(new Date(view.getFullYear(), view.getMonth(), Number(day.dataset.d)));
+    if(e.target.closest('.lc-dp-clear')){ lcDpClose(); anchor.focus({ preventScroll:true }); onClear(); return; }
     if(e.target.closest('.lc-dp-today')){ const t = new Date(); pick(new Date(t.getFullYear(), t.getMonth(), t.getDate())); }
   });
   render();
@@ -4154,7 +4360,7 @@ function cvApplyModeLabels(){
   const m = cvM();
   document.getElementById('cvLauncherTitle').textContent = m.plural;
   const prospect = cvMode==='outreach' ? coProspects.find(p=> p.id===coActiveProspectId) : null;
-  document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : m.plural);
+  document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + (window.CO_EMBED ? 'Back to company' : esc(prospect ? (prospect.name || 'Untitled Prospect') : m.plural));
   document.getElementById('ideasTitle').textContent = m.ideasTitle;
   document.getElementById('ideasTextarea').placeholder = m.ideasPlaceholder;
   document.getElementById('outlineTitle').textContent = m.outlineTitle;
@@ -4388,6 +4594,7 @@ function cvOpen(id){
   cvRenderDetail();
 }
 function cvBackToLauncher(){
+  if(window.CO_EMBED && cvMode==='outreach') return coEmbedClose();
   outlineAutoSaveIfDirty();
   ideasAutoSaveIfDirty();
   cvActiveId = null;
@@ -4415,6 +4622,12 @@ let coProspects = [];
 let coActiveProspectId = null;
 try{ coActiveProspectId = localStorage.getItem(CO_ACTIVE_PROSPECT_KEY); }catch(e){}
 
+// Strategy Docs are written and edited inside the company in the Outreach Tracker (kind 'strategyDoc',
+// linked by prospectId); this page only shows them.
+const SD_KIND = 'strategyDoc';
+let coStrategyDocs = [];
+function sdFor(prospectId){ return coStrategyDocs.find(r=> r.prospectId===prospectId) || null; }
+
 // The outreach movie list lives in cvLibrary while the Creative Outreach tab is showing, else in the stash.
 function coMovies(){ return cvMode==='outreach' ? cvLibrary : cvStash.outreach.library; }
 function coMovieFor(prospectId){ return coMovies().find(r=> r.prospectId===prospectId) || null; }
@@ -4422,10 +4635,11 @@ function coMovieFor(prospectId){ return coMovies().find(r=> r.prospectId===prosp
 // Loads prospects, then gives every outreach movie that has no prospect yet its own prospect (named after the movie).
 async function coLoadProspects(movies){
   try{
-    const snap = await getDocs(query(collection(db, CO_PROSPECTS_COLLECTION), where('kind', 'in', [CO_PROSPECT_KIND, PG_KIND])));
+    const snap = await getDocs(query(collection(db, CO_PROSPECTS_COLLECTION), where('kind', 'in', [CO_PROSPECT_KIND, PG_KIND, SD_KIND])));
     const all = snap.docs.map(d=> ({ id: d.id, ...d.data() }));
     coProspects = all.filter(r=> r.kind===CO_PROSPECT_KIND);
     coPhysicalGoods = all.filter(r=> r.kind===PG_KIND);
+    coStrategyDocs = all.filter(r=> r.kind===SD_KIND);
   }catch(e){
     console.error('Failed to load prospects from Firebase:', e);
     await lcAlert('Connection error', 'Could not load your prospects from the database. Check your connection and try again.');
@@ -4553,11 +4767,13 @@ function coProspectsSortValue(){ return coSortGetter ? coSortGetter() : 'updated
 function coRenderProspects(){
   const grid = document.getElementById('coProspectsGrid');
   if(!cvLoaded.outreach){ grid.innerHTML = '<div class="launcher-empty">Loading prospects…</div>'; return; }
-  let html = '<button type="button" class="launcher-card new" id="coCreateProspectBtn"><span class="plus">+</span><span class="label">Create Prospect</span></button>';
+  // Creative outreach is started from a company in the Outreach Tracker, never here: this tab only maps what is active.
+  let html = '';
   // Last Update on a card is the newest of the prospect, its movie and its Physical Good, so sort on that same date.
   const lastUpdateOf = p=>{ const m = coMovieFor(p.id), g = pgFor(p.id); return Math.max(p.updatedAt||0, m ? m.updatedAt||0 : 0, g ? g.updatedAt||0 : 0); };
   if(!coProspects.length){
-    html += '<div class="launcher-empty">No prospects yet - create your first one to get started.</div>';
+    html += '<div class="launcher-empty co-empty">No creative outreach yet. Open a company in the Outreach Tracker and press <strong>Creative Outreach</strong> to start one.'
+      + '<button type="button" class="co-tracker-link" id="coEmptyTrackerBtn"><span>Open Outreach Tracker</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>';
   }
   html += lsSortedCardsHtml(coProspects, coProspectsSortValue(), {
     nameOf: p=> p.name, createdOf: p=> p.createdAt || lastUpdateOf(p), updatedOf: lastUpdateOf,
@@ -4565,16 +4781,16 @@ function coRenderProspects(){
     const done = !!p.completed;
     const movie = coMovieFor(p.id);
     const pg = pgFor(p.id);
-    // The Strategy Doc is still a placeholder, so it always reads Not Created until it can be built.
     const statusRow = (label, made)=> '<li>' + label + ': <span class="' + (made ? 'is-yes' : 'is-no') + '">' + (made ? 'Created' : 'Not Created') + '</span></li>';
     const lastUpdate = Math.max(p.updatedAt||0, movie ? movie.updatedAt||0 : 0, pg ? pg.updatedAt||0 : 0);
     return '<div class="launcher-card' + (done ? ' is-complete' : '') + '" data-prospect-id="' + escAttr(p.id) + '">'
       + '<button type="button" class="lc-complete-btn' + (done ? ' is-complete' : '') + '" data-complete-id="' + escAttr(p.id) + '" title="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-label="' + (done ? 'Mark as not completed' : 'Mark as completed') + '" aria-pressed="' + (done ? 'true' : 'false') + '">' + CV_CHECK_SVG + '</button>'
       + '<h3 class="lc-name">' + esc(p.name || 'Untitled Prospect') + '</h3>'
+      + (p.companyId ? '<p class="lc-meta co-linked">Linked to Outreach Tracker</p>' : '')
       + '<ul class="lc-status">'
         + statusRow('Creative Outreach Movie', !!movie)
         + statusRow('Physical Good', !!pg)
-        + statusRow('Strategy Doc', false)
+        + statusRow('Strategy Doc', !!sdFor(p.id))
       + '</ul>'
       + '<ul class="lc-dates">'
         + '<li>Date Created: ' + esc(cvFmtDate(p.createdAt || lastUpdate)) + '</li>'
@@ -4600,13 +4816,17 @@ function coRenderProspects(){
   grid.querySelectorAll('.lc-rename').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coRenameProspect(btn.dataset.renameId); }));
   grid.querySelectorAll('.lc-delete').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coDeleteProspect(btn.dataset.deleteId); }));
   grid.querySelectorAll('.lc-complete-btn').forEach(btn=> btn.addEventListener('click', (e)=>{ e.stopPropagation(); coToggleProspectComplete(btn.dataset.completeId); }));
-  document.getElementById('coCreateProspectBtn').addEventListener('click', coCreateProspect);
+  const emptyTrackerBtn = document.getElementById('coEmptyTrackerBtn');
+  if(emptyTrackerBtn) emptyTrackerBtn.addEventListener('click', ()=> switchTab('outreach-tracker'));
 }
 
 function coRenderProspect(){
   const p = coProspects.find(x=> x.id===coActiveProspectId);
   if(!p) return;
   document.getElementById('coProspectTitle').textContent = p.name || 'Untitled Prospect';
+  const trackerBtn = document.getElementById('coOpenInTrackerBtn');
+  trackerBtn.hidden = !p.companyId;
+  trackerBtn.dataset.companyId = p.companyId || '';
   const movie = coMovieFor(p.id);
   let html = '';
   if(movie){
@@ -4626,7 +4846,11 @@ function coRenderProspect(){
       + '</div>'
     + '</div>';
   } else {
-    html += '<button type="button" class="launcher-card new" id="coCreateMovieBtn"><span class="plus">+</span><span class="label">Create Creative Outreach Movie</span></button>';
+    html += '<div class="launcher-card is-soon" aria-disabled="true">'
+      + '<p class="lc-type">Creative Outreach Movie</p>'
+      + '<h3 class="lc-name">Not created yet</h3>'
+      + '<p class="lc-meta">Create it from the company in the Outreach Tracker.</p>'
+    + '</div>';
   }
   const pg = pgFor(p.id);
   if(pg){
@@ -4645,15 +4869,25 @@ function coRenderProspect(){
   } else {
     html += '<div class="launcher-card is-soon" aria-disabled="true">'
       + '<p class="lc-type">Creative Physical Good</p>'
-      + '<h3 class="lc-name">Not run yet</h3>'
-      + '<p class="lc-meta">Run /physical-goods for ' + esc(p.name || 'this prospect') + ' in Claude Code and the picks appear here.</p>'
+      + '<h3 class="lc-name">Not created yet</h3>'
+      + '<p class="lc-meta">Create it from the company in the Outreach Tracker, or run /physical-goods for ' + esc(p.name || 'this prospect') + ' in Claude Code.</p>'
     + '</div>';
   }
-  html += '<div class="launcher-card is-soon" aria-disabled="true">'
-    + '<p class="lc-type">Strategy Doc</p>'
-    + '<h3 class="lc-name">Create Strategy Doc</h3>'
-    + '<div class="lc-footer"><span class="lc-soon-badge">Coming soon</span><span></span></div>'
-  + '</div>';
+  const sd = sdFor(p.id);
+  if(sd){
+    // Opens in the tracker, where the doc is written.
+    html += '<div class="launcher-card" data-sd-company="' + escAttr(p.companyId || '') + '">'
+      + '<p class="lc-type">Strategy Doc</p>'
+      + '<h3 class="lc-name">' + esc(sd.status || 'Drafting') + '</h3>'
+      + '<p class="lc-meta">' + (sd.gammaUrl ? 'Gamma doc linked · ' : '') + 'Updated ' + cvFmtDate(sd.updatedAt) + '</p>'
+    + '</div>';
+  } else {
+    html += '<div class="launcher-card is-soon" aria-disabled="true">'
+      + '<p class="lc-type">Strategy Doc</p>'
+      + '<h3 class="lc-name">Not created yet</h3>'
+      + '<p class="lc-meta">Create it from the company in the Outreach Tracker.</p>'
+    + '</div>';
+  }
   const grid = document.getElementById('coProspectItemsGrid');
   grid.innerHTML = html;
   const pgCard = grid.querySelector('[data-pg-id]');
@@ -4670,8 +4904,8 @@ function coRenderProspect(){
   });
   const delBtn = grid.querySelector('[data-delete-movie-id]');
   if(delBtn) delBtn.addEventListener('click', (e)=>{ e.stopPropagation(); cvDelete(delBtn.dataset.deleteMovieId); });
-  const createBtn = document.getElementById('coCreateMovieBtn');
-  if(createBtn) createBtn.addEventListener('click', coCreateMovie);
+  const sdCard = grid.querySelector('[data-sd-company]');
+  if(sdCard) sdCard.addEventListener('click', ()=> coOpenInTracker(sdCard.dataset.sdCompany, 'doc'));
 }
 
 function coShowPage(page){
@@ -4699,23 +4933,6 @@ function coBackToProspects(){
   coRenderProspects();
 }
 
-async function coCreateProspect(){
-  const name = await lcPrompt('Create Prospect', 'Untitled Prospect', {
-    message: 'Who is this outreach for? Use the person or company name.', confirmText: 'Create'
-  });
-  if(name === null) return;
-  const now = Date.now();
-  const p = { kind: CO_PROSPECT_KIND, name: name || 'Untitled Prospect', createdAt: now, updatedAt: now, completed: false };
-  try{
-    const ref = await addDoc(collection(db, CO_PROSPECTS_COLLECTION), p);
-    p.id = ref.id;
-    coProspects.push(p);
-    coOpenProspect(p.id);
-  }catch(e){
-    console.error('Failed to create prospect:', e);
-    await lcAlert('Connection error', 'Could not create this prospect. Check your connection and try again.');
-  }
-}
 async function coRenameProspect(id){
   const p = coProspects.find(x=> x.id===id);
   if(!p) return;
@@ -4777,6 +4994,116 @@ async function coCreateMovie(){
   }
 }
 
+/* ---------- Outreach Tracker link ---------- */
+// Creative outreach is started from a company in the Outreach Tracker (outreach-tracker/, in a frame on the
+// next tab), which writes the prospect with its companyId. The tracker then asks this page, by postMessage,
+// to open the prospect, its movie (created on first open) or its Physical Good; this page can send it back
+// to that company. Messages, not direct calls: the frame is cross-origin when the app is opened from a file.
+function coTrackerFrame(){ return document.getElementById('outreachTrackerFrame'); }
+// Re-reads the outreach movies, prospects and Physical Goods, so anything the tracker started shows up.
+// One reload at a time: coLoadProspects creates prospects for orphan movies, so two at once could double-create.
+let coReloading = null;
+function coReload(){
+  if(cvMode!=='outreach' || !cvLoaded.outreach) return Promise.resolve();
+  if(!coReloading){
+    coReloading = (async()=>{
+      const lib = await cvFetchLibrary();
+      if(cvMode!=='outreach') return;
+      await coLoadProspects(lib);
+      cvLibrary = lib;
+    })().finally(()=>{ coReloading = null; });
+  }
+  return coReloading;
+}
+// Quiet refresh when the tab is shown, skipped while an editor or Physical Good is open so nothing open is swapped out.
+async function coRefreshIfIdle(){
+  if(cvActiveId || pgActiveId || !cvLoaded.outreach) return;
+  await coReload();
+  if(cvCurrentTab!=='outreach' || cvActiveId || pgActiveId) return;
+  if(coActiveProspectId && coProspects.some(p=> p.id===coActiveProspectId)) coRenderProspect();
+  else coRenderProspects();
+}
+async function coOpenFromTracker(prospectId, item){
+  if(activeChannel!=='outreach') openChannel('outreach', { tab:'outreach' });
+  if(cvActiveId && cvMode==='outreach'){
+    outlineAutoSaveIfDirty(); ideasAutoSaveIfDirty();
+    cvActiveId = null;
+    try{ localStorage.removeItem(cvM().storageKey); }catch(e){}
+    document.getElementById('cvDetailOverlay').classList.remove('active');
+  }
+  switchTab('outreach');
+  for(let i=0; i<150 && !cvLoaded.outreach; i++) await new Promise(r=> setTimeout(r, 100));
+  if(!cvLoaded.outreach) return;
+  await coReload();
+  if(!coProspects.some(p=> p.id===prospectId)){
+    await lcAlert('Not found', 'This creative outreach no longer exists. Start it again from the company in the Outreach Tracker.');
+    if(window.CO_EMBED) return coEmbedClose();
+    coBackToProspects();
+    return;
+  }
+  coOpenProspect(prospectId);
+  if(item==='movie'){
+    const movie = coMovieFor(prospectId);
+    if(movie) cvOpen(movie.id); else await coCreateMovie();
+  } else if(item==='pg'){
+    const pg = pgFor(prospectId);
+    if(pg) pgOpen(pg.id); else await pgCreateManual(prospectId);
+  }
+}
+// Embedded mode: open the one item asked for, label the back links as a way back to the company,
+// and tell the tracker it can drop its loading screen.
+async function coEmbedBoot(){
+  const { item, prospectId } = window.CO_EMBED;
+  await coOpenFromTracker(prospectId, item);
+  window.parent.postMessage({ type:'lincko:embed-ready' }, '*');
+}
+// Saves anything still open, waits for the database to confirm every write, then asks the tracker to close the frame.
+async function coEmbedClose(){
+  try{
+    await outlineAutoSaveIfDirty();
+    await ideasAutoSaveIfDirty();
+    await waitForPendingWrites(db);
+  }catch(e){ console.warn('Could not confirm every save before closing:', e); }
+  window.parent.postMessage({ type:'lincko:embed-close' }, '*');
+}
+function coOpenInTracker(companyId, item){
+  if(!companyId) return;
+  switchTab('outreach-tracker');
+  const frame = coTrackerFrame();
+  const send = ()=>{ if(frame.contentWindow) frame.contentWindow.postMessage({ type:'lincko:open-company', companyId, item: item || null }, '*'); };
+  // A frame opened for the first time is still loading: send once it has.
+  if(frame.dataset.loaded) send(); else frame.addEventListener('load', send, { once:true });
+}
+window.addEventListener('message', (e)=>{
+  const frame = coTrackerFrame();
+  if(!frame || e.source!==frame.contentWindow) return;
+  const d = e.data || {};
+  if(d.type==='lincko:co-open' && d.prospectId) coOpenFromTracker(String(d.prospectId), d.item);
+  else if(d.type==='lincko:co-changed' && cvCurrentTab==='outreach') coRefreshIfIdle();
+  else if(d.type==='lincko:inbox-count'){
+    coInbox = { overdue: +d.overdue || 0, today: +d.today || 0 };
+    try{ localStorage.setItem('lcCoInbox', JSON.stringify(coInbox)); }catch(err){}
+    const card = document.querySelector('#homeOverlay .home-card[data-channel="outreach"]');
+    if(card) homeRenderFoot(card);
+  }
+  else if(d.type==='lincko:inbox-tasks' && Array.isArray(d.tasks)){
+    dtCoTasks = d.tasks.filter(t=> t && typeof t.key==='string' && t.company && t.due);
+    dtSyncCo();
+  }
+});
+
+// The tracker frame loads on first open, or in the background from the landing page so its
+// Inbox count (overdue + due today, posted as lincko:inbox-count) can fill the Creative Outreach card.
+function coTrackerLoad(){
+  const frame = coTrackerFrame();
+  if(!frame || frame.getAttribute('src')) return;
+  frame.addEventListener('load', ()=>{ frame.dataset.loaded = '1'; }, { once:true });
+  frame.setAttribute('src', frame.dataset.src);
+}
+// Last count seen, so the card has a line straight away; corrected when the tracker reports in.
+let coInbox = null;
+try{ coInbox = JSON.parse(localStorage.getItem('lcCoInbox')); }catch(err){}
+
 /* ================= PHYSICAL GOODS ================= */
 // One Physical Good record per prospect (kind 'physicalGood' in cineVlogs, linked by prospectId).
 // The /physical-goods skill does the research and picks, then `scripts/bank.py publish` writes
@@ -4818,7 +5145,8 @@ const PG_PROMPT_LABELS = {
 let coPhysicalGoods = [];
 let pgActiveId = null;
 try{ pgActiveId = localStorage.getItem(PG_ACTIVE_KEY); }catch(e){}
-let pgEditing = null;   // null | 'notes': the picks themselves are read-only here
+let pgEditing = null;   // null | 'notes' | 'tier:<low|mid|high>' (adding or editing that pick)
+let pgTierDraft = null; // unsaved pick fields while a pick form is open
 
 function pgTierDef(key){ return PG_TIERS.find(t=> t.key===key) || { key, label: key || '', cap:'' }; }
 function pgFor(prospectId){ return coPhysicalGoods.find(r=> r.prospectId===prospectId) || null; }
@@ -4866,6 +5194,24 @@ async function pgDelete(id){
   if(pgActiveId===id) pgBack(); else coRenderProspect();
 }
 
+// A Physical Good made by hand (from the company in the Outreach Tracker) instead of by the skill: it starts
+// empty, and its picks are added on the page. A later /physical-goods publish for the same prospect fills it the usual way.
+async function pgCreateManual(prospectId){
+  const p = coProspects.find(x=> x.id===prospectId);
+  if(!p || pgFor(prospectId)) return;
+  const now = Date.now();
+  const rec = { kind: PG_KIND, prospectId, company: p.name || '', contact: '', tiers: {}, leadTier: '', notes: '', checklist: {}, manual: true, createdAt: now, updatedAt: now };
+  try{
+    const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+    rec.id = ref.id;
+    coPhysicalGoods.push(rec);
+    coTouchProspect(prospectId);
+    pgOpen(rec.id);
+  }catch(e){
+    console.error('Failed to create Physical Good:', e);
+    await lcAlert('Connection error', 'Could not create this Physical Good. Check your connection and try again.');
+  }
+}
 function pgOpen(id){
   const pg = coPhysicalGoods.find(r=> r.id===id);
   if(!pg) return;
@@ -4876,11 +5222,13 @@ function pgOpen(id){
   try{ localStorage.setItem(PG_ACTIVE_KEY, id); }catch(e){}
   pgEditing = null;
   pgNotesDraft = null;
+  pgTierDraft = null;
   pgRender();
 }
 async function pgBack(){
-  if(pgEditing && !(await lcConfirm('Leave without saving?', 'Your notes have unsaved changes. Leave and lose them?', { confirmText:'Leave', danger:true }))) return;
+  if(pgEditing && !(await lcConfirm('Leave without saving?', 'You have unsaved changes on this page. Leave and lose them?', { confirmText:'Leave', danger:true }))) return;
   pgEditing = null;
+  if(window.CO_EMBED) return coEmbedClose();
   const prospectId = (pgActive() || {}).prospectId || coActiveProspectId;
   if(coProspects.some(p=> p.id===prospectId)) coOpenProspect(prospectId);
   else coBackToProspects();
@@ -4944,15 +5292,18 @@ function pgBoxesHtml(pg){
   return '<div class="pg-boxes">' + PG_TIERS.map(t=> pgBoxHtml(pg, t)).join('') + '</div>';
 }
 function pgBoxHtml(pg, t){
+  if(pgEditing==='tier:' + t.key) return pgBoxFormHtml(pg, t);
   const tier = (pg.tiers && pg.tiers[t.key]) || {};
   const isLead = pg.leadTier===t.key && !!tier.name;
+  const editBtn = tier.name ? '<button type="button" class="pg-edit-pick" data-pg-edit-tier="' + escAttr(t.key) + '">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>Edit</button>' : '';
   const head = '<header class="pg-box-head"><p class="pg-box-tier"><span>' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span>'
-      + (isLead ? '<span class="pg-tab-star">&#9733; Lead</span>' : '') + '</p>'
-    + '<h2 class="pg-box-name">' + esc(tier.good || tier.name || 'No pick at this price') + '</h2>'
+      + '<span class="pg-box-tier-end">' + (isLead ? '<span class="pg-tab-star">&#9733; Lead</span>' : '') + editBtn + '</span></p>'
+    + '<h2 class="pg-box-name">' + esc(tier.good || tier.name || 'No pick at this price yet') + '</h2>'
     + (tier.good && tier.name ? '<p class="pg-box-alias">' + esc(tier.name) + '</p>' : '') + '</header>';
   if(!tier.name){
     return '<article class="pg-box is-empty" id="pg-box-' + t.key + '">' + head
-      + '<div class="pg-pick-empty">No pick at ' + esc(t.label.toLowerCase()) + ' (' + esc(t.cap.toLowerCase()) + ') in this run.</div></article>';
+      + '<div class="pg-pick-empty"><button type="button" class="pg-add-pick" data-pg-edit-tier="' + escAttr(t.key) + '"><span>+</span>Add a ' + esc(t.label.toLowerCase()) + ' pick (' + esc(t.cap.toLowerCase()) + ')</button></div></article>';
   }
   const status = tier.status || 'Idea';
   const [costMain, costSub] = pgSplit(tier.cost);
@@ -4985,6 +5336,51 @@ function pgBoxHtml(pg, t){
           + '<button type="button" class="btn small" data-pg-copy-text="' + escAttr(tier.insideNote.trim()) + '">Copy</button></div>'
         : '')
   + '</article>';
+}
+
+// Add / edit one pick. Field names match what the skill publishes, so hand-made and skill-made picks look the same.
+const PG_FORM_FIELDS = [
+  { key:'name',       label:'The gift',            ph:'e.g. A framed print of their first storefront' },
+  { key:'what',       label:'What it is',          ph:'What actually arrives in the box', multi:true },
+  { key:'whyThem',    label:'Why them',            ph:'Why this lands for this person in particular', multi:true },
+  { key:'cost',       label:'Cost',                ph:'e.g. $35', row:true },
+  { key:'leadTime',   label:'Lead time',           ph:'e.g. 5-7 days', row:true },
+  { key:'sourcing',   label:'Where to get it',     ph:'Shop, link or maker', multi:true },
+  { key:'riskGap',    label:'Check before buying', ph:'Anything to confirm first: address, allergies, sizing', multi:true },
+  { key:'insideNote', label:'Inside note',         ph:'The handwritten note that goes in the box (50 words max)', multi:true },
+];
+function pgBoxFormHtml(pg, t){
+  const tier = (pg.tiers && pg.tiers[t.key]) || {};
+  const d = pgTierDraft || Object.assign({}, tier, { lead: pg.leadTier===t.key });
+  const input = f=> f.multi
+    ? '<textarea data-pg-field="' + f.key + '" rows="2" placeholder="' + escAttr(f.ph) + '">' + esc(d[f.key] || '') + '</textarea>'
+    : '<input type="text" data-pg-field="' + f.key + '" value="' + escAttr(d[f.key] || '') + '" placeholder="' + escAttr(f.ph) + '">';
+  const field = f=> '<label class="pg-f"><span class="pg-k">' + esc(f.label) + '</span>' + input(f) + '</label>';
+  const rowFields = PG_FORM_FIELDS.filter(f=> f.row);
+  const size = '<label class="pg-f"><span class="pg-k">Size</span><select data-pg-field="size"><option value="">Choose…</option>'
+    + ['small','medium','large'].map(z=> '<option value="' + z + '"' + (d.size===z ? ' selected' : '') + '>' + z[0].toUpperCase() + z.slice(1) + '</option>').join('') + '</select></label>';
+  let fields = '';
+  PG_FORM_FIELDS.forEach(f=>{
+    if(f.row){ if(f===rowFields[0]) fields += '<div class="pg-form-row">' + rowFields.map(field).join('') + size + '</div>'; return; }
+    fields += field(f);
+  });
+  return '<article class="pg-box is-editing" id="pg-box-' + t.key + '">'
+    + '<header class="pg-box-head"><p class="pg-box-tier"><span>' + esc(t.label) + ' &middot; ' + esc(t.cap) + '</span></p>'
+    + '<h2 class="pg-box-name">' + (tier.name ? 'Edit this pick' : 'Add a pick') + '</h2></header>'
+    + '<div class="pg-form">' + fields
+      + '<label class="pg-f-check"><input type="checkbox" data-pg-field="lead"' + (d.lead ? ' checked' : '') + '><span>&#9733; Lead with this pick</span></label>'
+      + '<div class="pg-form-actions">'
+        + (tier.name ? '<button type="button" class="btn small pg-remove-pick" data-pg-remove-tier="' + escAttr(t.key) + '">Remove pick</button>' : '<span></span>')
+        + '<span class="pg-form-btns"><button type="button" class="btn small" data-pg-cancel>Cancel</button><button type="button" class="btn small primary" data-pg-save-tier="' + escAttr(t.key) + '">Save pick</button></span>'
+      + '</div>'
+    + '</div></article>';
+}
+function pgReadTierForm(){
+  const box = document.querySelector('#pgBody .pg-box.is-editing');
+  if(!box) return null;
+  const d = {};
+  box.querySelectorAll('[data-pg-field]').forEach(el=>{ d[el.dataset.pgField] = el.type==='checkbox' ? el.checked : el.value.trim(); });
+  return d;
 }
 
 function pgMsgHtml(subject, text){
@@ -5061,8 +5457,10 @@ function pgRender(){
   if(!pg) return;
   const ta = document.getElementById('pgNotesTextarea');
   if(ta) pgNotesDraft = ta.value;
+  const draft = pgReadTierForm();
+  if(draft) pgTierDraft = draft;
   const prospect = coProspects.find(p=> p.id===pg.prospectId);
-  document.getElementById('pgBackLink').innerHTML = '&larr; ' + esc(prospect ? (prospect.name || 'Untitled Prospect') : 'Creative Outreach');
+  document.getElementById('pgBackLink').innerHTML = '&larr; ' + (window.CO_EMBED ? 'Back to company' : esc(prospect ? (prospect.name || 'Untitled Prospect') : 'Active Creative Movies'));
   document.getElementById('pgDetailTitle').textContent = 'Physical Good';
   document.getElementById('pgMeta').innerHTML = '';
 
@@ -5073,10 +5471,11 @@ function pgRender(){
     + pgResearchHtml(pg)
     + pgNotesHtml(pg)
     + '<p class="pg-foot">' + (pg.slug ? 'Source: <code>physical-goods-bank/runs/' + esc(pg.slug) + '/recommendations.md</code> &middot; ' : '')
-      + 'To change a pick, re-run /physical-goods and publish again. Statuses, checklist ticks and notes are kept.</p>';
+      + 'Add or edit a pick with its Edit button, or re-run /physical-goods and publish again. Statuses, checklist ticks and notes are kept.</p>';
 
   const nta = document.getElementById('pgNotesTextarea');
   if(nta) requestAnimationFrame(()=> outlineAutoGrow(nta));
+  document.querySelectorAll('#pgBody .pg-form textarea').forEach(el=> requestAnimationFrame(()=> outlineAutoGrow(el)));
 }
 
 // One listener set for the page body, attached once at startup.
@@ -5105,7 +5504,51 @@ function pgBindBody(){
       if(ta) ta.focus();
       return;
     }
-    if(e.target.closest('[data-pg-cancel]')){ pgEditing = null; pgNotesDraft = null; pgRender(); return; }
+    const editTier = e.target.closest('[data-pg-edit-tier]');
+    if(editTier){
+      if(pgEditing && !(await lcConfirm('Discard your changes?', 'You have another edit open on this page. Discard it?', { confirmText:'Discard', danger:true }))) return;
+      const key = editTier.dataset.pgEditTier;
+      pgEditing = 'tier:' + key; pgTierDraft = null; pgNotesDraft = null;
+      pgRender();
+      const box = document.getElementById('pg-box-' + key);
+      if(box){
+        box.scrollIntoView({ behavior:'smooth', block:'start' });
+        const first = box.querySelector('[data-pg-field]');
+        if(first) first.focus({ preventScroll:true });
+      }
+      return;
+    }
+    const saveTier = e.target.closest('[data-pg-save-tier]');
+    if(saveTier){
+      const key = saveTier.dataset.pgSaveTier;
+      const d = pgReadTierForm() || {};
+      if(!d.name){ lcAlert('Name the gift', 'Give this pick a name before saving it.'); return; }
+      const lead = !!d.lead; delete d.lead;
+      pg.tiers = pg.tiers || {};
+      const prev = pg.tiers[key] || {};
+      pg.tiers[key] = Object.assign({}, prev, d, { status: prev.status || 'Idea', type: prev.type || 'original' });
+      if(lead) pg.leadTier = key;
+      else if(pg.leadTier===key) pg.leadTier = '';
+      // With a single pick, that pick is the lead, so the top of the page always has something to show.
+      const picked = PG_TIERS.filter(x=> pg.tiers[x.key] && pg.tiers[x.key].name);
+      if(!pg.leadTier && picked.length===1) pg.leadTier = picked[0].key;
+      pgEditing = null; pgTierDraft = null;
+      pgRender();
+      await pgSave(pg, { tiers: pg.tiers, leadTier: pg.leadTier || '' });
+      return;
+    }
+    const removeTier = e.target.closest('[data-pg-remove-tier]');
+    if(removeTier){
+      const key = removeTier.dataset.pgRemoveTier;
+      if(!(await lcConfirm('Remove this pick?', 'Remove the ' + pgTierDef(key).label.toLowerCase() + ' pick from this Physical Good?', { confirmText:'Remove', danger:true }))) return;
+      delete pg.tiers[key];
+      if(pg.leadTier===key) pg.leadTier = '';
+      pgEditing = null; pgTierDraft = null;
+      pgRender();
+      await pgSave(pg, { tiers: pg.tiers, leadTier: pg.leadTier || '' });
+      return;
+    }
+    if(e.target.closest('[data-pg-cancel]')){ pgEditing = null; pgNotesDraft = null; pgTierDraft = null; pgRender(); return; }
     if(e.target.closest('[data-pg-save]')){
       pg.notes = document.getElementById('pgNotesTextarea').value;
       pgEditing = null; pgNotesDraft = null;
@@ -9076,6 +9519,7 @@ async function dtLoad(){
   catch(e){ console.error('Failed to load the daily tasks:', e); dtState.loading = null; dtState.error = true; }
   if(document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
   homeCards().forEach(homeRenderFoot);
+  dtSyncCo();
 }
 // The Close sync (close-sync/sync.mjs) adds tasks to the same doc while the page is open, so keep dtState.rec live:
 // a save from stale state would drop them. Changes waiting to save win, but Close tasks that arrive meanwhile are kept
@@ -9094,6 +9538,7 @@ function dtWatch(){
     const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
     if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
     homeCards().forEach(homeRenderFoot);
+    dtSyncCo();
   }, (e)=> console.error('Lost the live link to the daily tasks:', e));
 }
 // Written straight away and on its own field, so the sync picks it up even if the list save is still waiting.
@@ -9102,6 +9547,64 @@ async function dtCloseDone(closeId){
   r.closeDone = [...(r.closeDone || []), closeId];
   try{ await updateDoc(doc(db, CV_COLLECTION, r.id), { closeDone: arrayUnion(closeId) }); }
   catch(e){ console.error('Failed to mark the Close task done:', e); }
+}
+// Outreach Tracker follow-ups: the tracker frame posts its Inbox (lincko:inbox-tasks, every touch keyed
+// 'companyId|touchId'); each one is a Power List task carrying coTask, coKind and coCompanyId. New ones are added,
+// dates follow the tracker, and one the tracker no longer lists (done there, or no longer due) is dropped.
+// Ticking one Done here adds its key to coDone and asks the tracker to mark the touch done (lincko:inbox-done);
+// the key stays in coDone, so the task is not added again, until the tracker stops listing it.
+let dtCoTasks = null;
+const dtCoAsked = new Set(); // asked the tracker once this session; a retry waits for the next page load
+const dtCoName = (company)=> 'Do follow-up for ' + company + '!';
+function dtCoAsk(key){
+  if(dtCoAsked.has(key)) return;
+  dtCoAsked.add(key);
+  const frame = coTrackerFrame();
+  const send = ()=>{ if(frame.contentWindow) frame.contentWindow.postMessage({ type:'lincko:inbox-done', key }, '*'); };
+  coTrackerLoad();
+  if(frame.dataset.loaded) send(); else frame.addEventListener('load', send, { once:true });
+}
+async function dtCoDone(key){
+  const r = dtState.rec;
+  r.coDone = [...new Set([...(r.coDone || []), key])];
+  dtCoAsk(key);
+  try{ await updateDoc(doc(db, CV_COLLECTION, r.id), { coDone: arrayUnion(key) }); }
+  catch(e){ console.error('Failed to record the follow-up as done:', e); }
+}
+function dtSyncCo(){
+  if(!dtState.loaded || !dtCoTasks) return;
+  const r = dtState.rec, byKey = new Map(dtCoTasks.map(t=> [t.key, t]));
+  let changed = false;
+  const seen = new Set(); // two pages open at once can each add the same follow-up: keep one
+  ['power', 'backlog'].forEach(k=>{
+    const keep = r[k].filter(x=> !x.coTask || (byKey.has(x.coTask) && !seen.has(x.coTask) && seen.add(x.coTask)));
+    if(keep.length!==r[k].length){ r[k] = keep; changed = true; }
+    keep.forEach(x=>{
+      const t = x.coTask && byKey.get(x.coTask);
+      if(!t) return;
+      if(k==='power' && x.due!==t.due){ x.due = t.due; changed = true; }
+      if(x.coKind!==t.kind){ x.coKind = t.kind; changed = true; }
+    });
+  });
+  // Done here but still listed: ask again (the tracker may not have been loaded). Gone from the list: forget it.
+  const done = r.coDone || [], stillDue = done.filter(key=> byKey.has(key));
+  stillDue.forEach(dtCoAsk);
+  const cleared = done.filter(key=> !byKey.has(key));
+  if(cleared.length){
+    r.coDone = stillDue;
+    updateDoc(doc(db, CV_COLLECTION, r.id), { coDone: arrayRemove(...cleared) }).catch(e=> console.error('Failed to tidy the done follow-ups:', e));
+  }
+  const have = new Set([...r.power, ...r.backlog].map(x=> x.coTask).filter(Boolean)), skip = new Set(stillDue);
+  dtCoTasks.forEach(t=>{
+    if(have.has(t.key) || skip.has(t.key)) return;
+    r.power.push({ id: dtNewId(), name: dtCoName(t.company), due: t.due, coTask: t.key, coKind: t.kind, coCompanyId: t.key.split('|')[0] });
+    changed = true;
+  });
+  if(!changed) return;
+  dtSave();
+  const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
+  if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
+  homeCards().forEach(homeRenderFoot);
 }
 function dtSave(){
   dtState.rec.updatedAt = Date.now();
@@ -9144,16 +9647,24 @@ function dtRender(instant){
   box.innerHTML = html;
   if(trState.loaded) trAnimateRings(box, instant);
 }
+// The due date opens the app's calendar (lcPickDate) instead of the browser's own picker.
+const DT_CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
+const dtDateText = (ymd)=> ymd ? trParse(ymd).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' }) : 'No due date';
+function dtDateBtn(ymd, attr){
+  return '<button type="button" class="os-input dt-date' + (ymd ? '' : ' is-empty') + '" ' + attr + ' aria-haspopup="dialog" aria-expanded="false" aria-label="Due date: ' + escAttr(dtDateText(ymd)) + '">'
+    + DT_CAL_SVG + '<span>' + esc(dtDateText(ymd)) + '</span></button>';
+}
 function dtListHtml(which){
   const power = which==='power', list = dtState.rec[which];
   const late = power ? dtLateCount() : 0;
   const n = list.length + (list.length===1 ? ' task' : ' tasks');
+  const today = power ? dtDueTodayCount() : 0;
   let html = '<section class="dt-sec"><div class="dt-sec-head"><div><h2>' + (power ? 'Power List' : 'Backlog') + '</h2><p>'
-    + (power ? n + ' to get done' + (late ? ', ' + late + ' late' : '') : n + ' for later. Move one up to the Power List when it is time.') + '</p></div></div>';
+    + (power ? n + ' to get done' + (late ? ', ' + late + ' late' : '') + (today ? ', ' + today + ' due today' : '') : n + ' for later. Move one up to the Power List when it is time.') + '</p></div></div>';
   if(power) html += dtWeekHtml();
   html += '<form class="dt-add' + (power ? '' : ' is-backlog') + '" data-dt-add="' + which + '" autocomplete="off">'
     + '<input class="os-input" name="name" placeholder="' + (power ? 'New task' : 'New backlog task') + '" aria-label="' + (power ? 'New task' : 'New backlog task') + '" required>'
-    + (power ? '<input class="os-input" type="date" name="due" aria-label="Due date" value="' + trYmd(new Date()) + '">' : '')
+    + (power ? '<input type="hidden" name="due" value="' + trYmd(new Date()) + '">' + dtDateBtn(trYmd(new Date()), 'data-dt-add-date') : '')
     + '<button type="submit" class="os-btn primary">+ Add task</button></form>';
   if(!list.length) return html + '<div class="os-empty">' + (power ? 'Nothing on the Power List. Add a task above or pull one up from the Backlog.' : 'The Backlog is empty.') + '</div></section>';
   // Power List: soonest due first, tasks with no date at the bottom
@@ -9162,11 +9673,13 @@ function dtListHtml(which){
   rows.forEach(x=>{
     const due = dtDue(x.due);
     html += '<tr class="' + (power && due.late ? 'is-late' : '') + '" data-dt-id="' + escAttr(x.id) + '">'
-      + '<td><input class="dt-name" data-dt-field="name" value="' + escAttr(x.name) + '" aria-label="Task name"></td>'
-      + (power ? '<td data-label="Due date"><input class="os-input dt-date" type="date" data-dt-field="due" value="' + escAttr(x.due || '') + '" aria-label="Due date"></td>'
+      + '<td><div class="dt-task"><input class="dt-name" data-dt-field="name" value="' + escAttr(x.name) + '" aria-label="Task name">'
+      + (x.coTask ? '<span class="dt-src is-co">Creative Outreach</span>' : '') + '</div></td>'
+      + (power ? '<td data-label="Due date">' + dtDateBtn(x.due, 'data-dt-date') + '</td>'
         + '<td data-label="When"><span class="dt-due ' + due.cls + '">' + due.text + '</span></td>' : '')
       + '<td><span class="dt-actions">'
       + (x.closeUrl ? '<a class="os-icon-btn" href="' + escAttr(x.closeUrl) + '" target="_blank" rel="noopener" title="Open in Close" aria-label="Open in Close">' + DT_LINK_SVG + '</a>' : '')
+      + (x.coCompanyId ? '<button type="button" class="os-icon-btn" data-dt-act="co-open" title="Open in Outreach Tracker" aria-label="Open in Outreach Tracker">' + DT_LINK_SVG + '</button>' : '')
       + (power
         ? '<button type="button" class="os-btn small" data-dt-act="done" title="Done: take it off the list">' + DT_CHECK_SVG + 'Done</button>'
           + '<button type="button" class="os-icon-btn" data-dt-act="to-backlog" title="Move to Backlog" aria-label="Move to Backlog">' + DT_DOWN_SVG + '</button>'
@@ -9228,33 +9741,47 @@ function dtInit(){
     document.querySelector('[data-dt-add="' + which + '"] [name="name"]').focus();
     homeCards().forEach(homeRenderFoot);
   });
-  // A renamed task saves without a redraw (focus may have moved to the next field); a new due date re-sorts the list.
+  // A renamed task saves without a redraw (focus may have moved to the next field). A new due date (the calendar, above) re-sorts the list.
   box.addEventListener('change', (e)=>{
-    const field = e.target.dataset.dtField, row = e.target.closest('[data-dt-id]');
-    const hit = field && row && dtFind(row.dataset.dtId);
+    const row = e.target.dataset.dtField==='name' && e.target.closest('[data-dt-id]');
+    const hit = row && dtFind(row.dataset.dtId);
     if(!hit) return;
-    if(field==='name'){
-      const v = e.target.value.trim();
-      if(!v){ e.target.value = hit.item.name; return; }
-      hit.item.name = v;
-    }else{
-      hit.item.due = e.target.value;
-      dtRender(true);
-    }
+    const v = e.target.value.trim();
+    if(!v){ e.target.value = hit.item.name; return; }
+    hit.item.name = v;
     dtSave();
   });
   box.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.classList.contains('dt-name')) e.target.blur(); });
   box.addEventListener('click', async (e)=>{
+    const addDate = e.target.closest('[data-dt-add-date]');
+    if(addDate){
+      const field = addDate.closest('form').elements.due;
+      lcPickDate(addDate, trParse(field.value || trYmd(new Date())).getTime(), (d)=>{
+        field.value = trYmd(d);
+        addDate.outerHTML = dtDateBtn(field.value, 'data-dt-add-date');
+      });
+      return;
+    }
+    const dateBtn = e.target.closest('[data-dt-date]'), dateRow = dateBtn && dateBtn.closest('[data-dt-id]');
+    const dateHit = dateRow && dtFind(dateRow.dataset.dtId);
+    if(dateHit){
+      const set = (ymd)=>{ dateHit.item.due = ymd; dtSave(); dtRender(true); homeCards().forEach(homeRenderFoot); };
+      lcPickDate(dateBtn, dateHit.item.due ? trParse(dateHit.item.due).getTime() : Date.now(), (d)=> set(trYmd(d)), { onClear: ()=> set('') });
+      return;
+    }
     const day = e.target.closest('[data-dt-day]');
     if(day){ trSetMark(trYmd(new Date()), day.dataset.dtDay, 'daily'); return; }
     const b = e.target.closest('[data-dt-act]'), row = b && b.closest('[data-dt-id]');
     const hit = row && dtFind(row.dataset.dtId);
     if(!hit) return;
     const act = b.dataset.dtAct, r = dtState.rec;
-    if(act==='delete' && !(await lcConfirm('Delete task?', '"' + hit.item.name + '" will be removed from the Backlog.', { confirmText:'Delete', danger:true }))) return;
+    if(act==='co-open'){ openChannel('outreach', { tab:'outreach-tracker' }); coOpenInTracker(hit.item.coCompanyId); return; }
+    if(act==='delete' && !(await lcConfirm('Delete task?', '"' + hit.item.name + '" will be removed from the Backlog.' + (hit.item.coTask ? ' The follow-up is marked done in the Outreach Tracker too.' : ''), { confirmText:'Delete', danger:true }))) return;
     hit.list.splice(hit.i, 1);
     if((act==='done' || act==='delete') && hit.item.closeId) dtCloseDone(hit.item.closeId);
-    const close = hit.item.closeUrl ? { closeId: hit.item.closeId, closeUrl: hit.item.closeUrl } : {};
+    if((act==='done' || act==='delete') && hit.item.coTask) dtCoDone(hit.item.coTask);
+    const close = hit.item.closeUrl ? { closeId: hit.item.closeId, closeUrl: hit.item.closeUrl }
+      : hit.item.coTask ? { coTask: hit.item.coTask, coKind: hit.item.coKind, coCompanyId: hit.item.coCompanyId } : {};
     if(act==='to-backlog') r.backlog.unshift({ id: hit.item.id, name: hit.item.name, ...close });
     if(act==='to-power') r.power.push({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()), ...close });
     dtSave();
@@ -9269,7 +9796,7 @@ function dtInit(){
 // Each channel only shows its own tabs. 'soon' is the placeholder page for channels not built yet.
 // The open channel lives in the URL hash (#builds etc.), so a refresh stays put and a plain link lands on the landing page.
 const CHANNELS = {
-  outreach:   { name:'Creative Outreach',    tabs:['outreach'] },
+  outreach:   { name:'Creative Outreach',    tabs:['outreach-tracker','outreach'] },
   business:   { name:'Dan James (Business)', tabs:['os:youtube:items','os:youtube:ideas','business','business-thumbs','tracker:youtube','os:youtube:os'] },
   builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','styles','effects','thumbs','buckets','tracker:cine'] },
   linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','os:linkedin:os','tracker:linkedin'] },
@@ -9341,13 +9868,25 @@ function homeRenderFoot(card){
     if(dtState.loaded){
       const late = dtLateCount(), due = dtDueTodayCount();
       const st = late ? 'behind' : due ? 'due' : 'on-track';
-      const say = late ? late + (late===1 ? ' task' : ' tasks') + ' late' : due ? (due===1 ? 'Task due' : due + ' tasks due') : 'Nothing late';
+      const count = (n, what)=> n + (n===1 ? ' task is ' : ' tasks are ') + what;
+      const say = due || late ? [due ? count(due, 'due today') : '', late ? count(late, 'late') : ''].filter(Boolean).join(', ') : 'Nothing due today or late';
       html += '<span class="hc-meta hc-status is-' + st + '">' + say + '</span>';
     }
     if(trState.loaded){
       const v = trMarks('daily')[trYmd(new Date())];
       html += '<span class="hc-meta">' + (v==='hit' ? 'Today won' : v==='miss' ? 'Today lost' : 'Today not marked yet') + '</span>';
     }
+    foot.innerHTML = html;
+    return;
+  }
+  // Creative Outreach: the Outreach Tracker Inbox's overdue + due-today tasks
+  if(ch==='outreach'){
+    if(!coInbox){ foot.innerHTML = ''; return; }
+    const n = coInbox.overdue + coInbox.today;
+    const st = coInbox.overdue ? 'behind' : n ? 'due' : 'on-track';
+    const say = n ? n + (n===1 ? ' task' : ' tasks') + ' must be completed' : 'Creative outbound is on track';
+    let html = '<span class="hc-meta hc-status is-' + st + '">' + say + '</span>';
+    if(n) html += '<span class="hc-meta">' + [coInbox.overdue ? coInbox.overdue + ' overdue' : '', coInbox.today ? coInbox.today + ' due today' : ''].filter(Boolean).join(' · ') + '</span>';
     foot.innerHTML = html;
     return;
   }
@@ -9373,6 +9912,7 @@ function homeInit(){
   document.querySelector('#homeOverlay .home-foot').style.setProperty('--i', cards.length + 1);
   document.getElementById('homeFootMax').textContent = cards.length;
   document.getElementById('homeResume').addEventListener('click', e=> openChannel(e.currentTarget.dataset.channel));
+  if(!window.CO_EMBED) coTrackerLoad();
   // 1-9 opens the matching card while the landing page is up (not while typing anywhere).
   document.addEventListener('keydown', e=>{
     if(activeChannel || e.metaKey || e.ctrlKey || e.altKey || e.repeat || !/^[1-9]$/.test(e.key)) return;
@@ -9413,6 +9953,17 @@ function switchTab(tab){
   document.querySelectorAll('.top-tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   document.getElementById('soonOverlay').classList.toggle('active', tab==='soon');
   document.getElementById('businessOverlay').classList.toggle('active', isBiz);
+  const otOverlay = document.getElementById('outreachTrackerOverlay');
+  otOverlay.classList.toggle('active', tab==='outreach-tracker');
+  if(tab==='outreach-tracker'){
+    const otFrame = coTrackerFrame();
+    if(!otFrame.getAttribute('src')){
+      coTrackerLoad();
+    } else if(otFrame.contentWindow){
+      // Its open company's Creative Outreach tiles may be stale after time on other tabs.
+      otFrame.contentWindow.postMessage({ type:'lincko:tracker-shown' }, '*');
+    }
+  }
   const isOs = tab.startsWith('os:');
   document.getElementById('osOverlay').classList.toggle('active', isOs);
   if(isOs){ const [, ch, view] = tab.split(':'); osShow(ch, view); } else { osHide(); }
@@ -9464,6 +10015,7 @@ function switchTab(tab){
   if(showPg) pgRender();
   if(showDetail){ cvApplyModeLabels(); cvRenderDetail(); }
   if(isCv) cvLoadMode(tab);
+  if(isCo) coRefreshIfIdle();
 }
 
 (async function init(){
@@ -9532,6 +10084,7 @@ function switchTab(tab){
   document.getElementById('pgBackLink').addEventListener('click', pgBack);
   pgBindBody();
   document.getElementById('coProspectRenameBtn').addEventListener('click', ()=>{ if(coActiveProspectId) coRenameProspect(coActiveProspectId); });
+  document.getElementById('coOpenInTrackerBtn').addEventListener('click', (e)=> coOpenInTracker(e.currentTarget.dataset.companyId));
   document.getElementById('cvRenameBtn').addEventListener('click', ()=>{ if(cvActiveId) cvRename(cvActiveId); });
   document.querySelectorAll('[data-cv-shot-action="add-row"]').forEach(btn=> btn.addEventListener('click', cvAddRow));
   document.querySelectorAll('[data-cv-shot-action="add-section"]').forEach(btn=> btn.addEventListener('click', cvAddSection));
@@ -9549,7 +10102,8 @@ function switchTab(tab){
   bkAudioInit();
   homeInit();
 
-  openChannel(location.hash.slice(1), {replace:true});
+  if(window.CO_EMBED) coEmbedBoot();
+  else openChannel(location.hash.slice(1), {replace:true});
 })();
 </script>
 </body>

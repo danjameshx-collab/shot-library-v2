@@ -1,0 +1,669 @@
+    /* ============================================================
+       Step card: the header of each mechanism in the sequence.
+       Loaded last. Replaces the single crowded band from 07-layout.css
+       with:
+       - a two-tier header (who/what + live status, then the controls),
+       - three labelled control groups (Seen switch, Reply, Sent via),
+       - the send's own to-dos as labelled tiles,
+       - a full-width banner once the deliverable is marked Seen.
+       ============================================================ */
+
+    .mech-section {
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+
+    /* A seen step lifts out of the list: green outline + soft halo. */
+    .mech-section:has(> .send-card-wrap .node-box.send.is-seen) {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px var(--green-tint), 0 8px 24px rgba(20, 92, 52, .10);
+    }
+
+    .mech-section .send-card-wrap {
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
+
+    /* ---------- The card ---------- */
+    .mech-section .node-box.send.send-hero-columns {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+      padding: 20px 22px 18px;
+      background: var(--surface);
+      transition: background-color .2s ease, box-shadow .2s ease;
+    }
+
+    .mech-section .node-box.send.send-hero-columns:hover {
+      background: #fafcfb;
+    }
+
+    .mech-section .node-box.send.send-hero-columns.is-seen {
+      background: linear-gradient(180deg, var(--green-tint) 0%, #f6fbf8 100%);
+      box-shadow: inset 5px 0 0 var(--green);
+    }
+
+    /* Same precedence as before: Replied over Posted over Seen. */
+    .mech-section .node-box.send.send-hero-columns.is-posted {
+      background: var(--blue-tint);
+    }
+
+    .mech-section .node-box.send.send-hero-columns.is-replied-card {
+      background: var(--purple-tint);
+      box-shadow: inset 5px 0 0 var(--purple);
+    }
+
+    /* ---------- Tier 1: step, icon, name, status ---------- */
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .mech-section .step-head .hero-step-badge {
+      position: static;
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      font-size: 14px;
+      box-shadow: none;
+    }
+
+    .step-icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--green-tint);
+      color: var(--green);
+    }
+
+    .step-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .is-seen .step-icon {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .step-head-text {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .mech-section .step-head .hero-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      line-height: 1.2;
+      white-space: normal;
+      color: var(--ink);
+    }
+
+    .step-sub {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .step-state-slot {
+      flex: 0 0 auto;
+    }
+
+    .step-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: #eef2ef;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .step-state svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .step-state.is-seen {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(20, 92, 52, .25);
+    }
+
+    .step-state.is-replied {
+      background: var(--purple);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(107, 63, 160, .25);
+    }
+
+    /* ---------- Tier 2: three labelled control groups ---------- */
+    .step-controls {
+      display: grid;
+      grid-template-columns: minmax(230px, auto) auto minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .step-field {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, .75);
+      border: 1px solid var(--border);
+      cursor: default;
+    }
+
+    .step-field-label,
+    .step-task-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--muted-soft);
+    }
+
+    /* The Seen switch: a real on/off switch, since it reroutes the branch below. */
+    .mech-section .step-field .seen-toggle.seen-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      width: auto;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: none;
+      box-shadow: none;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .seen-switch-track {
+      position: relative;
+      flex: 0 0 auto;
+      width: 44px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      background: #c9d3cd;
+      transition: background-color .2s ease;
+    }
+
+    .mech-section .seen-switch .seen-toggle-dot {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(13, 19, 15, .3);
+      transition: transform .22s cubic-bezier(.3, 1.4, .5, 1);
+    }
+
+    .seen-switch:hover .seen-switch-track {
+      background: #b5c2ba;
+    }
+
+    .seen-switch.is-seen .seen-switch-track {
+      background: var(--green);
+    }
+
+    .mech-section .seen-switch.is-seen .seen-toggle-dot {
+      transform: translateX(20px);
+    }
+
+    .mech-section .seen-switch.is-seen .seen-toggle-text {
+      color: var(--green-dark);
+    }
+
+    .seen-switch:focus-visible,
+    .step-reply:focus-visible,
+    .step-medium-options .pill:focus-visible {
+      outline: 2px solid var(--green-light);
+      outline-offset: 3px;
+    }
+
+    /* Reply: a plain button that fills purple once replied. */
+    .mech-section .step-field .seen-toggle.step-reply {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: none;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mech-section .step-field .seen-toggle.step-reply:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    .mech-section .step-field .seen-toggle.step-reply .seen-toggle-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #b8c2bc;
+    }
+
+    .mech-section .step-field .seen-toggle.step-reply.is-replied {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: #fff;
+    }
+
+    .mech-section .step-field .seen-toggle.step-reply.is-replied .seen-toggle-dot {
+      background: #fff;
+    }
+
+    /* Sent via: chips that show a tick when chosen. */
+    .step-medium-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mech-section .step-medium-options .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .mech-section .step-medium-options .pill.channel-toggle:hover,
+    .mech-section .step-medium-options .pill.medium-toggle:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .mech-section .step-medium-options .pill.is-on {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .mech-section .step-medium-options .pill.medium-fixed {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .mech-section .step-medium-options .pill.is-on::before {
+      content: "";
+      width: 10px;
+      height: 6px;
+      margin-top: -3px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+    }
+
+    /* ---------- Seen banner ---------- */
+    .mech-section .seen-date-row.seen-banner {
+      display: none !important;
+    }
+
+    .mech-section .seen-date-row.seen-banner.is-on {
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+      width: auto;
+      margin: 0;
+      padding: 12px 22px;
+      background: var(--green);
+      color: #fff;
+      justify-content: flex-start;
+    }
+
+    .seen-banner-icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+    }
+
+    .seen-banner-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .seen-banner-copy {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .seen-banner-copy strong {
+      font-size: 14.5px;
+      font-weight: 800;
+    }
+
+    .seen-banner-copy span {
+      font-size: 12.5px;
+      font-weight: 500;
+      opacity: .88;
+    }
+
+    .seen-banner-arrow {
+      flex: 0 0 auto;
+      font-size: 18px;
+      font-weight: 800;
+      animation: seen-bob 1.6s ease-in-out infinite;
+    }
+
+    @keyframes seen-bob {
+      0%, 100% { transform: translateY(-2px); }
+      50% { transform: translateY(3px); }
+    }
+
+    /* Flipping to Seen: banner slides in, status chip pops. */
+    .send-card-wrap.just-seen .seen-banner.is-on {
+      animation: seen-banner-in .45s cubic-bezier(.2, .9, .3, 1);
+    }
+
+    .send-card-wrap.just-seen .step-state.is-seen {
+      animation: seen-pop .5s cubic-bezier(.3, 1.6, .5, 1);
+    }
+
+    @keyframes seen-banner-in {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes seen-pop {
+      0% { transform: scale(.7); }
+      100% { transform: scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .seen-banner-arrow,
+      .send-card-wrap.just-seen .seen-banner.is-on,
+      .send-card-wrap.just-seen .step-state.is-seen {
+        animation: none;
+      }
+    }
+
+    /* ---------- The send's own to-dos ---------- */
+    .step-tasks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      padding: 14px 22px 16px;
+      border-top: 1px solid var(--border-soft);
+      background: #fbfcfb;
+    }
+
+    .step-task {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .step-task .touch-cadence-wrap {
+      max-width: none;
+    }
+
+    .step-task .touch-cadence-row,
+    .step-task .manual-check-row {
+      max-width: none;
+      margin: 0;
+      gap: 11px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      transition: border-color .15s ease, background-color .15s ease;
+    }
+
+    .step-task .touch-cadence-checkbox,
+    .step-task .manual-check-checkbox {
+      width: 18px;
+      height: 18px;
+    }
+
+    .step-task .touch-cadence-checkbox {
+      accent-color: var(--green);
+    }
+
+    .step-task .touch-day {
+      font-size: 14px;
+      min-width: 0;
+    }
+
+    .step-task .touch-date {
+      font-size: 13px;
+    }
+
+    .step-task .manual-check-text {
+      font-size: 13.5px;
+    }
+
+    .step-task .touch-cadence-row:hover {
+      border-color: var(--green);
+      background: var(--green-tint);
+    }
+
+    .step-task .manual-check-row {
+      border-color: #efc9bf;
+      background: var(--red-light-tint);
+    }
+
+    .step-task .manual-check-row:hover {
+      border-color: var(--red);
+    }
+
+    .step-task .touch-cadence-row.cadence-done,
+    .step-task .manual-check-row.manual-done {
+      border-color: var(--green-tint-strong);
+      background: var(--green-tint);
+    }
+
+    /* The send itself is the next thing to do. */
+    .send-card-wrap.is-next:not(.is-next-manual) .step-task .touch-cadence-row {
+      border-color: var(--green);
+      background: var(--green-tint);
+      box-shadow: 0 0 0 3px rgba(63, 166, 107, .18);
+    }
+
+    /* The step's own manual task is what's holding the sequence up. */
+    .send-card-wrap.is-next-manual .step-task .manual-check-row {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(179, 69, 46, .14);
+    }
+
+    .send-card-wrap.is-next:not(.is-next-manual) .step-task:has(.touch-cadence-row) .step-task-label::after,
+    .send-card-wrap.is-next-manual .step-task:has(.manual-check-row) .step-task-label::after {
+      content: "Next";
+      margin-left: 8px;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--green);
+      color: #fff;
+      font-size: 9.5px;
+      letter-spacing: .03em;
+      vertical-align: 1px;
+    }
+
+    /* ---------- On hold: behind an unfinished manual step ---------- */
+    .hold-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 6px 0 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--accent-tint);
+      border: 1px solid #f3d6ae;
+      color: #7a4f10;
+      font-size: 12.5px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .send-card-wrap > .hold-notice {
+      margin: 0;
+      border-radius: 0;
+      border-width: 1px 0 0;
+      padding: 11px 22px;
+    }
+
+    .hold-notice strong {
+      font-weight: 800;
+    }
+
+    .hold-notice-icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .hold-notice-icon svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    .hold-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      vertical-align: -2px;
+      border-radius: 50%;
+      background: #f3e2c8;
+      color: #a8711d;
+    }
+
+    .hold-icon svg {
+      width: 8px;
+      height: 8px;
+    }
+
+    .touch-cadence-row.on-hold .touch-day,
+    .touch-cadence-row.on-hold .touch-date {
+      color: var(--muted-soft);
+    }
+
+    .touch-cadence-row.on-hold .touch-date {
+      font-style: italic;
+    }
+
+    /* Paused behind an unfinished manual step: can't be ticked. */
+    .touch-cadence-row.on-hold,
+    .touch-cadence-row.on-hold .touch-cadence-checkbox {
+      cursor: not-allowed;
+    }
+
+    /* ---------- Follow-up rows: calmer manual tick-offs ---------- */
+    .touch-row > .manual-check-row {
+      border: 1px solid #efc9bf;
+      background: #fff;
+    }
+
+    .touch-row > .manual-check-row:hover {
+      background: var(--red-light-tint);
+      border-color: var(--red);
+    }
+
+    .touch-row > .manual-check-row.manual-done {
+      border-color: var(--green-tint-strong);
+      background: var(--green-tint);
+    }
+
+    /* Social follow-ups line up with the email follow-ups' names. */
+    .touch-row > .chip.social-chip {
+      padding-left: 0;
+      padding-right: 0;
+      background: transparent;
+    }
+
+    /* Seen branch: its heading reads as a label, and the instant reply
+       (the first thing to do once seen) stands out. */
+    .mech-section .mech-block.is-seen .opened-head {
+      color: var(--green-dark);
+    }
+
+    .mech-section .mech-block.is-seen .touch-row:has(> .chip-instant) {
+      background: var(--accent-tint);
+      box-shadow: inset 4px 0 0 var(--accent);
+      margin-bottom: 4px;
+    }
+
+    /* ---------- Narrower screens ---------- */
+    @media (max-width: 860px) {
+      .step-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .step-field-medium {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .mech-section .node-box.send.send-hero-columns {
+        padding: 16px 14px 14px;
+      }
+
+      .step-head {
+        flex-wrap: wrap;
+        gap: 10px 12px;
+      }
+
+      .step-state-slot {
+        flex-basis: 100%;
+      }
+
+      .step-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .mech-section .seen-date-row.seen-banner.is-on,
+      .step-tasks {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+    }
