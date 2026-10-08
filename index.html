@@ -2923,7 +2923,7 @@ html.lc-android-tablet table.shot-table .shot-type-chip-label{white-space:normal
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot, arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
@@ -9023,6 +9023,7 @@ function lnInit(){
 /* ---------- Daily Tasks: the Power List and the Backlog (replaces the Notion Tasks & Trackers page) ---------- */
 // One kind 'dailyTasks' doc in the cineVlogs collection: { power:[{ id, name, due:'2026-10-07' }], backlog:[{ id, name }] }.
 // Tasks pulled in from Close also carry closeId and closeUrl; closeSynced (written only by close-sync/sync.mjs) lists every Close task already pulled in.
+// Ticking one Done (or deleting it from the Backlog) adds its closeId to closeDone, and the sync then marks it complete in Close.
 // The Stats tab (and the bottom of the All tab) is the 'daily' tracker above.
 const DT_KIND = 'dailyTasks';
 const dtState = { loaded:false, loading:null, error:false, rec:null, view:'power' };
@@ -9077,16 +9078,30 @@ async function dtLoad(){
   homeCards().forEach(homeRenderFoot);
 }
 // The Close sync (close-sync/sync.mjs) adds tasks to the same doc while the page is open, so keep dtState.rec live:
-// a save from stale state would drop them. Changes waiting to save win; a redraw waits while you are typing in the list.
+// a save from stale state would drop them. Changes waiting to save win, but Close tasks that arrive meanwhile are kept
+// (dropping one would read as done and complete it in Close); a redraw waits while you are typing in the list.
 function dtWatch(){
   onSnapshot(doc(db, CV_COLLECTION, dtState.rec.id), (snap)=>{
-    if(snap.metadata.hasPendingWrites || dtSaveTimer || !snap.exists()) return;
+    if(!snap.exists()) return;
     const d = snap.data();
+    if(snap.metadata.hasPendingWrites || dtSaveTimer){
+      const r = dtState.rec, done = new Set(r.closeDone || []);
+      const have = new Set([...r.power, ...r.backlog].map(x=> x.closeId).filter(Boolean));
+      ['power', 'backlog'].forEach(k=> (d[k] || []).forEach(x=>{ if(x.closeId && !have.has(x.closeId) && !done.has(x.closeId)) r[k].push(x); }));
+      return;
+    }
     dtState.rec = { id: snap.id, ...d, power: d.power || [], backlog: d.backlog || [] };
     const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input');
     if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
     homeCards().forEach(homeRenderFoot);
   }, (e)=> console.error('Lost the live link to the daily tasks:', e));
+}
+// Written straight away and on its own field, so the sync picks it up even if the list save is still waiting.
+async function dtCloseDone(closeId){
+  const r = dtState.rec;
+  r.closeDone = [...(r.closeDone || []), closeId];
+  try{ await updateDoc(doc(db, CV_COLLECTION, r.id), { closeDone: arrayUnion(closeId) }); }
+  catch(e){ console.error('Failed to mark the Close task done:', e); }
 }
 function dtSave(){
   dtState.rec.updatedAt = Date.now();
@@ -9238,6 +9253,7 @@ function dtInit(){
     const act = b.dataset.dtAct, r = dtState.rec;
     if(act==='delete' && !(await lcConfirm('Delete task?', '"' + hit.item.name + '" will be removed from the Backlog.', { confirmText:'Delete', danger:true }))) return;
     hit.list.splice(hit.i, 1);
+    if((act==='done' || act==='delete') && hit.item.closeId) dtCloseDone(hit.item.closeId);
     const close = hit.item.closeUrl ? { closeId: hit.item.closeId, closeUrl: hit.item.closeUrl } : {};
     if(act==='to-backlog') r.backlog.unshift({ id: hit.item.id, name: hit.item.name, ...close });
     if(act==='to-power') r.power.push({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()), ...close });
