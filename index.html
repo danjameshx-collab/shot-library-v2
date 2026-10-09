@@ -588,7 +588,21 @@ button.ws-box:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
 .dt-task .dt-name{flex:1 1 auto;}
 .dt-src{flex:none; font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap; background:#EEF1EF; color:var(--ink-soft);}
 .dt-src.is-co{background:#FEF3E2; color:#B45309;}
+/* drag a task by its grip to move it up or down the list */
+.dt-grip{
+  flex:none; display:grid; place-items:center; width:22px; height:30px; margin-left:-10px; border-radius:6px;
+  color:var(--ink-faint); cursor:grab; touch-action:none; opacity:.45; transition:opacity .15s, background .15s;
+}
+.dt-grip svg{width:14px; height:14px;}
+.dt-table tbody tr:hover .dt-grip{opacity:1;}
+.dt-grip:hover{background:var(--line);}
+.dt-task .dt-name{margin-left:0;}
+.dt-task .dt-grip{margin-right:-6px;}
+.dt-table tbody tr.is-dragging{position:relative; z-index:2; background:var(--paper); box-shadow:0 8px 24px rgba(16,24,20,.14);}
+.dt-table tbody tr.is-dragging td{border-bottom-color:transparent;}
+body.dt-dragging, body.dt-dragging *{cursor:grabbing !important; user-select:none;}
 @media (max-width:760px){
+  .dt-grip{opacity:1; margin-left:-4px;}
   .dt-add, .dt-add.is-backlog{grid-template-columns:1fr;}
   .dt-name{min-width:0; margin-left:0;}
   .dt-table td:last-child{grid-column:1 / -1; text-align:left;}
@@ -969,6 +983,65 @@ textarea.os-input.os-wrap.is-desc{font-size:13.5px; color:var(--ink-soft);}
   .os-detail-title{font-size:21px;}
 }
 
+/* ---------- Hooks (LinkedIn): the Hook Library ---------- */
+.hk-add{margin-bottom:18px;}
+.hk-add .os-hint{margin:-4px 0 12px;}
+.hk-add-text{min-height:120px; resize:vertical; line-height:1.5;}
+.hk-add-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+.hk-add-row .os-input{flex:1; min-width:200px;}
+.hk-bar{display:flex; gap:8px; align-items:center; margin-bottom:12px;}
+.hk-search{flex:1; position:relative;}
+.hk-search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--ink-faint); pointer-events:none;}
+.hk-search .os-input{padding:10px 40px 10px 36px; border-radius:999px; font-size:13.5px;}
+.hk-search kbd{position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); border:1px solid var(--line-strong); border-radius:5px; padding:0 5px; pointer-events:none;}
+.hk-search .os-input:focus + kbd{display:none;}
+.hk-star-chip{display:inline-flex; align-items:center; gap:6px; padding:9px 14px; white-space:nowrap;}
+.hk-star-chip svg{width:14px; height:14px;}
+.hk-star-chip.active svg{fill:currentColor;}
+.hk-filters{display:grid; gap:8px; margin-bottom:16px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--paper-raised);}
+.hk-filter{display:flex; gap:10px; align-items:baseline;}
+.hk-filter .os-label{flex:0 0 64px;}
+.hk-filter .os-chip{padding:4px 10px; font-size:12px;}
+.hk-filter .os-chip.is-zero{opacity:.45;}
+.hk-count{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-faint); margin:0 0 12px;}
+.hk-count b{color:var(--ink);}
+.hk-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;}
+.hk-card{
+  display:flex; flex-direction:column; gap:12px; border:1px solid var(--line); border-radius:12px; background:var(--paper-raised);
+  box-shadow:var(--shadow); padding:14px 16px 10px; transition:border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+.hk-card:hover{border-color:var(--line-strong); box-shadow:var(--shadow-hover);}
+.hk-card.is-starred{box-shadow:inset 3px 0 0 var(--bespoke), var(--shadow);}
+.hk-card.is-copied{border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg), var(--shadow);}
+.hk-text{margin:0; flex:1; font-size:15px; font-weight:600; line-height:1.55; color:var(--ink); overflow-wrap:anywhere;}
+.hk-gap{
+  padding:1px 6px; border-radius:6px; background:var(--bespoke-bg); color:var(--bespoke); border:1px dashed rgba(30,107,69,.45);
+  cursor:text; outline:none; -webkit-box-decoration-break:clone; box-decoration-break:clone; transition:background-color var(--dur-fast) ease;
+}
+.hk-gap:hover{border-color:var(--bespoke);}
+.hk-gap:focus{background:var(--paper-raised); color:var(--ink); border-style:solid; border-color:var(--bespoke); box-shadow:0 0 0 3px var(--bespoke-bg);}
+.hk-gap.is-filled{background:var(--bespoke); color:#fff; border-style:solid; border-color:var(--bespoke);}
+.hk-gap.is-filled:focus{background:var(--paper-raised); color:var(--ink);}
+.hk-card-foot{display:flex; align-items:center; justify-content:space-between; gap:8px; padding-top:10px; border-top:1px solid var(--line);}
+.hk-tags{display:flex; gap:4px; flex-wrap:wrap; min-width:0;}
+.hk-actions{display:flex; align-items:center; gap:2px; flex:0 0 auto;}
+.hk-star.is-on{color:var(--bespoke);}
+.hk-star.is-on svg{fill:currentColor;}
+.hk-reset{font-family:inherit; font-size:12px; font-weight:600; color:var(--ink-faint); background:none; border:none; cursor:pointer; padding:4px 6px;}
+.hk-reset:hover{color:var(--bespoke);}
+.hk-copy{margin-left:4px;}
+.hk-copy svg{width:13px; height:13px;}
+.hk-copy.is-done, .hk-copy.is-done:hover{background:var(--bespoke); border-color:var(--bespoke); color:#fff;}
+@media (max-width:600px){
+  .hk-grid{grid-template-columns:1fr;}
+  .hk-add-row .os-input{min-width:0; flex-basis:100%;}
+  .hk-filter{flex-direction:column; gap:6px;}
+  .hk-filter .os-chips{flex-wrap:nowrap; overflow-x:auto; width:100%; padding-bottom:2px; scrollbar-width:none;}
+  .hk-filter .os-chip{flex:0 0 auto;}
+  .hk-filter .os-label{flex:none;}
+  .hk-search kbd{display:none;}
+}
+
 /* ---------- placeholder page for channels not built yet ---------- */
 .soon-overlay{
   position:fixed; top:52px; left:0; right:0; bottom:0; background:var(--paper);
@@ -1182,7 +1255,8 @@ select.os-input.ln-select:focus{border-color:var(--bespoke);}
 }
 .bk-add{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) auto; gap:8px; margin-bottom:18px;}
 .bk-toolbar-right{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
-.bk-toolbar-right select.os-input{width:auto;}
+.bk-sort{align-items:center;}
+.bk-sort-label{font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); padding:0 6px 0 10px;}
 .bk-toolbar-right .os-search{min-width:200px; width:auto;}
 .bk-table{min-width:560px;}
 .bk-title-cell{display:flex; align-items:center; gap:20px;}
@@ -2782,6 +2856,7 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
   <button type="button" class="top-tab-btn" data-tab="os:youtube:ideas">Ideas</button>
   <button type="button" class="top-tab-btn" data-tab="os:linkedin:items">Posts</button>
   <button type="button" class="top-tab-btn" data-tab="os:linkedin:ideas">Ideas</button>
+  <button type="button" class="top-tab-btn" data-tab="hooks">Hooks</button>
   <button type="button" class="top-tab-btn" data-tab="os:linkedin:os">LinkedIn OS</button>
   <button type="button" class="top-tab-btn" data-tab="business">Titles</button>
   <button type="button" class="top-tab-btn" data-tab="business-thumbs">Thumbnails</button>
@@ -2809,6 +2884,11 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
 <!-- Creative Outreach: the Outreach Tracker CRM (outreach-tracker/), shown in place. src is set on first open. -->
 <div class="business-overlay tab-page" id="outreachTrackerOverlay">
   <iframe id="outreachTrackerFrame" title="Outreach Tracker" data-src="outreach-tracker/index.html"></iframe>
+</div>
+
+<!-- LinkedIn: the Hook Library. The hooks come from hook-library/hooks.js; stars, filled-in gaps and added hooks are one doc of kind 'hookLibrary' in Firestore. Drawn by hkRender(). -->
+<div class="cv-launcher-overlay tab-page os-overlay" id="hooksOverlay">
+  <div class="os-inner" id="hooksInner"></div>
 </div>
 
 <!-- Content OS: Dan James (Business) YouTube and LinkedIn. One page, drawn by osRender() for whichever channel and tab is open. -->
@@ -8074,9 +8154,8 @@ const BK_PDF_MAX = 150 * 1024 * 1024; // 150 MB (shared with Learnings)
 const BK_CATEGORIES = ['Business', 'Sales', 'Marketing', 'Copywriting', 'Mindset', 'Biography', 'Finance', 'Health'];
 const BK_NEW_CATEGORY = '__new';
 const BK_SORTS = [
-  { id:'added',  name:'Recently added' },
-  { id:'title',  name:'Name A-Z' },
-  { id:'author', name:'Author A-Z' },
+  { id:'title',    name:'A-Z' },
+  { id:'category', name:'Category' },
 ];
 const BK_TEXT_FIELDS = ['title','author','category','takeaways','cover'];
 const BK_PDF_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
@@ -8089,7 +8168,8 @@ let bkSaveTimer = null;
 const bkDirty = new Set();
 const bkPdfUrls = {};   // fileId -> blob URL, so a PDF only downloads once per visit
 function bkPdfs(b){ return Array.isArray(b.pdfs) ? b.pdfs : []; }
-try{ bkState.sort = localStorage.getItem('bkSort') || 'added'; }catch(e){}
+bkState.sort = 'title';
+try{ const s = localStorage.getItem('bkSort'); if(BK_SORTS.some(o=> o.id===s)) bkState.sort = s; }catch(e){}
 
 function bkBook(id){ return bkState.books.find(b=> b.id===id); }
 function bkFmtSize(n){ return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
@@ -8148,7 +8228,7 @@ function bkListShellHtml(){
     + '<button type="button" class="os-chip' + (bkState.filter==='all' ? ' active' : '') + '" data-bk-filter="all">All<span class="n">' + books.length + '</span></button>'
     + used.map(c=> '<button type="button" class="os-chip' + (bkState.filter===c ? ' active' : '') + '" data-bk-filter="' + escAttr(c) + '">' + esc(c) + '<span class="n">' + counts[c] + '</span></button>').join('')
     + '</div><div class="bk-toolbar-right">'
-    + '<select class="os-input" id="bkSort" aria-label="Sort books">' + BK_SORTS.map(s=> '<option value="' + s.id + '"' + (bkState.sort===s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</select>'
+    + '<div class="os-seg bk-sort" role="group" aria-label="Sort books"><span class="bk-sort-label">Sort</span>' + BK_SORTS.map(s=> '<button type="button" class="' + (bkState.sort===s.id ? 'active' : '') + '" data-bk-sort="' + s.id + '" aria-pressed="' + (bkState.sort===s.id) + '">' + esc(s.name) + '</button>').join('') + '</div>'
     + '<input class="os-input os-search" id="bkSearch" type="search" placeholder="Search books" value="' + escAttr(bkState.search) + '">'
     + '</div></div>';
   html += '<div id="bkList"></div>';
@@ -8160,8 +8240,8 @@ function bkFiltered(){
   let list = bkState.books.filter(b=> bkState.filter==='all' || b.category===bkState.filter);
   if(q) list = list.filter(b=> [b.title, b.author, b.category, b.takeaways].some(v=> (v || '').toLowerCase().includes(q)));
   const by = (f)=> (a, b)=> (a[f] || '').localeCompare(b[f] || '', undefined, { sensitivity:'base' });
-  const sorts = { added: (a, b)=> (b.createdAt || 0) - (a.createdAt || 0), title: by('title'), author: by('author') };
-  return list.sort(sorts[bkState.sort] || sorts.added);
+  const sorts = { title: by('title'), category: (a, b)=> by('category')(a, b) || by('title')(a, b) };
+  return list.sort(sorts[bkState.sort] || sorts.title);
 }
 
 // one PDF opens straight from the list; several open the book so you can pick a version
@@ -9006,6 +9086,8 @@ function bkInit(){
     if(open){ e.stopPropagation(); bkPdfOpen(open.dataset.bkPdfBook, open.dataset.bkPdfOpen); return; }
     const f = t.closest('[data-bk-filter]');
     if(f){ bkState.filter = f.dataset.bkFilter; bkRender(); return; }
+    const srt = t.closest('[data-bk-sort]');
+    if(srt){ bkState.sort = srt.dataset.bkSort; try{ localStorage.setItem('bkSort', bkState.sort); }catch(err){} bkRender(); return; }
     const row = t.closest('[data-bk-open]');
     if(row){ bkState.active = row.dataset.bkOpen; bkRender(); document.getElementById('booksOverlay').scrollTop = 0; return; }
     if(t.closest('[data-bk-back]')){ bkBack(); return; }
@@ -9034,7 +9116,6 @@ function bkInit(){
   });
   box.addEventListener('change', async (e)=>{
     const t = e.target;
-    if(t.id==='bkSort'){ bkState.sort = t.value; try{ localStorage.setItem('bkSort', t.value); }catch(err){} bkRenderList(); return; }
     if(!bkState.active) return;
     if(t.dataset.bkField==='author') bkRender();
     if(t.dataset.bkField==='category'){
@@ -9540,7 +9621,8 @@ function lnInit(){
 }
 
 /* ---------- Daily Tasks: the Power List and the Backlog (replaces the Notion Tasks & Trackers page) ---------- */
-// One kind 'dailyTasks' doc in the cineVlogs collection: { power:[{ id, name, due:'2026-10-07' }], backlog:[{ id, name }] }.
+// One kind 'dailyTasks' doc in the cineVlogs collection: { power:[{ id, name, due:'2026-10-07' }], backlog:[{ id, name }], powerOrdered }.
+// The Power List shows soonest due first until you drag a task; then powerOrdered is set and the list keeps your order.
 // Tasks pulled in from Close also carry closeId and closeUrl; closeSynced (written only by close-sync/sync.mjs) lists every Close task already pulled in.
 // Ticking one Done (or deleting it from the Backlog) adds its closeId to closeDone, and the sync then marks it complete in Close.
 // The Stats tab (and the bottom of the All tab) is the 'daily' tracker above.
@@ -9551,6 +9633,7 @@ const DT_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 const DT_DOWN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
 const DT_UP_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
 const DT_LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+const DT_GRIP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
 const DT_BIN_SVG ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
 
 const dtNewId = ()=> Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -9568,6 +9651,15 @@ function dtDue(due){
   if(days < 0) return { text:'Task late', cls:'is-late', late:true, days };
   if(days===0) return { text:'Due today', cls:'is-today', days };
   return { text: days===1 ? 'Due tomorrow' : 'Due in ' + days + ' days', cls: days <= 3 ? 'is-soon' : '', days };
+}
+const dtByDue = (a, b)=> dtDue(a.due).days - dtDue(b.due).days;
+const dtPowerRows = ()=> dtState.rec.powerOrdered ? dtState.rec.power : dtState.rec.power.slice().sort(dtByDue);
+// Put a Power List task where its due date belongs: in front of the first task due later (your dragged order stays as it is).
+function dtPlaceByDue(item){
+  const p = dtState.rec.power, i = p.indexOf(item);
+  if(i >= 0) p.splice(i, 1);
+  const days = dtDue(item.due).days, j = dtState.rec.powerOrdered ? p.findIndex(x=> dtDue(x.due).days > days) : -1;
+  p.splice(j < 0 ? p.length : j, 0, item);
 }
 const dtLateCount = ()=> dtState.loaded ? dtState.rec.power.filter(x=> dtDue(x.due).late).length : 0;
 const dtDueTodayCount = ()=> dtState.loaded ? dtState.rec.power.filter(x=> dtDue(x.due).days===0).length : 0;
@@ -9612,7 +9704,7 @@ function dtWatch(){
     }
     dtState.rec = { id: snap.id, ...d, power: d.power || [], backlog: d.backlog || [] };
     const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input, textarea');
-    if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
+    if(!typing && !document.body.classList.contains('dt-dragging') && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
     homeCards().forEach(homeRenderFoot);
     dtSyncCo();
   }, (e)=> console.error('Lost the live link to the daily tasks:', e));
@@ -9673,13 +9765,13 @@ function dtSyncCo(){
   const have = new Set([...r.power, ...r.backlog].map(x=> x.coTask).filter(Boolean)), skip = new Set(stillDue);
   dtCoTasks.forEach(t=>{
     if(have.has(t.key) || skip.has(t.key)) return;
-    r.power.push({ id: dtNewId(), name: dtCoName(t.company), due: t.due, coTask: t.key, coKind: t.kind, coCompanyId: t.key.split('|')[0] });
+    dtPlaceByDue({ id: dtNewId(), name: dtCoName(t.company), due: t.due, coTask: t.key, coKind: t.kind, coCompanyId: t.key.split('|')[0] });
     changed = true;
   });
   if(!changed) return;
   dtSave();
   const box = document.getElementById('tasksInner'), typing = box.contains(document.activeElement) && document.activeElement.matches('input, textarea');
-  if(!typing && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
+  if(!typing && !document.body.classList.contains('dt-dragging') && document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
   homeCards().forEach(homeRenderFoot);
 }
 function dtSave(){
@@ -9692,7 +9784,7 @@ async function dtSaveNow(){
   dtSaveTimer = null;
   const rec = dtState.rec;
   if(!rec) return;
-  try{ await updateDoc(doc(db, CV_COLLECTION, rec.id), { power: rec.power, backlog: rec.backlog, updatedAt: rec.updatedAt }); }
+  try{ await updateDoc(doc(db, CV_COLLECTION, rec.id), { power: rec.power, backlog: rec.backlog, powerOrdered: !!rec.powerOrdered, updatedAt: rec.updatedAt }); }
   catch(e){
     console.error('Failed to save the daily tasks:', e);
     await lcAlert('Connection error', 'Could not save your tasks to the database. Check your connection and try again.');
@@ -9748,13 +9840,13 @@ function dtListHtml(which){
     + (power ? '<input type="hidden" name="due" value="' + trYmd(new Date()) + '">' + dtDateBtn(trYmd(new Date()), 'data-dt-add-date') : '')
     + '<button type="submit" class="os-btn primary">+ Add task</button></form>';
   if(!list.length) return html + '<div class="os-empty">' + (power ? 'Nothing on the Power List. Add a task above or pull one up from the Backlog.' : 'The Backlog is empty.') + '</div></section>';
-  // Power List: soonest due first, tasks with no date at the bottom
-  const rows = power ? list.slice().sort((a, b)=> dtDue(a.due).days - dtDue(b.due).days) : list;
+  // Power List: soonest due first (no date at the bottom) until you drag one into place
+  const rows = power ? dtPowerRows() : list;
   html += '<div class="os-table-wrap"><table class="os-table dt-table"><thead><tr><th>Task</th>' + (power ? '<th>Due date</th><th>When</th>' : '') + '<th></th></tr></thead><tbody>';
   rows.forEach(x=>{
     const due = dtDue(x.due);
     html += '<tr class="' + (power && due.late ? 'is-late' : '') + '" data-dt-id="' + escAttr(x.id) + '">'
-      + '<td><div class="dt-task"><textarea class="dt-name" data-dt-field="name" rows="1" aria-label="Task name">' + esc(x.name) + '</textarea>'
+      + '<td><div class="dt-task"><span class="dt-grip" data-dt-grip title="Drag to move" aria-hidden="true">' + DT_GRIP_SVG + '</span><textarea class="dt-name" data-dt-field="name" rows="1" aria-label="Task name">' + esc(x.name) + '</textarea>'
       + (x.coTask ? '<span class="dt-src is-co">Creative Outreach</span>' : '') + '</div></td>'
       + (power ? '<td data-label="Due date">' + dtDateBtn(x.due, 'data-dt-date') + '</td>'
         + '<td data-label="When"><span class="dt-due ' + due.cls + '">' + due.text + '</span></td>' : '')
@@ -9815,14 +9907,14 @@ function dtInit(){
     e.preventDefault();
     const f = e.target, name = f.elements.name.value.trim();
     if(!name) return;
-    if(which==='power') dtState.rec.power.push({ id: dtNewId(), name, due: f.elements.due.value || '' });
+    if(which==='power') dtPlaceByDue({ id: dtNewId(), name, due: f.elements.due.value || '' });
     else dtState.rec.backlog.unshift({ id: dtNewId(), name });
     dtSave();
     dtRender(true);
     document.querySelector('[data-dt-add="' + which + '"] [name="name"]').focus();
     homeCards().forEach(homeRenderFoot);
   });
-  // A renamed task saves without a redraw (focus may have moved to the next field). A new due date (the calendar, above) re-sorts the list.
+  // A renamed task saves without a redraw (focus may have moved to the next field). A new due date (the calendar, above) moves it to where that date belongs.
   box.addEventListener('change', (e)=>{
     const row = e.target.dataset.dtField==='name' && e.target.closest('[data-dt-id]');
     const hit = row && dtFind(row.dataset.dtId);
@@ -9848,7 +9940,7 @@ function dtInit(){
     const dateBtn = e.target.closest('[data-dt-date]'), dateRow = dateBtn && dateBtn.closest('[data-dt-id]');
     const dateHit = dateRow && dtFind(dateRow.dataset.dtId);
     if(dateHit){
-      const set = (ymd)=>{ dateHit.item.due = ymd; dtSave(); dtRender(true); homeCards().forEach(homeRenderFoot); };
+      const set = (ymd)=>{ dateHit.item.due = ymd; if(dateHit.list===dtState.rec.power) dtPlaceByDue(dateHit.item); dtSave(); dtRender(true); homeCards().forEach(homeRenderFoot); };
       lcPickDate(dateBtn, dateHit.item.due ? trParse(dateHit.item.due).getTime() : Date.now(), (d)=> set(trYmd(d)), { onClear: ()=> set('') });
       return;
     }
@@ -9866,13 +9958,423 @@ function dtInit(){
     const close = hit.item.closeUrl ? { closeId: hit.item.closeId, closeUrl: hit.item.closeUrl }
       : hit.item.coTask ? { coTask: hit.item.coTask, coKind: hit.item.coKind, coCompanyId: hit.item.coCompanyId } : {};
     if(act==='to-backlog') r.backlog.unshift({ id: hit.item.id, name: hit.item.name, ...close });
-    if(act==='to-power') r.power.push({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()), ...close });
+    if(act==='to-power') dtPlaceByDue({ id: hit.item.id, name: hit.item.name, due: trYmd(new Date()), ...close });
     dtSave();
     dtRender(true);
     homeCards().forEach(homeRenderFoot);
   });
+  // Drag a task by its grip: the row follows the pointer and the others make room; letting go saves the new order.
+  box.addEventListener('pointerdown', (e)=>{
+    const grip = e.target.closest('[data-dt-grip]'), row = grip && grip.closest('[data-dt-id]');
+    const hit = row && e.button===0 && dtFind(row.dataset.dtId);
+    if(!hit) return;
+    e.preventDefault();
+    const body = row.parentElement;
+    grip.setPointerCapture(e.pointerId);
+    row.classList.add('is-dragging');
+    document.body.classList.add('dt-dragging');
+    const move = (ev)=>{
+      // swap with the neighbour once the pointer passes its middle
+      let sib;
+      while((sib = row.previousElementSibling) && ev.clientY < sib.getBoundingClientRect().top + sib.offsetHeight / 2) body.insertBefore(row, sib);
+      while((sib = row.nextElementSibling) && ev.clientY > sib.getBoundingClientRect().top + sib.offsetHeight / 2) body.insertBefore(sib, row);
+      row.style.transform = '';
+      const r = row.getBoundingClientRect();
+      row.style.transform = 'translateY(' + Math.max(-r.height / 2, Math.min(r.height / 2, ev.clientY - (r.top + r.height / 2))) + 'px)';
+    };
+    const up = ()=>{
+      grip.removeEventListener('pointermove', move);
+      grip.removeEventListener('pointerup', up);
+      grip.removeEventListener('pointercancel', up);
+      row.classList.remove('is-dragging');
+      row.style.transform = '';
+      document.body.classList.remove('dt-dragging');
+      const now = dtFind(row.dataset.dtId), list = now && now.list;
+      if(!list) return;
+      const ids = [...body.children].map(tr=> tr.dataset.dtId);
+      const shown = list===dtState.rec.power ? dtPowerRows() : list;
+      if(ids.join() === shown.map(x=> x.id).join()) return dtRender(true);
+      // keep anything not on screen (a Close task that arrived mid-drag) at the end
+      const byId = new Map(list.map(x=> [x.id, x])), moved = ids.map(id=> byId.get(id)).filter(Boolean);
+      const rest = list.filter(x=> !ids.includes(x.id));
+      list.splice(0, list.length, ...moved, ...rest);
+      if(list===dtState.rec.power) dtState.rec.powerOrdered = true;
+      dtSave();
+      dtRender(true);
+    };
+    grip.addEventListener('pointermove', move);
+    grip.addEventListener('pointerup', up);
+    grip.addEventListener('pointercancel', up);
+  });
   window.addEventListener('beforeunload', (e)=>{ if(dtSaveTimer){ dtSaveNow(); e.preventDefault(); e.returnValue = ''; } });
   dtLoad();
+}
+
+/* ---------- Hooks (LinkedIn): the Hook Library ---------- */
+// The built-in hooks live in hook-library/hooks.js (loaded on first open). What you change lives in one doc of kind 'hookLibrary'
+// in the cineVlogs collection: { custom:[{ id, text, author, createdAt }], stars:[hook key], fills:{ hook key: [gap text or null, ...] } }.
+// A built-in hook's key comes from its text, so adding or reordering hooks in hooks.js never moves a star or a filled-in gap.
+const HK_KIND = 'hookLibrary';
+const HK_MINE = 'Added by you';
+const HK_GAP_RE = /(\[[^\]]+\]|\{[^}]+\}|_{3,})/g;
+const HK_TYPES = [
+  { key:'question',   name:'Curiosity',  test:h=> /\?\s*$/.test(h.trim()) || /^(do you|did you|have you|would you|why|guess|wanna see|what if|what would|what's)/i.test(h.trim()) },
+  { key:'contrarian', name:'Contrarian', test:h=> /\b(wrong|lie\b|lies\b|myth|misconception|stupid|unpopular opinion|isn't|actually|hate me|piss)\b/i.test(h) },
+  { key:'warning',    name:'Warning',    test:h=> /\b(do not|don't watch|won't|destroy|sabotag|garbage|falling behind|ruin|regret|nobody gives)\b/i.test(h) },
+  { key:'confession', name:'Confession', test:h=> /\b(confession|secret|problem\b|vent|honest|wish i|i have a|i genuinely think)\b/i.test(h) },
+  { key:'story',      name:'Story',      test:h=> /\b(years ago|back then|time machine|reflecting|20,? with everything|2023|younger self|previous age|in hindsight)\b/i.test(h) },
+  { key:'proof',      name:'Proof',      test:h=> /\b(i achieved|i implemented|i was able to|generated|result|went from|switching one thing|track record)\b/i.test(h) },
+  { key:'listicle',   name:'List',       test:h=> /^\s*(\[?\d|1 of|9 |10 |12 )/i.test(h) || /\b(strategies|lies|reasons|ways|things)\b/i.test(h) },
+  { key:'howto',      name:'How-To',     test:h=> /\b(here's how|here's exactly|simplest way|beginner-friendly|step|everything i'd do|breakdown)\b/i.test(h) },
+  { key:'direct',     name:'Direct Ask', test:h=> /\b(listen up|this video is for|you need to watch|right now|watch this)\b/i.test(h) },
+  { key:'general',    name:'General',    test:()=> false },
+];
+const HK_TYPE_NAME = Object.fromEntries(HK_TYPES.map(t=> [t.key, t.name]));
+const HK_STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+const HK_COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const HK_TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
+const HK_SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+const hkState = { loaded:false, loading:null, error:false, rec:null, seeds:[], type:'all', author:'', starred:false, search:'', adding:false };
+let hkSaveTimer = null, hkSearchTimer = null;
+
+function hkHash(s){ let h = 5381; for(let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+function hkSeedKey(text){ return 's' + hkHash(text); }
+function hkTypesOf(text){ const t = HK_TYPES.filter(r=> r.test(text)).map(r=> r.key); return t.length ? t : ['general']; }
+function hkAll(){
+  return hkState.seeds.concat(hkState.rec.custom.map(c=> ({ key:'c' + c.id, id:c.id, text:c.text, author:c.author || '', custom:true, types: hkTypesOf(c.text) })));
+}
+function hkHook(key){ return hkAll().find(h=> h.key===key); }
+function hkGroupOf(h){ return h.author || HK_MINE; }
+function hkGroupSort(a, b){ return (b===HK_MINE) - (a===HK_MINE) || a.localeCompare(b); }
+function hkFilled(key){ return (hkState.rec.fills[key] || []).some(Boolean); }
+function hkGapLabel(tok){ return tok[0]==='_' ? '___' : tok.slice(1, -1); }
+// the hook as text, with what you filled in swapped into its gaps (gaps left empty keep their [word])
+function hkPlain(h){ const f = hkState.rec.fills[h.key] || []; let i = 0; return h.text.replace(HK_GAP_RE, tok=> f[i++] || tok); }
+
+function hkLoadSeeds(){
+  if(window.HOOK_SEEDS) return Promise.resolve();
+  // Loaded as a <script> rather than fetch() so it also works when the page is opened from disk (file://).
+  return new Promise((resolve, reject)=>{
+    const tag = document.createElement('script');
+    tag.src = 'hook-library/hooks.js?v=' + Date.now();
+    tag.onload = resolve;
+    tag.onerror = ()=>{ tag.remove(); reject(new Error('hook-library/hooks.js failed to load')); };
+    document.head.appendChild(tag);
+  });
+}
+// Once, when the doc is first made: bring in what the old Hook Library page saved in this browser (added hooks, favourites, filled-in gaps).
+function hkFromLocal(){
+  const read = k=>{ try{ return JSON.parse(localStorage.getItem(k) || 'null'); }catch(e){ return null; } };
+  const raw = window.HOOK_SEEDS || [], now = Date.now();
+  const oldCustom = read('hookLibrary.customHooks'), oldFavs = read('hookLibrary.favorites'), oldEdits = read('hookLibrary.edits');
+  const byOld = (Array.isArray(oldCustom) ? oldCustom : []).map(t=> typeof t==='string' && t.trim() ? { id: osUid(), text: t.trim(), author:'', createdAt: now } : null);
+  const keyOf = old=>{
+    const m = /^(seed|custom)-(\d+)$/.exec(old || '');
+    if(!m) return null;
+    if(m[1]==='seed'){ const s = raw[+m[2]]; return s ? hkSeedKey(typeof s==='string' ? s : s.text) : null; }
+    const c = byOld[+m[2]];
+    return c ? 'c' + c.id : null;
+  };
+  const stars = [...new Set((Array.isArray(oldFavs) ? oldFavs : []).map(keyOf).filter(Boolean))];
+  const fills = {};
+  Object.keys(oldEdits && typeof oldEdits==='object' ? oldEdits : {}).forEach(old=>{
+    const k = keyOf(old);
+    if(!k) return;
+    const d = new DOMParser().parseFromString(String(oldEdits[old]), 'text/html');
+    const vals = [...d.querySelectorAll('.ph')].map(sp=>{ const v = sp.textContent.replace(/\s+/g, ' ').trim(); return v && v!==(sp.dataset.orig || '').trim() ? v : null; });
+    if(vals.some(Boolean)) fills[k] = vals;
+  });
+  return { custom: byOld.filter(Boolean), stars, fills };
+}
+async function hkLoad(){
+  if(hkState.loaded) return;
+  if(!hkState.loading){
+    hkState.loading = (async ()=>{
+      const [snap] = await Promise.all([getDocs(query(collection(db, CV_COLLECTION), where('kind', '==', HK_KIND))), hkLoadSeeds()]);
+      const seen = new Set();
+      hkState.seeds = (window.HOOK_SEEDS || []).map(s=> typeof s==='string' ? { text:s } : s)
+        .filter(s=> s && s.text && !seen.has(s.text) && seen.add(s.text))
+        .map(s=> ({ key: hkSeedKey(s.text), text: s.text, author: s.author || '', custom:false, types: hkTypesOf(s.text) }));
+      if(snap.docs.length){
+        hkState.rec = { id: snap.docs[0].id, ...snap.docs[0].data() };
+      }else{
+        const now = Date.now();
+        const rec = Object.assign({ kind: HK_KIND, createdAt: now, updatedAt: now }, hkFromLocal());
+        const ref = await addDoc(collection(db, CV_COLLECTION), rec);
+        hkState.rec = Object.assign({ id: ref.id }, rec);
+      }
+      const r = hkState.rec;
+      r.custom = r.custom || []; r.stars = r.stars || []; r.fills = r.fills || {};
+      hkState.loaded = true;
+    })();
+  }
+  try{ await hkState.loading; hkState.error = false; }
+  catch(e){ console.error('Failed to load the hook library:', e); hkState.loading = null; hkState.error = true; }
+  if(document.getElementById('hooksOverlay').classList.contains('active')) hkRender();
+}
+function hkShow(){
+  hkRender();
+  if(!hkState.loaded) hkLoad();
+}
+function hkQueueSave(){
+  hkState.rec.updatedAt = Date.now();
+  clearTimeout(hkSaveTimer);
+  hkSaveTimer = setTimeout(hkSaveNow, 500);
+}
+async function hkSaveNow(){
+  clearTimeout(hkSaveTimer);
+  hkSaveTimer = null;
+  const r = hkState.rec;
+  if(!r) return;
+  try{ await updateDoc(doc(db, CV_COLLECTION, r.id), { custom: r.custom, stars: r.stars, fills: r.fills, updatedAt: r.updatedAt }); }
+  catch(e){
+    console.error('Failed to save the hook library:', e);
+    await lcAlert('Connection error', 'Could not save your hooks to the database. Check your connection and try again.');
+  }
+}
+
+function hkRender(){
+  const box = document.getElementById('hooksInner');
+  if(!hkState.loaded){
+    box.innerHTML = '<div class="os-empty" style="margin-top:24px">' + (hkState.error ? 'Could not load the hook library. Check your connection and refresh the page.' : 'Loading your hooks...') + '</div>';
+    return;
+  }
+  box.innerHTML = hkShellHtml();
+  hkRenderList();
+}
+function hkShellHtml(){
+  const all = hkAll();
+  const groups = [...new Set(all.map(hkGroupOf))].sort(hkGroupSort);
+  if(hkState.author && !groups.includes(hkState.author)) hkState.author = '';
+  const creators = groups.filter(g=> g!==HK_MINE);
+  return '<div class="os-head"><div><h1 class="os-title">Hooks</h1><p class="os-sub">' + all.length + ' hooks from ' + creators.length + ' creators. Click a highlighted gap to fill it in, then copy.</p></div>'
+    + '<div class="os-right"><button type="button" class="os-btn' + (hkState.adding ? '' : ' primary') + '" data-hk-add>' + (hkState.adding ? 'Close' : '+ Add hooks') + '</button></div></div>'
+    + (hkState.adding ? hkAddHtml(creators) : '')
+    + '<div class="hk-bar"><label class="hk-search">' + HK_SEARCH_SVG
+    + '<input class="os-input" id="hkSearch" type="search" placeholder="Search hooks" aria-label="Search hooks" value="' + escAttr(hkState.search) + '"><kbd>/</kbd></label>'
+    + '<button type="button" class="os-chip hk-star-chip" id="hkStarred" data-hk-starred></button></div>'
+    + '<div class="hk-filters"><div class="hk-filter"><span class="os-label">Creator</span><div class="os-chips" id="hkAuthors"></div></div>'
+    + '<div class="hk-filter"><span class="os-label">Type</span><div class="os-chips" id="hkTypes"></div></div></div>'
+    + '<div id="hkList"></div>';
+}
+function hkAddHtml(creators){
+  return '<form class="os-panel hk-add" id="hkAddForm" autocomplete="off"><div class="os-panel-head"><h3>Add hooks</h3></div>'
+    + '<p class="os-hint">Paste one hook per line. Write the parts to swap out as [word] or ___ and they become gaps you can fill in.</p>'
+    + '<textarea class="os-input hk-add-text" id="hkAddText" name="text" rows="5" required placeholder="I spent [X] years doing [thing]. Here is what I wish I knew on day one:"></textarea>'
+    + '<div class="hk-add-row"><input class="os-input" name="author" placeholder="Creator (optional)" aria-label="Creator" list="hkAuthorList">'
+    + '<datalist id="hkAuthorList">' + creators.map(g=> '<option value="' + escAttr(g) + '">').join('') + '</datalist>'
+    + '<button type="button" class="os-btn" data-hk-add>Cancel</button><button type="submit" class="os-btn primary">Add to library</button></div></form>';
+}
+function hkChip(attr, value, label, n, active){
+  return '<button type="button" class="os-chip' + (active ? ' active' : '') + (n ? '' : ' is-zero') + '" ' + attr + '="' + escAttr(value) + '">' + esc(label) + '<span class="n">' + n + '</span></button>';
+}
+function hkRenderList(){
+  const wrap = document.getElementById('hkList');
+  if(!wrap) return;
+  const all = hkAll(), r = hkState.rec, stars = new Set(r.stars), q = hkState.search.trim().toLowerCase();
+  const pass = (h, skip)=> (!hkState.starred || stars.has(h.key))
+    && (skip==='author' || !hkState.author || hkGroupOf(h)===hkState.author)
+    && (skip==='type' || hkState.type==='all' || h.types.includes(hkState.type))
+    && (!q || h.text.toLowerCase().includes(q) || hkGroupOf(h).toLowerCase().includes(q) || (r.fills[h.key] || []).some(v=> v && v.toLowerCase().includes(q)));
+  // each row of chips counts what you would get by picking it, with the other filters left as they are
+  const byAuthor = all.filter(h=> pass(h, 'author')), byType = all.filter(h=> pass(h, 'type'));
+  const aCount = {}, tCount = {};
+  byAuthor.forEach(h=> aCount[hkGroupOf(h)] = (aCount[hkGroupOf(h)] || 0) + 1);
+  byType.forEach(h=> h.types.forEach(t=> tCount[t] = (tCount[t] || 0) + 1));
+  document.getElementById('hkAuthors').innerHTML = hkChip('data-hk-author', '', 'All', byAuthor.length, !hkState.author)
+    + [...new Set(all.map(hkGroupOf))].sort(hkGroupSort).map(g=> hkChip('data-hk-author', g, g, aCount[g] || 0, hkState.author===g)).join('');
+  document.getElementById('hkTypes').innerHTML = hkChip('data-hk-type', 'all', 'All', byType.length, hkState.type==='all')
+    + HK_TYPES.map(t=> hkChip('data-hk-type', t.key, t.name, tCount[t.key] || 0, hkState.type===t.key)).join('');
+  hkStarChip();
+  const list = all.filter(h=> pass(h));
+  const filtering = hkState.starred || hkState.author || hkState.type!=='all' || q;
+  if(!list.length){
+    wrap.innerHTML = '<div class="os-empty">' + (hkState.starred && !stars.size ? 'No starred hooks yet. Tap the star on any hook to keep it here.' : 'No hooks match.')
+      + (filtering ? '<div style="margin-top:12px"><button type="button" class="os-btn small" data-hk-clear>Clear filters</button></div>' : '') + '</div>';
+    return;
+  }
+  const groups = {};
+  list.forEach(h=> (groups[hkGroupOf(h)] = groups[hkGroupOf(h)] || []).push(h));
+  wrap.innerHTML = '<p class="hk-count"><span>Showing <b>' + list.length + '</b> of ' + all.length + ' hooks</span>'
+    + (filtering ? '<button type="button" class="hk-reset" data-hk-clear>Clear filters</button>' : '') + '</p>'
+    + Object.keys(groups).sort(hkGroupSort).map(g=> '<section class="os-group"><div class="os-group-head"><h2>' + esc(g) + '<span class="n">' + groups[g].length + '</span></h2></div><div class="hk-grid">'
+      + groups[g].sort((a, b)=> a.text.localeCompare(b.text, undefined, { sensitivity:'base' })).map(h=> hkCardHtml(h, stars.has(h.key))).join('')
+      + '</div></section>').join('');
+}
+function hkStarChip(){
+  const b = document.getElementById('hkStarred');
+  if(!b) return;
+  b.classList.toggle('active', hkState.starred);
+  b.setAttribute('aria-pressed', hkState.starred);
+  b.innerHTML = HK_STAR_SVG + 'Starred<span class="n">' + hkState.rec.stars.length + '</span>';
+}
+function hkTextHtml(h){
+  const f = hkState.rec.fills[h.key] || [];
+  let i = 0;
+  return h.text.split(HK_GAP_RE).map((part, j)=>{
+    if(j % 2===0) return esc(part);
+    const label = hkGapLabel(part), v = f[i];
+    return '<span class="hk-gap' + (v ? ' is-filled' : '') + '" contenteditable="plaintext-only" spellcheck="false" role="textbox" aria-label="Fill in ' + escAttr(label)
+      + '" data-i="' + (i++) + '" data-label="' + escAttr(label) + '">' + esc(v || label) + '</span>';
+  }).join('');
+}
+const HK_RESET_HTML = '<button type="button" class="hk-reset" data-hk-reset title="Clear what you filled in">Reset</button>';
+function hkCardHtml(h, starred){
+  return '<article class="hk-card' + (starred ? ' is-starred' : '') + '" data-hk="' + escAttr(h.key) + '">'
+    + '<p class="hk-text">' + hkTextHtml(h) + '</p>'
+    + '<div class="hk-card-foot"><div class="hk-tags">' + h.types.map(t=> '<span class="os-tag">' + esc(HK_TYPE_NAME[t]) + '</span>').join('') + '</div>'
+    + '<div class="hk-actions">' + (hkFilled(h.key) ? HK_RESET_HTML : '')
+    + (h.custom ? '<button type="button" class="os-icon-btn danger" data-hk-delete title="Delete hook" aria-label="Delete hook">' + HK_TRASH_SVG + '</button>' : '')
+    + '<button type="button" class="os-icon-btn hk-star' + (starred ? ' is-on' : '') + '" data-hk-star aria-pressed="' + starred + '" title="' + (starred ? 'Unstar' : 'Star') + '" aria-label="Star hook">' + HK_STAR_SVG + '</button>'
+    + '<button type="button" class="os-btn small hk-copy" data-hk-copy>' + HK_COPY_SVG + '<span>Copy</span></button></div></div></article>';
+}
+// typing in a gap saves as you go; the card is not redrawn, so the caret stays put
+function hkGapInput(gap){
+  const card = gap.closest('[data-hk]'), key = card.dataset.hk, r = hkState.rec;
+  const v = gap.textContent.replace(/\s+/g, ' ').trim();
+  const val = v && v!==gap.dataset.label ? v : null;
+  const f = (r.fills[key] || []).slice();
+  while(f.length < card.querySelectorAll('.hk-gap').length) f.push(null);
+  f[+gap.dataset.i] = val;
+  if(f.some(Boolean)) r.fills[key] = f; else delete r.fills[key];
+  gap.classList.toggle('is-filled', !!val);
+  hkQueueSave();
+}
+function hkSelectAll(el){ const range = document.createRange(); range.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(range); }
+
+function hkInit(){
+  const box = document.getElementById('hooksInner');
+  box.addEventListener('click', async (e)=>{
+    const t = e.target;
+    if(t.closest('[data-hk-add]')){
+      hkState.adding = !hkState.adding;
+      hkRender();
+      if(hkState.adding) document.getElementById('hkAddText').focus();
+      return;
+    }
+    if(t.closest('[data-hk-starred]')){ hkState.starred = !hkState.starred; hkRenderList(); return; }
+    const author = t.closest('[data-hk-author]');
+    if(author){ hkState.author = author.dataset.hkAuthor; hkRenderList(); return; }
+    const type = t.closest('[data-hk-type]');
+    if(type){ hkState.type = type.dataset.hkType; hkRenderList(); return; }
+    if(t.closest('[data-hk-clear]')){
+      Object.assign(hkState, { type:'all', author:'', starred:false, search:'' });
+      document.getElementById('hkSearch').value = '';
+      hkRenderList();
+      return;
+    }
+    const card = t.closest('[data-hk]');
+    const h = card && hkHook(card.dataset.hk);
+    if(!h) return;
+    const r = hkState.rec;
+    const star = t.closest('[data-hk-star]');
+    if(star){
+      const on = !r.stars.includes(h.key);
+      r.stars = on ? r.stars.concat(h.key) : r.stars.filter(k=> k!==h.key);
+      hkQueueSave();
+      if(hkState.starred && !on){ hkRenderList(); return; }
+      card.classList.toggle('is-starred', on);
+      star.classList.toggle('is-on', on);
+      star.setAttribute('aria-pressed', on);
+      star.title = on ? 'Unstar' : 'Star';
+      hkStarChip();
+      return;
+    }
+    const copy = t.closest('[data-hk-copy]');
+    if(copy){
+      try{
+        await navigator.clipboard.writeText(hkPlain(h));
+        const label = copy.querySelector('span');
+        copy.classList.add('is-done'); card.classList.add('is-copied'); label.textContent = 'Copied';
+        clearTimeout(copy._hkT);
+        copy._hkT = setTimeout(()=>{ copy.classList.remove('is-done'); card.classList.remove('is-copied'); label.textContent = 'Copy'; }, 1400);
+      }catch(err){ lcAlert('Copy failed', 'Your browser blocked the clipboard. Select the text and copy it by hand.'); }
+      return;
+    }
+    if(t.closest('[data-hk-reset]')){
+      delete r.fills[h.key];
+      hkQueueSave();
+      card.insertAdjacentHTML('beforebegin', hkCardHtml(h, r.stars.includes(h.key)));
+      card.remove();
+      return;
+    }
+    if(t.closest('[data-hk-delete]')){
+      if(!await lcConfirm('Delete this hook?', h.text, { danger:true, confirmText:'Delete' })) return;
+      r.custom = r.custom.filter(c=> c.id!==h.id);
+      r.stars = r.stars.filter(k=> k!==h.key);
+      delete r.fills[h.key];
+      hkQueueSave();
+      hkRender();
+    }
+  });
+  box.addEventListener('input', (e)=>{
+    if(e.target.id==='hkSearch'){
+      hkState.search = e.target.value;
+      clearTimeout(hkSearchTimer);
+      hkSearchTimer = setTimeout(hkRenderList, 120);
+      return;
+    }
+    const gap = e.target.closest && e.target.closest('.hk-gap');
+    if(gap) hkGapInput(gap);
+  });
+  // an empty gap is all selected when you click into it, so typing replaces the [word]
+  box.addEventListener('focusin', (e)=>{
+    const gap = e.target.closest && e.target.closest('.hk-gap');
+    if(gap && !gap.classList.contains('is-filled')) requestAnimationFrame(()=> hkSelectAll(gap));
+  });
+  box.addEventListener('mouseup', (e)=>{
+    const gap = e.target.closest('.hk-gap');
+    if(gap && !gap.classList.contains('is-filled')) hkSelectAll(gap);
+  });
+  // and the first letter typed into an empty gap always replaces the [word], wherever the caret landed
+  box.addEventListener('beforeinput', (e)=>{
+    const gap = e.target.closest && e.target.closest('.hk-gap');
+    if(!gap || gap.classList.contains('is-filled') || e.inputType!=='insertText' || !e.data) return;
+    e.preventDefault();
+    gap.textContent = e.data;
+    const range = document.createRange(); range.selectNodeContents(gap); range.collapse(false);
+    const s = getSelection(); s.removeAllRanges(); s.addRange(range);
+    hkGapInput(gap);
+  });
+  box.addEventListener('focusout', (e)=>{
+    const gap = e.target.closest && e.target.closest('.hk-gap');
+    if(!gap) return;
+    gap.textContent = gap.classList.contains('is-filled') ? gap.textContent.replace(/\s+/g, ' ').trim() : gap.dataset.label;
+    // show or hide Reset without redrawing the card, so a click on Copy that caused this blur still lands
+    const card = gap.closest('[data-hk]'), actions = card.querySelector('.hk-actions'), reset = actions.querySelector('[data-hk-reset]');
+    const filled = hkFilled(card.dataset.hk);
+    if(filled && !reset) actions.insertAdjacentHTML('afterbegin', HK_RESET_HTML);
+    if(!filled && reset) reset.remove();
+  });
+  box.addEventListener('keydown', (e)=>{
+    if(e.target.classList.contains('hk-gap') && (e.key==='Enter' || e.key==='Escape')){ e.preventDefault(); e.target.blur(); return; }
+    if(e.target.id==='hkAddText' && e.key==='Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); e.target.form.requestSubmit(); }
+  });
+  box.addEventListener('submit', (e)=>{
+    if(e.target.id!=='hkAddForm') return;
+    e.preventDefault();
+    const r = hkState.rec;
+    const author = e.target.elements.author.value.replace(/\s+/g, ' ').trim();
+    // a pasted markdown link like [hook](https://...) keeps just the hook
+    const lines = e.target.elements.text.value.split('\n').map(l=>{ l = l.trim(); const m = /^\[(.+)\]\((https?:\/\/[^)]+)\)$/.exec(l); return m ? m[1].trim() : l; }).filter(Boolean);
+    const have = new Set(hkAll().map(h=> h.text));
+    const fresh = [...new Set(lines)].filter(l=> !have.has(l));
+    if(!fresh.length){ lcAlert('Already in the library', lines.length===1 ? 'That hook is already in your library.' : 'All of those hooks are already in your library.'); return; }
+    const now = Date.now();
+    fresh.forEach(text=> r.custom.push({ id: osUid(), text, author, createdAt: now }));
+    hkQueueSave();
+    Object.assign(hkState, { adding:false, type:'all', starred:false, search:'', author: author || HK_MINE });
+    hkRender();
+  });
+  // press / anywhere on the Hooks tab to jump to search
+  document.addEventListener('keydown', (e)=>{
+    if(e.key!=='/' || e.ctrlKey || e.metaKey || e.altKey || !document.getElementById('hooksOverlay').classList.contains('active')) return;
+    const a = document.activeElement;
+    if(a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    const s = document.getElementById('hkSearch');
+    if(s){ e.preventDefault(); s.focus(); s.select(); }
+  });
+  window.addEventListener('beforeunload', (e)=>{ if(hkSaveTimer){ hkSaveNow(); e.preventDefault(); e.returnValue = ''; } });
 }
 
 /* ---------- channels (Operating System landing page) ---------- */
@@ -9882,7 +10384,7 @@ const CHANNELS = {
   outreach:   { name:'Creative Outreach',    tabs:['outreach-tracker','outreach'] },
   business:   { name:'Dan James (Business)', tabs:['os:youtube:items','os:youtube:ideas','business','business-thumbs','tracker:youtube','os:youtube:os'] },
   builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','styles','effects','thumbs','buckets','tracker:cine'] },
-  linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','os:linkedin:os','tracker:linkedin'] },
+  linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','hooks','os:linkedin:os','tracker:linkedin'] },
   stats:      { name:'Stats',        tabs:['stats-all','stats-daily','stats'] },
   books:      { name:'Books',                tabs:['books'] },
   learnings:  { name:'Learnings',            tabs:['learnings'] },
@@ -10071,6 +10573,8 @@ function switchTab(tab){
       otFrame.contentWindow.postMessage({ type:'lincko:tracker-shown' }, '*');
     }
   }
+  document.getElementById('hooksOverlay').classList.toggle('active', tab==='hooks');
+  if(tab==='hooks') hkShow();
   const isOs = tab.startsWith('os:');
   document.getElementById('osOverlay').classList.toggle('active', isOs);
   if(isOs){ const [, ch, view] = tab.split(':'); osShow(ch, view); } else { osHide(); }
@@ -10206,6 +10710,7 @@ function switchTab(tab){
   dtInit();
   bkInit();
   lnInit();
+  hkInit();
   bkAudioInit();
   homeInit();
 
