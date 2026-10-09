@@ -2847,6 +2847,7 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
   <button type="button" class="top-tab-btn" data-tab="outreach">Active Creative Movies</button>
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
+  <button type="button" class="top-tab-btn" data-tab="drone">Drone Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
   <button type="button" class="top-tab-btn" data-tab="styles">Styles</button>
   <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
@@ -2993,6 +2994,28 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
       </div>
     </div>
     <div class="all-shots-scroll" id="allShotsScroll"></div>
+  </div>
+</div>
+
+<div class="all-shots-overlay tab-page" id="droneOverlay">
+  <div class="all-shots-box" id="droneBox">
+    <div class="all-shots-head">
+      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="droneTitle">All Drone Shots</h2></div>
+      <div class="all-shots-head-right">
+        <button type="button" class="modal-fullscreen-btn" id="droneFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
+            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
+          </svg>
+        </button>
+        <button type="button" class="all-shots-close" id="droneCloseBtn" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="all-shots-scroll" id="droneScroll"></div>
   </div>
 </div>
 
@@ -3316,6 +3339,111 @@ const SHOT_TYPE_GROUPS = [
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
   {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Props (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
+
+/* ---------- drone shots reference data (own tab; images are diagrams drawn by scripts/drone_diagrams.py) ---------- */
+const DRONE_TYPE_GROUPS = [
+  {group:'Bird\'s Eye View', items:['Following Subject (Bird\'s Eye View)','Riser (Bird\'s Eye View)','Static (Bird\'s Eye View)']},
+  {group:'Dolly In (Go Forward)', items:['Classic (Dolly In)','Gimbal Down (Dolly In)','Gimbal Up (Dolly In)','Reveal Or Pass (Dolly In)','Riser (Dolly In)']},
+  {group:'Dolly Out (Go Backward)', items:['Classic (Dolly Out)','Fall Down (Dolly Out)','Pass Subject (Dolly Out)']},
+  {group:'Drop Down', items:['Forward (Drop Down)','Gimbal Up (Drop Down)']},
+  {group:'Raise Up', items:['Gimbal Down (Raise Up)','Reverse (Raise Up)']},
+  {group:'Slider', items:['Classic (Slider)','Gimbal Up (Slider)','Push In (Slider)','Reverse (Slider)']},
+  {group:'Unique', items:['Orbit (Unique)','Tripod (Unique)']},
+];
+const DRONE_IMG_DIR = 'drone-shots/';
+const DRONE_TYPE_PREVIEWS = {
+  /* ---- Bird's Eye View ---- */
+  'Following Subject (Bird\'s Eye View)': {
+    group: 'Bird\'s Eye View', title: 'Following Subject (Bird\'s Eye View)', image: DRONE_IMG_DIR + 'Following Subject (Bird\'s Eye View).png',
+    desc: 'Camera points straight down and the drone moves with the subject as they walk, run or drive. Keeps them in the same spot in frame while the ground slides past.'
+  },
+  'Riser (Bird\'s Eye View)': {
+    group: 'Bird\'s Eye View', title: 'Riser (Bird\'s Eye View)', image: DRONE_IMG_DIR + 'Riser (Bird\'s Eye View).png',
+    desc: 'Camera points straight down and the drone rises straight up. The subject shrinks and the frame opens up to show where they are.'
+  },
+  'Static (Bird\'s Eye View)': {
+    group: 'Bird\'s Eye View', title: 'Static (Bird\'s Eye View)', image: DRONE_IMG_DIR + 'Static (Bird\'s Eye View).png',
+    desc: 'Camera points straight down and the drone hovers in place with no movement. Lets the action inside the frame do the work.'
+  },
+  /* ---- Dolly In (Go Forward) ---- */
+  'Classic (Dolly In)': {
+    group: 'Dolly In (Go Forward)', title: 'Classic (Dolly In)', image: DRONE_IMG_DIR + 'Classic (Dolly In).png',
+    desc: 'The drone flies straight forward towards the subject, camera facing them. Builds focus and draws the viewer in.'
+  },
+  'Gimbal Down (Dolly In)': {
+    group: 'Dolly In (Go Forward)', title: 'Gimbal Down (Dolly In)', image: DRONE_IMG_DIR + 'Gimbal Down (Dolly In).png',
+    desc: 'The drone flies forward while the camera tilts down from the horizon onto the subject. Starts wide, finishes on them.'
+  },
+  'Gimbal Up (Dolly In)': {
+    group: 'Dolly In (Go Forward)', title: 'Gimbal Up (Dolly In)', image: DRONE_IMG_DIR + 'Gimbal Up (Dolly In).png',
+    desc: 'The drone flies forward while the camera tilts up from the ground to the view ahead. A classic reveal of the landscape or location.'
+  },
+  'Reveal Or Pass (Dolly In)': {
+    group: 'Dolly In (Go Forward)', title: 'Reveal Or Pass (Dolly In)', image: DRONE_IMG_DIR + 'Reveal Or Pass (Dolly In).png',
+    desc: 'The drone flies forward past something in the foreground, like a tree, wall or building, to reveal the scene behind it. Or flies forward over the subject and past them.'
+  },
+  'Riser (Dolly In)': {
+    group: 'Dolly In (Go Forward)', title: 'Riser (Dolly In)', image: DRONE_IMG_DIR + 'Riser (Dolly In).png',
+    desc: 'The drone flies forward and climbs at the same time, camera on the subject. Adds scale as more of the scene comes into view.'
+  },
+  /* ---- Dolly Out (Go Backward) ---- */
+  'Classic (Dolly Out)': {
+    group: 'Dolly Out (Go Backward)', title: 'Classic (Dolly Out)', image: DRONE_IMG_DIR + 'Classic (Dolly Out).png',
+    desc: 'The drone flies straight backwards away from the subject, camera still facing them. Shows where they are and works well as an ending.'
+  },
+  'Fall Down (Dolly Out)': {
+    group: 'Dolly Out (Go Backward)', title: 'Fall Down (Dolly Out)', image: DRONE_IMG_DIR + 'Fall Down (Dolly Out).png',
+    desc: 'The drone flies backwards while dropping lower, camera on the subject. Pulls away and settles down to their level.'
+  },
+  'Pass Subject (Dolly Out)': {
+    group: 'Dolly Out (Go Backward)', title: 'Pass Subject (Dolly Out)', image: DRONE_IMG_DIR + 'Pass Subject (Dolly Out).png',
+    desc: 'The drone flies backwards over the subject\'s head, so they appear from the bottom of the frame and get smaller as the drone pulls away.'
+  },
+  /* ---- Drop Down ---- */
+  'Forward (Drop Down)': {
+    group: 'Drop Down', title: 'Forward (Drop Down)', image: DRONE_IMG_DIR + 'Forward (Drop Down).png',
+    desc: 'The drone drops lower while flying forward towards the subject. Swoops down into the scene.'
+  },
+  'Gimbal Up (Drop Down)': {
+    group: 'Drop Down', title: 'Gimbal Up (Drop Down)', image: DRONE_IMG_DIR + 'Gimbal Up (Drop Down).png',
+    desc: 'The drone drops straight down while the camera tilts up from the ground to the subject or the view. Lands the viewer into the scene.'
+  },
+  /* ---- Raise Up ---- */
+  'Gimbal Down (Raise Up)': {
+    group: 'Raise Up', title: 'Gimbal Down (Raise Up)', image: DRONE_IMG_DIR + 'Gimbal Down (Raise Up).png',
+    desc: 'The drone rises straight up while the camera tilts down to keep the subject in frame. The world opens up around them.'
+  },
+  'Reverse (Raise Up)': {
+    group: 'Raise Up', title: 'Reverse (Raise Up)', image: DRONE_IMG_DIR + 'Reverse (Raise Up).png',
+    desc: 'The drone rises while flying backwards away from the subject. A big pull-out that works as an ending or a sense of scale.'
+  },
+  /* ---- Slider ---- */
+  'Classic (Slider)': {
+    group: 'Slider', title: 'Classic (Slider)', image: DRONE_IMG_DIR + 'Classic (Slider).png',
+    desc: 'The drone slides sideways, moving alongside the subject at the same speed, camera facing them. The aerial version of a camera on a track.'
+  },
+  'Gimbal Up (Slider)': {
+    group: 'Slider', title: 'Gimbal Up (Slider)', image: DRONE_IMG_DIR + 'Gimbal Up (Slider).png',
+    desc: 'The drone slides sideways alongside the subject while the camera tilts up from the ground to the view.'
+  },
+  'Push In (Slider)': {
+    group: 'Slider', title: 'Push In (Slider)', image: DRONE_IMG_DIR + 'Push In (Slider).png',
+    desc: 'The drone slides sideways while also moving closer to the subject. Adds depth and energy to a tracking shot.'
+  },
+  'Reverse (Slider)': {
+    group: 'Slider', title: 'Reverse (Slider)', image: DRONE_IMG_DIR + 'Reverse (Slider).png',
+    desc: 'The drone slides sideways in the opposite direction to the subject, so they pass each other. Feels fast and dynamic.'
+  },
+  /* ---- Unique ---- */
+  'Orbit (Unique)': {
+    group: 'Unique', title: 'Orbit (Unique)', image: DRONE_IMG_DIR + 'Orbit (Unique).png',
+    desc: 'The drone circles around the subject with the camera locked on them. Makes a person, building or object feel like the centre of the world.'
+  },
+  'Tripod (Unique)': {
+    group: 'Unique', title: 'Tripod (Unique)', image: DRONE_IMG_DIR + 'Tripod (Unique).png',
+    desc: 'The drone hovers low and completely still, used like a camera on a tripod. Gets a steady shot from a spot a tripod could never reach.'
+  },
+};
 
 /* ---------- sequences reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
 const SEQUENCE_TYPE_GROUPS = [
@@ -3762,7 +3890,7 @@ const EFFECT_TYPE_PREVIEWS = {
     desc: 'PSR.'
   },
 };
-Object.assign(SHOT_TYPE_PREVIEWS, EFFECT_TYPE_PREVIEWS);
+Object.assign(SHOT_TYPE_PREVIEWS, EFFECT_TYPE_PREVIEWS, DRONE_TYPE_PREVIEWS);
 
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
@@ -4019,6 +4147,13 @@ function toggleSequencesFullscreen(){
   document.getElementById('sequencesOverlay').classList.toggle('fullscreen', sequencesFullscreen);
   document.body.classList.toggle('tabs-hidden', sequencesFullscreen);
 }
+let droneFullscreen = false;
+function toggleDroneFullscreen(){
+  droneFullscreen = !droneFullscreen;
+  document.getElementById('droneBox').classList.toggle('fullscreen', droneFullscreen);
+  document.getElementById('droneOverlay').classList.toggle('fullscreen', droneFullscreen);
+  document.body.classList.toggle('tabs-hidden', droneFullscreen);
+}
 let stylesFullscreen = false;
 function toggleStylesFullscreen(){
   stylesFullscreen = !stylesFullscreen;
@@ -4125,7 +4260,8 @@ function cvLocationPanelHtml(current, rec){
 }
 function shotTypePanelHtml(current){
   let list = '';
-  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, STYLE_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
+  const droneGroups = DRONE_TYPE_GROUPS.map(g=> ({ group:'Drone: ' + g.group, items:g.items }));
+  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, droneGroups, STYLE_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     if(!items.length) return;
     list += lcGroupLabel(g.group);
@@ -10389,7 +10525,7 @@ function hkInit(){
 const CHANNELS = {
   outreach:   { name:'Creative Outreach',    tabs:['outreach-tracker','outreach'] },
   business:   { name:'Dan James (Business)', tabs:['os:youtube:items','os:youtube:ideas','business','business-thumbs','tracker:youtube','os:youtube:os'] },
-  builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','styles','effects','thumbs','buckets','tracker:cine'] },
+  builds:     { name:'Dan James (Builds)',   tabs:['cine','library','drone','sequences','styles','effects','thumbs','buckets','tracker:cine'] },
   linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','hooks','os:linkedin:os','tracker:linkedin'] },
   stats:      { name:'Stats',        tabs:['stats-all','stats-daily','stats'] },
   books:      { name:'Books',                tabs:['books'] },
@@ -10608,6 +10744,7 @@ function switchTab(tab){
     if(bf.getAttribute('src')!==want) bf.setAttribute('src', want);
   }
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
+  document.getElementById('droneOverlay').classList.toggle('active', tab==='drone');
   document.getElementById('sequencesOverlay').classList.toggle('active', tab==='sequences');
   document.getElementById('stylesOverlay').classList.toggle('active', tab==='styles');
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
@@ -10645,6 +10782,18 @@ function switchTab(tab){
   });
   document.getElementById('allShotsFullscreenBtn').addEventListener('click', toggleAllShotsFullscreen);
   document.getElementById('allShotsCloseBtn').addEventListener('click', ()=>{
+    if(document.referrer){ history.back(); } else { window.close(); }
+  });
+
+  const droneScroll = document.getElementById('droneScroll');
+  droneScroll.innerHTML = sectionedGridHtml(DRONE_TYPE_GROUPS);
+  droneScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      openShotPreview(card.dataset.shotPreview);
+    });
+  });
+  document.getElementById('droneFullscreenBtn').addEventListener('click', toggleDroneFullscreen);
+  document.getElementById('droneCloseBtn').addEventListener('click', ()=>{
     if(document.referrer){ history.back(); } else { window.close(); }
   });
 
