@@ -366,6 +366,20 @@ Each entry covers:
 
 ---
 
+### Low Angled (Talking Head)
+
+**The shot:** Shot from below looking up at the subject, who leans in over the lens. Ceiling, sky or overhead lights fill the background and the subject looms large in the frame.
+
+**Used for:** Personality-led creator content, comedic or reaction moments, hype intros, and breaking up standard eye-level talking heads.
+
+**Why use it:** It is instantly different from a normal interview. Looking up at someone makes them feel bigger and closer, and having them lean into the lens pulls the viewer right into the moment.
+
+**What it conveys:** Power, presence, playfulness and a bold, larger-than-life personality.
+
+**Storytelling role:** Low angled talking heads put the subject in charge of the frame. Use them when the person should feel dominant, confrontational or full of energy, or for a moment of humour that needs to land hard.
+
+---
+
 ### Classic (Talking Head)
 
 **The shot:** The subject faces the camera directly (or just off-lens) at medium distance, roughly chest up, usually on the rule of thirds with a tidy, soft background.
