@@ -4289,7 +4289,8 @@ const CV_HIGHLIGHT_VALUE_CLASS = { 'Classic (Talking Head)': 'is-highlight-burgu
 function shotTypeChipHtml(value, idx){
   const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value] && !SHOT_TYPE_PREVIEWS[value].noPreview);
   const isHighlightGroup = !!(value && SHOT_TYPE_PREVIEWS[value] && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
-  const highlightValueClass = CV_HIGHLIGHT_VALUE_CLASS[value];
+  const isTalkingHead = !!(value && SHOT_TYPE_PREVIEWS[value] && SHOT_TYPE_PREVIEWS[value].group === 'Talking Head');
+  const highlightValueClass = CV_HIGHLIGHT_VALUE_CLASS[value] || (isTalkingHead ? 'is-highlight-burgundy' : '');
   const chipClass = highlightValueClass ? (' ' + highlightValueClass) : (isHighlightGroup ? ' is-highlight-group' : '');
   return '<div class="shot-type-chip' + chipClass + '" data-slot-idx="' + idx + '">'
     + '<span class="shot-type-chip-label">' + esc(value) + '</span>'
