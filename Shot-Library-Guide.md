@@ -352,7 +352,7 @@ Each entry covers:
 
 ## Talking Head
 
-### Angled (Talking Head)
+### High Angled (Talking Head)
 
 **The shot:** Shot from a high angle looking down on the subject, who is sat on the ground or low with a mic. Graphic lines from the floor, architecture and hard shadows frame the subject and turn the conversation into a styled, designed composition.
 
