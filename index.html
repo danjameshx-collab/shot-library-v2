@@ -3203,7 +3203,7 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
     </div>
     <nav class="cv-jump" id="cvJumpNav" aria-label="Jump to a part of the movie" hidden><div class="cv-jump-track" id="cvJumpTrack"></div></nav>
     <div class="cv-detail-scroll">
-      <div class="outline-section" id="cvIdeasSection">
+      <div class="outline-section" id="cvIdeasSection" style="display:none;">
         <div class="outline-head">
           <h2 class="outline-title" id="ideasTitle">Ideas</h2>
           <div class="outline-head-actions">
@@ -4039,13 +4039,14 @@ const CV_MODES = {
   cine:     { singular:'Cine Vlog',               plural:'Cine Vlogs',               mark:'CV', storageKey:'lcActiveCvId',
               ideasTitle:'Ideas', ideasPlaceholder:'Start typing your ideas…', ideasEmpty:'No ideas yet — click Edit to add some.',
               outlineTitle:'Script Outline', outlinePlaceholder:'Start typing your outline…', outlineEmpty:'No outline yet — click Edit to add one.',
-              thumbnailSection:true, ideasFormatted:false,
+              thumbnailSection:true, ideasFormatted:false, ideasSection:false,
               checklist:[{ id:'audio', name:'Audio in both ears' }, { id:'timestamps', name:'Timestamps' }] },
+  // Cine Vlogs have no Ideas box (ideasSection:false); anything already written in one is kept, just not shown.
   // Outreach: the first box describes the movie (no dialogue), the second holds only what is said, and there is no Thumbnail section.
   outreach: { singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId',
               ideasTitle:'Creative Outreach Movie Outline', ideasPlaceholder:'Describe everything that happens in the movie…', ideasEmpty:'No movie outline yet — click Edit to add one.',
               outlineTitle:'Dialogue', outlinePlaceholder:'Everything that is said, by section…', outlineEmpty:'No dialogue yet — click Edit to add it.',
-              thumbnailSection:false, ideasFormatted:true },
+              thumbnailSection:false, ideasFormatted:true, ideasSection:true },
 };
 let cvMode = 'cine';
 function cvM(){ return CV_MODES[cvMode]; }
@@ -4517,6 +4518,7 @@ function cvApplyModeLabels(){
   document.getElementById('cvLauncherTitle').textContent = m.plural;
   const prospect = cvMode==='outreach' ? coProspects.find(p=> p.id===coActiveProspectId) : null;
   document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + (window.CO_EMBED ? 'Back to company' : esc(prospect ? (prospect.name || 'Untitled Prospect') : m.plural));
+  document.getElementById('cvIdeasSection').style.display = m.ideasSection ? '' : 'none';
   document.getElementById('ideasTitle').textContent = m.ideasTitle;
   document.getElementById('ideasTextarea').placeholder = m.ideasPlaceholder;
   document.getElementById('outlineTitle').textContent = m.outlineTitle;
