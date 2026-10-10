@@ -499,9 +499,7 @@ button.ws-box:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
   .ws-cal .ws-boxes .ws-box svg{width:11px; height:11px;}
 }
 
-/* ---------- Daily Tasks: Power List, Backlog, Stats, and All (every section on one page) ---------- */
-/* on a single-section tab the page title already names the section */
-.dt-solo .dt-sec-head h2{display:none;}
+/* ---------- Daily Tasks: Power List, Backlog and Stats, all on one page ---------- */
 .dt-sec{margin:0 0 40px;}
 .dt-sec-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:0 4px; margin:0 0 14px;}
 .dt-sec-head h2{margin:0; font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; color:var(--ink);}
@@ -2868,10 +2866,7 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
   <button type="button" class="top-tab-btn" data-tab="stats-all">All Stats</button>
   <button type="button" class="top-tab-btn" data-tab="stats-daily">Daily Stats</button>
   <button type="button" class="top-tab-btn" data-tab="stats">Content Stats</button>
-  <button type="button" class="top-tab-btn" data-tab="tasks:power">Power List</button>
-  <button type="button" class="top-tab-btn" data-tab="tasks:backlog">Backlog</button>
-  <button type="button" class="top-tab-btn" data-tab="tasks:stats">Stats</button>
-  <button type="button" class="top-tab-btn" data-tab="tasks:all">All</button>
+  <button type="button" class="top-tab-btn" data-tab="tasks:all">Power List</button>
   <button type="button" class="top-tab-btn" data-tab="books">Books</button>
   <button type="button" class="top-tab-btn" data-tab="learnings">Learnings</button>
   <button type="button" class="top-tab-btn" data-tab="soon" id="soonTabBtn">LinkedIn</button>
@@ -2909,7 +2904,7 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
   </div>
 </div>
 
-<!-- Daily Tasks: the Power List, the Backlog and the Daily Tracker's stats, one tab each plus All (every section on one page). Tasks are one doc of kind 'dailyTasks' in Firestore. Drawn by dtRender(). -->
+<!-- Daily Tasks: the Power List, the Backlog and the Daily Tracker's stats, all on the one Power List tab. Tasks are one doc of kind 'dailyTasks' in Firestore. Drawn by dtRender(). -->
 <div class="cv-launcher-overlay tab-page os-overlay" id="tasksOverlay">
   <div class="os-inner" id="tasksInner"></div>
 </div>
@@ -9772,9 +9767,9 @@ function lnInit(){
 // The Power List shows soonest due first until you drag a task; then powerOrdered is set and the list keeps your order.
 // Tasks pulled in from Close also carry closeId and closeUrl; closeSynced (written only by close-sync/sync.mjs) lists every Close task already pulled in.
 // Ticking one Done (or deleting it from the Backlog) adds its closeId to closeDone, and the sync then marks it complete in Close.
-// The Stats tab (and the bottom of the All tab) is the 'daily' tracker above.
+// The Stats section at the bottom of the page is the 'daily' tracker above.
 const DT_KIND = 'dailyTasks';
-const dtState = { loaded:false, loading:null, error:false, rec:null, view:'power' };
+const dtState = { loaded:false, loading:null, error:false, rec:null };
 let dtSaveTimer = null;
 const DT_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const DT_DOWN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
@@ -9938,27 +9933,19 @@ async function dtSaveNow(){
   }
 }
 
-const DT_VIEWS = { power:'Power List', backlog:'Backlog', stats:'Stats', all:'Daily Tasks' };
-function dtShow(view){
-  dtState.view = DT_VIEWS[view] ? view : 'power';
+function dtShow(){
   dtRender();
   if(!dtState.loaded) dtLoad();
 }
-// One section per tab (Power List, Backlog, Stats), or all three on the All tab. instant skips the stats entrance (a redraw after an edit).
+// The Power List, the Backlog and the Stats, one page. instant skips the stats entrance (a redraw after an edit).
 function dtRender(instant){
-  const box = document.getElementById('tasksInner'), view = dtState.view;
-  const secs = view==='all' ? ['power', 'backlog', 'stats'] : [view];
-  box.classList.toggle('dt-solo', view!=='all');
+  const box = document.getElementById('tasksInner');
   box.classList.toggle('dt-still', !!instant); // a redraw after a click keeps today's glow still
-  let html = '<div class="os-head"><div><h1 class="os-title">' + DT_VIEWS[view] + '</h1><p class="os-sub">'
+  let html = '<div class="os-head"><div><h1 class="os-title">Daily Tasks</h1><p class="os-sub">'
     + new Date().toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long' }) + '</p></div></div>';
-  if(!dtState.loaded && secs.some(k=> k!=='stats')){
-    html += '<section class="dt-sec"><div class="os-empty">' + (dtState.error ? 'Could not load your tasks. Check your connection and refresh the page.' : 'Loading your tasks...') + '</div></section>';
-  }
-  secs.forEach(k=>{
-    if(k==='stats') html += dtStatsHtml();
-    else if(dtState.loaded) html += dtListHtml(k);
-  });
+  if(dtState.loaded) html += dtListHtml('power') + dtListHtml('backlog');
+  else html += '<section class="dt-sec"><div class="os-empty">' + (dtState.error ? 'Could not load your tasks. Check your connection and refresh the page.' : 'Loading your tasks...') + '</div></section>';
+  html += dtStatsHtml();
   box.innerHTML = html;
   dtFitNames(box);
   if(trState.loaded) trAnimateRings(box, instant);
@@ -10535,7 +10522,7 @@ const CHANNELS = {
   stats:      { name:'Stats',        tabs:['stats-all','stats-daily','stats'] },
   books:      { name:'Books',                tabs:['books'] },
   learnings:  { name:'Learnings',            tabs:['learnings'] },
-  daily:      { name:'Daily Tasks',          tabs:['tasks:power','tasks:backlog','tasks:stats','tasks:all'] },
+  daily:      { name:'Daily Tasks',          tabs:['tasks:all'] },
 };
 let activeChannel = null;
 
@@ -10731,7 +10718,7 @@ function switchTab(tab){
   if(isTr){ trRender(); document.getElementById('trackerOverlay').scrollTop = 0; }
   const isTasks = tab.startsWith('tasks:');
   document.getElementById('tasksOverlay').classList.toggle('active', isTasks);
-  if(isTasks){ dtShow(tab.split(':')[1]); document.getElementById('tasksOverlay').scrollTop = 0; }
+  if(isTasks){ dtShow(); document.getElementById('tasksOverlay').scrollTop = 0; }
   const isStats = Object.prototype.hasOwnProperty.call(ST_VIEWS, tab);
   document.getElementById('statsOverlay').classList.toggle('active', isStats);
   if(isStats){ trState.statsView = tab; trRenderStats(); document.getElementById('statsOverlay').scrollTop = 0; }
