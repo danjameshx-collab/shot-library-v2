@@ -874,7 +874,7 @@ Each entry covers:
 
 ---
 
-### Before Context Sequence (Stylised Shots)
+### Before Scene Sequence (Stylised Shots)
 
 **The shot:** Open on a small, intimate detail (a hand wrapping around a mug, a pen on a page) before showing where you are.
 
@@ -944,7 +944,7 @@ Each entry covers:
 
 ---
 
-### Ending Context Wide (Stylised Shots)
+### Ending Scene Sequence (Stylised Shots)
 
 **The shot:** The scene closes on a wide of the location (like a lit-up diner at night) so the viewer finally sees the whole place.
 
