@@ -1937,6 +1937,39 @@ textarea.bk-takeaways{min-height:360px; font-size:14px; line-height:1.65;}
 .cv-research[hidden]{display:none;}
 /* Cine Vlog checklist: the Business video checklist panel (.os-panel / .os-check), at the very bottom */
 .cv-checklist{margin-top:30px;}
+/* Creative Outreach Movie: Props. One button per thing the movie needs; grey until gathered, then green. */
+.cv-props-count{font-size:12.5px; font-weight:600; color:var(--ink-faint); margin-right:4px;}
+.cv-props{border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); box-shadow:var(--shadow); padding:6px 22px;}
+.cv-props-group{display:grid; grid-template-columns:130px 1fr; gap:14px; align-items:start; padding:14px 0;}
+.cv-props-group + .cv-props-group, .cv-props-add{border-top:1px solid var(--line);}
+.cv-props-group h3{margin:0; padding-top:8px; font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);}
+.cv-props-items{display:flex; flex-wrap:wrap; gap:8px;}
+.cv-prop{
+  display:inline-flex; align-items:center; gap:8px; padding:7px 14px 7px 10px; border-radius:999px; cursor:pointer;
+  border:1px solid transparent; background:#ECEFED; color:var(--ink-soft);
+  font:inherit; font-size:13.5px; font-weight:600; line-height:1.2; transition:background .15s, color .15s;
+}
+.cv-prop::before{
+  content:''; width:16px; height:16px; flex:0 0 auto; border-radius:50%; box-sizing:border-box;
+  border:1.5px solid #B5BFB9; background:#fff center/10px no-repeat;
+}
+.cv-prop:hover{background:#E2E7E4;}
+.cv-prop:focus-visible{outline:2px solid var(--bespoke); outline-offset:2px;}
+.cv-prop.is-got{background:var(--bespoke); color:#fff;}
+.cv-prop.is-got::before{
+  border-color:#fff;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.5' stroke='%231E6B45' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.cv-prop.is-removing{background:#fff; border:1px dashed var(--line-strong); padding-left:14px;}
+.cv-prop.is-removing::before{display:none;}
+.cv-prop.is-removing::after{content:'\00d7'; font-size:15px; line-height:1; color:var(--ink-faint);}
+.cv-props-add{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:14px 0;}
+.cv-props-add input, .cv-props-add select{
+  padding:8px 12px; border-radius:10px; border:1px solid var(--line-strong); font:inherit; font-size:13.5px; background:#fff; color:var(--ink);
+}
+.cv-props-add input{width:200px;}
+.cv-props .outline-empty{padding:14px 0;}
+@media (max-width:640px){ .cv-props-group{grid-template-columns:1fr; gap:8px;} .cv-props-group h3{padding-top:0;} }
 .cv-checklist[hidden]{display:none;}
 .cv-checklist .os-panel{margin-bottom:0;}
 .cvr-person{font-family:var(--font-display); font-weight:800; font-size:19px; letter-spacing:-.01em; color:var(--ink); margin:0;}
@@ -3290,6 +3323,16 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
         <textarea class="outline-textarea" id="outlineTextarea" style="display:none;" placeholder="Start typing your outline…" spellcheck="false"></textarea>
         <p class="outline-hint" id="outlineHint" style="display:none;">Click a button above to style the line your cursor is on &middot; everything else is a bullet &middot; don't forget to hit <kbd>Save</kbd></p>
       </div>
+      <div class="outline-section" id="cvPropsSection" style="display:none;">
+        <div class="outline-head">
+          <h2 class="outline-title">Props</h2>
+          <div class="outline-head-actions">
+            <span class="cv-props-count" id="cvPropsCount"></span>
+            <button type="button" class="btn small" id="cvPropsEditBtn">Edit</button>
+          </div>
+        </div>
+        <div class="cv-props" id="cvPropsList"></div>
+      </div>
       <div class="shot-table-actions" id="cvShotListSection">
         <div class="shot-table-actions-left">
           <button type="button" class="btn small" data-cv-shot-action="add-row">+ Add Shot Row</button>
@@ -4212,10 +4255,11 @@ const CV_MODES = {
               checklist:[{ id:'audio', name:'Audio in both ears' }, { id:'timestamps', name:'Timestamps' }] },
   // Cine Vlogs have no Ideas box (ideasSection:false); anything already written in one is kept, just not shown.
   // Outreach: the first box describes the movie (no dialogue), the second holds only what is said, and there is no Thumbnail section.
+  // Props (outreach only): one button per thing the movie needs apart from the camera, tapped green once gathered.
   outreach: { singular:'Creative Outreach Movie', plural:'Creative Outreach Movies', mark:'CO', storageKey:'lcActiveCoId',
               ideasTitle:'Creative Outreach Movie Outline', ideasPlaceholder:'Describe everything that happens in the movie…', ideasEmpty:'No movie outline yet — click Edit to add one.',
               outlineTitle:'Dialogue', outlinePlaceholder:'Everything that is said, by section…', outlineEmpty:'No dialogue yet — click Edit to add it.',
-              thumbnailSection:false, ideasFormatted:true, ideasSection:true },
+              thumbnailSection:false, ideasFormatted:true, ideasSection:true, propsSection:true },
 };
 let cvMode = 'cine';
 function cvM(){ return CV_MODES[cvMode]; }
@@ -4690,6 +4734,7 @@ function cvApplyModeLabels(){
   const prospect = cvMode==='outreach' ? coProspects.find(p=> p.id===coActiveProspectId) : null;
   document.getElementById('cvBackToLauncherLink').innerHTML = '&larr; ' + (window.CO_EMBED ? 'Back to company' : esc(prospect ? (prospect.name || 'Untitled Prospect') : m.plural));
   document.getElementById('cvIdeasSection').style.display = m.ideasSection ? '' : 'none';
+  document.getElementById('cvPropsSection').style.display = m.propsSection ? '' : 'none';
   document.getElementById('ideasTitle').textContent = m.ideasTitle;
   document.getElementById('ideasTextarea').placeholder = m.ideasPlaceholder;
   document.getElementById('outlineTitle').textContent = m.outlineTitle;
@@ -5959,6 +6004,8 @@ function cvRenderDetail(){
   }
   cvWireRows();
   cvWireDragAndDrop();
+  cvPropsEditing = false;
+  cvRenderProps(rec);
   cvRenderResearch(rec);
   cvRenderChecklist(rec);
   cvRenderJumpNav(rec);
@@ -6001,6 +6048,83 @@ async function cvToggleCheck(key, on){
   rec.checks = { ...(rec.checks || {}), [key]: on };
   cvRenderChecklist(rec);
   await cvSaveRecord(rec);
+}
+
+/* ---------- Creative Outreach Movie: Props ---------- */
+// Saved on the movie as `props`: [{ name, group, got }], shown one row per group. Tapping a button marks it gathered; Edit adds and removes them.
+let cvPropsEditing = false;
+function cvPropGroups(props){
+  // Groups in the order they first appear; props saved without one sit under Other.
+  const groups = [];
+  props.forEach((x, i)=>{
+    const name = x.group || 'Other';
+    let g = groups.find(y=> y.name===name);
+    if(!g){ g = { name, items:[] }; groups.push(g); }
+    g.items.push({ ...x, i });
+  });
+  return groups;
+}
+function cvRenderProps(rec){
+  const list = document.getElementById('cvPropsList');
+  if(!cvM().propsSection || !rec){ list.innerHTML = ''; return; }
+  const props = Array.isArray(rec.props) ? rec.props : [];
+  const got = props.filter(x=> x.got).length;
+  document.getElementById('cvPropsCount').textContent = props.length ? got + ' / ' + props.length + ' gathered' : '';
+  document.getElementById('cvPropsEditBtn').textContent = cvPropsEditing ? 'Done' : 'Edit';
+  const groups = cvPropGroups(props);
+  let html = groups.map(g=> '<div class="cv-props-group"><h3>' + esc(g.name) + '</h3><div class="cv-props-items">'
+    + g.items.map(x=> cvPropsEditing
+      ? '<button type="button" class="cv-prop is-removing" data-prop="' + x.i + '" title="Remove">' + esc(x.name) + '</button>'
+      : '<button type="button" class="cv-prop' + (x.got ? ' is-got' : '') + '" data-prop="' + x.i + '" aria-pressed="' + (x.got ? 'true' : 'false') + '">' + esc(x.name) + '</button>').join('')
+    + '</div></div>').join('');
+  if(cvPropsEditing){
+    const names = groups.map(g=> g.name);
+    if(!names.includes('Other')) names.push('Other');
+    html += '<form class="cv-props-add" id="cvPropsAddForm"><input type="text" id="cvPropsAddInput" placeholder="Add a prop…" maxlength="60" autocomplete="off">'
+      + '<select id="cvPropsAddGroup" aria-label="Group">' + names.map(n=> '<option>' + esc(n) + '</option>').join('') + '</select>'
+      + '<button type="submit" class="btn small primary">Add</button></form>';
+  } else if(!props.length) html = '<p class="outline-empty">No props yet. Click Edit to add what this movie needs.</p>';
+  list.innerHTML = html;
+}
+async function cvSaveProps(rec){
+  try{
+    await updateDoc(doc(db, CV_COLLECTION, rec.id), { props: rec.props });
+  }catch(e){
+    console.error('Failed to save props to Firebase:', e);
+    await lcAlert('Connection error', 'Could not save your change to the database. Check your connection and try again.');
+  }
+}
+function cvPropsInit(){
+  const list = document.getElementById('cvPropsList');
+  document.getElementById('cvPropsEditBtn').addEventListener('click', ()=>{
+    cvPropsEditing = !cvPropsEditing;
+    cvRenderProps(cvLibrary.find(r=> r.id===cvActiveId));
+    if(cvPropsEditing) document.getElementById('cvPropsAddInput').focus();
+  });
+  list.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.cv-prop');
+    const rec = cvLibrary.find(r=> r.id===cvActiveId);
+    if(!btn || !rec) return;
+    const i = Number(btn.dataset.prop);
+    // Like the checklist ticks, this leaves the movie's dates alone.
+    rec.props = (rec.props || []).slice();
+    if(cvPropsEditing) rec.props.splice(i, 1);
+    else rec.props[i] = { ...rec.props[i], got: !rec.props[i].got };
+    cvRenderProps(rec);
+    cvSaveProps(rec);
+  });
+  list.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const rec = cvLibrary.find(r=> r.id===cvActiveId);
+    const name = document.getElementById('cvPropsAddInput').value.trim();
+    if(!rec || !name) return;
+    const group = document.getElementById('cvPropsAddGroup').value;
+    rec.props = [...(rec.props || []), { name, group, got:false }];
+    cvRenderProps(rec);
+    document.getElementById('cvPropsAddGroup').value = group;
+    document.getElementById('cvPropsAddInput').focus();
+    cvSaveProps(rec);
+  });
 }
 
 /* ---------- Creative Outreach Movie: Research ---------- */
@@ -6199,6 +6323,7 @@ function cvRenderJumpNav(rec){
   const tabs = [
     { target:'cvIdeasSection', label: m.ideasTitle.replace(/^Creative Outreach /, '') },
     { target:'cvOutlineSection', label: m.outlineTitle },
+    { target:'cvPropsSection', label:'Props' },
     { target:'cvShotListSection', label:'Shot List' },
     { target:'cvResearchSection', label:'Research' },
   ];
@@ -10955,6 +11080,7 @@ function switchTab(tab){
   document.querySelectorAll('[data-cv-shot-action="mark-all-undone"]').forEach(btn=> btn.addEventListener('click', ()=> cvMarkAllRows(false)));
   outlineInit();
   ideasInit();
+  cvPropsInit();
   cvJumpInit();
   osInit();
   trInit();
