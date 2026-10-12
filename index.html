@@ -2411,42 +2411,26 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;
 }
 .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
-.shot-type-chip.is-highlight-group{background:#1B3A6B; border-color:#1B3A6B;}
-.shot-type-chip.is-highlight-group:hover{border-color:#142C52;}
-.shot-type-chip.is-highlight-group .shot-type-chip-label{color:#fff;}
-.shot-type-chip.is-highlight-group .shot-type-chip-preview,
-.shot-type-chip.is-highlight-group .shot-type-chip-add{color:rgba(255,255,255,.75);}
-.shot-type-chip.is-highlight-group .shot-type-chip-preview:hover,
-.shot-type-chip.is-highlight-group .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
-.shot-type-chip.is-highlight-group .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
-.shot-type-chip.is-highlight-group .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
-.shot-type-chip.is-highlight-burgundy{background:#6E1423; border-color:#6E1423;}
-.shot-type-chip.is-highlight-burgundy:hover{border-color:#530F1A;}
-.shot-type-chip.is-highlight-burgundy .shot-type-chip-label{color:#fff;}
-.shot-type-chip.is-highlight-burgundy .shot-type-chip-preview,
-.shot-type-chip.is-highlight-burgundy .shot-type-chip-add{color:rgba(255,255,255,.75);}
-.shot-type-chip.is-highlight-burgundy .shot-type-chip-preview:hover,
-.shot-type-chip.is-highlight-burgundy .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
-.shot-type-chip.is-highlight-burgundy .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
-.shot-type-chip.is-highlight-burgundy .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
-.shot-type-chip.is-highlight-purple{background:#4C2A85; border-color:#4C2A85;}
-.shot-type-chip.is-highlight-purple:hover{border-color:#391F63;}
-.shot-type-chip.is-highlight-purple .shot-type-chip-label{color:#fff;}
-.shot-type-chip.is-highlight-purple .shot-type-chip-preview,
-.shot-type-chip.is-highlight-purple .shot-type-chip-add{color:rgba(255,255,255,.75);}
-.shot-type-chip.is-highlight-purple .shot-type-chip-preview:hover,
-.shot-type-chip.is-highlight-purple .shot-type-chip-add:hover{background:rgba(255,255,255,.2); color:#fff;}
-.shot-type-chip.is-highlight-purple .shot-slot-remove{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4); color:rgba(255,255,255,.85);}
-.shot-type-chip.is-highlight-purple .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
-.shot-type-chip.is-highlight-teal{background:#0C7B8A; border-color:#0C7B8A;}
-.shot-type-chip.is-highlight-teal:hover{border-color:#0A6470;}
-.shot-type-chip.is-highlight-teal .shot-type-chip-label{color:#fff;}
-.shot-type-chip.is-highlight-teal .shot-type-chip-preview,
-.shot-type-chip.is-highlight-teal .shot-type-chip-add{color:rgba(255,255,255,.8);}
-.shot-type-chip.is-highlight-teal .shot-type-chip-preview:hover,
-.shot-type-chip.is-highlight-teal .shot-type-chip-add:hover{background:rgba(255,255,255,.25); color:#fff;}
-.shot-type-chip.is-highlight-teal .shot-slot-remove{background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.5); color:rgba(255,255,255,.9);}
-.shot-type-chip.is-highlight-teal .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+/* chip colours: one per bundle of categories, picked by CV_CHIP_COLOUR. The light greens set --chip-ink (an r,g,b triplet) to turn the text and buttons dark. */
+.shot-type-chip.is-highlight{--chip-ink:255,255,255; background:var(--chip); border-color:var(--chip-line, var(--chip));}
+.shot-type-chip.is-highlight:hover{border-color:var(--chip-dark);}
+.shot-type-chip.is-highlight .shot-type-chip-label{color:rgb(var(--chip-ink));}
+.shot-type-chip.is-highlight .shot-type-chip-preview,
+.shot-type-chip.is-highlight .shot-type-chip-add{color:rgba(var(--chip-ink),.75);}
+.shot-type-chip.is-highlight .shot-type-chip-preview:hover,
+.shot-type-chip.is-highlight .shot-type-chip-add:hover{background:rgba(var(--chip-ink),.2); color:rgb(var(--chip-ink));}
+.shot-type-chip.is-highlight .shot-slot-remove{background:rgba(var(--chip-ink),.12); border-color:rgba(var(--chip-ink),.4); color:rgba(var(--chip-ink),.85);}
+.shot-type-chip.is-highlight .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff;}
+.shot-type-chip.is-highlight-green{--chip:var(--bespoke); --chip-dark:var(--bespoke-dark);}
+.shot-type-chip.is-highlight-leaf{--chip:#4D7C17; --chip-dark:#3A5E11;}
+.shot-type-chip.is-highlight-deep{--chip:#0E3A28; --chip-dark:#08251A;}
+.shot-type-chip.is-highlight-sage{--chip:#587766; --chip-dark:#445C4F;}
+.shot-type-chip.is-highlight-mint{--chip:#BFE6CF; --chip-line:#93CDAA; --chip-dark:#6FB58C; --chip-ink:18,61,40;}
+.shot-type-chip.is-highlight-lime{--chip:#DDEBAB; --chip-line:#C2D987; --chip-dark:#A5C25F; --chip-ink:44,74,10;}
+.shot-type-chip.is-highlight-burgundy{--chip:#6E1423; --chip-dark:#530F1A;}
+.shot-type-chip.is-highlight-navy{--chip:#1B3A6B; --chip-dark:#142C52;}
+.shot-type-chip.is-highlight-purple{--chip:#4C2A85; --chip-dark:#391F63;}
+.shot-type-chip.is-highlight-teal{--chip:#0C7B8A; --chip-dark:#0A6470;}
 
 /* ---------- shot table: section dividers (visually group a run of rows) ---------- */
 table.shot-table tbody tr.shot-section-row td{padding:0; border-bottom:none;}
@@ -4358,14 +4342,20 @@ function cvEnsureShotTypesArray(row){
   row.shotTypes = row.shotTypes.map(cvShotAlias);
   return row.shotTypes;
 }
-const CV_HIGHLIGHT_GROUPS = ['Frame', 'Composition', 'Sequences'];
-const CV_HIGHLIGHT_VALUE_CLASS = { 'Classic (Talking Head)': 'is-highlight-burgundy', 'PSR': 'is-highlight-purple', 'Net': 'is-highlight-teal' };
+// Chip colour per shot type, bundled by category: a tab's whole list shares one colour unless a section or a single value is picked out.
+const CV_CHIP_COLOUR = {};
+function cvChipBundle(groups, colour, sections){
+  groups.forEach(g=> g.items.forEach(i=>{ CV_CHIP_COLOUR[i] = (sections && sections[g.group]) || colour; }));
+}
+cvChipBundle(SHOT_TYPE_GROUPS, 'green', { 'Stylised Shots':'leaf', 'Talking Head':'burgundy', 'Composition':'navy' });
+cvChipBundle(DRONE_TYPE_GROUPS, 'mint');
+cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'lime' });
+cvChipBundle(STYLE_TYPE_GROUPS, 'sage');
+cvChipBundle(EFFECT_TYPE_GROUPS, 'navy');
+Object.assign(CV_CHIP_COLOUR, { 'PSR':'purple', 'Net':'teal' });
 function shotTypeChipHtml(value, idx){
   const hasPreview = !!(value && SHOT_TYPE_PREVIEWS[value] && !SHOT_TYPE_PREVIEWS[value].noPreview);
-  const isHighlightGroup = !!(value && SHOT_TYPE_PREVIEWS[value] && CV_HIGHLIGHT_GROUPS.includes(SHOT_TYPE_PREVIEWS[value].group));
-  const isTalkingHead = !!(value && SHOT_TYPE_PREVIEWS[value] && SHOT_TYPE_PREVIEWS[value].group === 'Talking Head');
-  const highlightValueClass = CV_HIGHLIGHT_VALUE_CLASS[value] || (isTalkingHead ? 'is-highlight-burgundy' : '');
-  const chipClass = highlightValueClass ? (' ' + highlightValueClass) : (isHighlightGroup ? ' is-highlight-group' : '');
+  const chipClass = CV_CHIP_COLOUR[value] ? (' is-highlight is-highlight-' + CV_CHIP_COLOUR[value]) : '';
   return '<div class="shot-type-chip' + chipClass + '" data-slot-idx="' + idx + '">'
     + '<span class="shot-type-chip-label">' + esc(value) + '</span>'
     + (hasPreview
