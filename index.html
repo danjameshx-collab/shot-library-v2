@@ -2411,7 +2411,7 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
   transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;
 }
 .shot-slot-remove:hover{background:var(--warn); border-color:var(--warn); color:#fff; transform:scale(1.08);}
-/* chip colours: one per bundle of categories, picked by CV_CHIP_COLOUR. The light greens set --chip-ink (an r,g,b triplet) to turn the text and buttons dark. */
+/* chip colours: one per bundle of categories, picked by CV_CHIP_COLOUR. A light chip sets --chip-ink (an r,g,b triplet) to turn the text and buttons dark. */
 .shot-type-chip.is-highlight{--chip-ink:255,255,255; background:var(--chip); border-color:var(--chip-line, var(--chip));}
 .shot-type-chip.is-highlight:hover{border-color:var(--chip-dark);}
 .shot-type-chip.is-highlight .shot-type-chip-label{color:rgb(var(--chip-ink));}
@@ -2424,8 +2424,8 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
 .shot-type-chip.is-highlight-green{--chip:var(--bespoke); --chip-dark:var(--bespoke-dark);}
 .shot-type-chip.is-highlight-leaf{--chip:#4D7C17; --chip-dark:#3A5E11;}
 .shot-type-chip.is-highlight-deep{--chip:#0E3A28; --chip-dark:#08251A;}
+.shot-type-chip.is-highlight-sage{--chip:#587766; --chip-dark:#445C4F;}
 .shot-type-chip.is-highlight-mint{--chip:#BFE6CF; --chip-line:#93CDAA; --chip-dark:#6FB58C; --chip-ink:18,61,40;}
-.shot-type-chip.is-highlight-lime{--chip:#DDEBAB; --chip-line:#C2D987; --chip-dark:#A5C25F; --chip-ink:44,74,10;}
 .shot-type-chip.is-highlight-burgundy{--chip:#6E1423; --chip-dark:#530F1A;}
 .shot-type-chip.is-highlight-navy{--chip:#1B3A6B; --chip-dark:#142C52;}
 .shot-type-chip.is-highlight-purple{--chip:#4C2A85; --chip-dark:#391F63;}
@@ -3479,7 +3479,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Camera', items:['Lots Of Cuts (Camera)']},
   {group:'Drone', items:['Drone Sequence (Drone)']},
   {group:'Introductions', items:['Cinematics & Talking Head (Introductions)','Cinematics & Voiceover (Introductions)','Music Montage Into A-Roll (Introductions)','Straight Into Raw (Introductions)','Talking Head & B-Roll (Introductions)']},
-  {group:'Transitions', items:['Music (Transitions)','Object Gives Context (Transitions)','Speech Adds Context (Transitions)','Text Card (Transitions)','Text Card With A Roll (Transitions)']},
+  {group:'Transitions', items:['Music (Transitions)','Object Gives Context (Transitions)','Speech Adds Context (Transitions)','Title Card (Transitions)','Title Card With A Roll (Transitions)']},
   {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Props (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
 
@@ -3770,13 +3770,13 @@ const SHOT_TYPE_PREVIEWS = {
     desc: 'Open on slow, moody cinematic shots, like hands on a passport in warm window light, carried by a voiceover instead of a face on camera. Builds intrigue and story before revealing who is talking.'
   },
   /* ---- Transitions ---- */
-  'Text Card (Transitions)': {
-    group: 'Transitions', title: 'Text Card (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card.png',
+  'Title Card (Transitions)': {
+    group: 'Transitions', title: 'Title Card (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card.png',
     desc: 'Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath. Gives the viewer a breath and signals a new part of the story.'
   },
-  'Text Card With A Roll (Transitions)': {
-    group: 'Transitions', title: 'Text Card With A Roll (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
-    desc: 'The same quiet serif text card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
+  'Title Card With A Roll (Transitions)': {
+    group: 'Transitions', title: 'Title Card With A Roll (Transitions)', image: SHOT_IMG_DIR + 'Chapter Card With A Roll.png',
+    desc: 'The same quiet serif title card, but laid over footage instead of black, sitting in the empty side of the frame while the scene plays. Marks a new chapter without stopping the story.'
   },
   'Music (Transitions)': {
     group: 'Transitions', title: 'Music (Transitions)', image: SHOT_IMG_DIR + 'Music.png',
@@ -4294,7 +4294,7 @@ function shotTypePanelHtml(current){
     + '<ul class="lc-opt-list" role="listbox">' + list + '</ul>';
 }
 // Old shot type names that were renamed/moved -> their current name.
-const SHOT_TYPE_ALIASES = { 'Angled (Talking Head)': 'High Angled (Talking Head)', 'Environment (Medium)': 'Environment (Stylised Shots)', 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Stylised Shots)', 'Close Up Sequence (Camera)': 'Close Up Sequence (Stylised Shots)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Stylised Shots)', 'Cut Sequence Zoom (Camera)': 'Cut Sequence Zoom (Stylised Shots)', 'Duplication': 'Duplication (Stylised Shots)', 'Duplication (Camera)': 'Duplication (Stylised Shots)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Stylised Shots)', 'Match Cuts (Camera)': 'Match Cuts (Stylised Shots)', 'Slow Motion Sequence': 'Slow Motion Sequence (Stylised Shots)', 'Slow Motion Sequence (Camera)': 'Slow Motion Sequence (Stylised Shots)', 'APS-C': 'APS-C (Stylised Shots)', 'APS-C (Lens)': 'APS-C (Stylised Shots)', 'POV': 'POV (Stylised Shots)', 'POV (Lens)': 'POV (Stylised Shots)', 'Top-Down': 'Top-Down (Stylised Shots)', 'Top-Down (Drone)': 'Top-Down (Stylised Shots)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Text Card (Transitions)', 'Text Card With A Roll': 'Text Card With A Roll (Transitions)', 'Chapter Card': 'Text Card (Transitions)', 'Chapter Card With A Roll': 'Text Card With A Roll (Transitions)' };
+const SHOT_TYPE_ALIASES = { 'Angled (Talking Head)': 'High Angled (Talking Head)', 'Environment (Medium)': 'Environment (Stylised Shots)', 'Reveal (Medium)': 'Reveal (Stylised Shots)', 'High Negative Space (Composition)': 'Negative Space (Composition)', 'Talking Head (Medium)': 'Classic (Talking Head)', '9 Shot Rule (Classic)': '9 Shot Rule Classic (Full Coverage)', '9 Shot Rule (Mixed)': '9 Shot Rule Mixed (Full Coverage)', '9-Shot Rule (Reverse)': '9 Shot Rule Reverse (Full Coverage)', 'Close Up Sequence': 'Close Up Sequence (Stylised Shots)', 'Close Up Sequence (Camera)': 'Close Up Sequence (Stylised Shots)', 'Cut Sequence Zoom': 'Cut Sequence Zoom (Stylised Shots)', 'Cut Sequence Zoom (Camera)': 'Cut Sequence Zoom (Stylised Shots)', 'Duplication': 'Duplication (Stylised Shots)', 'Duplication (Camera)': 'Duplication (Stylised Shots)', 'Lots Of Cuts': 'Lots Of Cuts (Camera)', 'Match Cuts': 'Match Cuts (Stylised Shots)', 'Match Cuts (Camera)': 'Match Cuts (Stylised Shots)', 'Slow Motion Sequence': 'Slow Motion Sequence (Stylised Shots)', 'Slow Motion Sequence (Camera)': 'Slow Motion Sequence (Stylised Shots)', 'APS-C': 'APS-C (Stylised Shots)', 'APS-C (Lens)': 'APS-C (Stylised Shots)', 'POV': 'POV (Stylised Shots)', 'POV (Lens)': 'POV (Stylised Shots)', 'Top-Down': 'Top-Down (Stylised Shots)', 'Top-Down (Drone)': 'Top-Down (Stylised Shots)', 'Drone Sequence': 'Drone Sequence (Drone)', 'Talking Head & B-Roll': 'Talking Head & B-Roll (Introductions)', 'Straight Into Raw': 'Straight Into Raw (Introductions)', 'Music Montage Into A-Roll': 'Music Montage Into A-Roll (Introductions)', 'Cinematics & Talking Head': 'Cinematics & Talking Head (Introductions)', 'Cinematics & Voiceover': 'Cinematics & Voiceover (Introductions)', 'Object Gives Context': 'Object Gives Context (Transitions)', 'Speech Adds Context': 'Speech Adds Context (Transitions)', 'Text Card': 'Title Card (Transitions)', 'Text Card With A Roll': 'Title Card With A Roll (Transitions)', 'Text Card (Transitions)': 'Title Card (Transitions)', 'Text Card With A Roll (Transitions)': 'Title Card With A Roll (Transitions)', 'Chapter Card': 'Title Card (Transitions)', 'Chapter Card With A Roll': 'Title Card With A Roll (Transitions)' };
 function cvShotAlias(v){ return SHOT_TYPE_ALIASES[v] || v; }
 function cvShotTypesOf(row){
   if(Array.isArray(row.shotTypes)) return row.shotTypes.filter(v=> v).map(cvShotAlias);
@@ -4314,7 +4314,7 @@ function cvChipBundle(groups, colour, sections){
 }
 cvChipBundle(SHOT_TYPE_GROUPS, 'green', { 'Talking Head':'burgundy', 'Composition':'navy' });
 cvChipBundle(DRONE_TYPE_GROUPS, 'mint');
-cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'lime', 'Stylised Shots':'leaf' });
+cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'sage', 'Stylised Shots':'leaf' });
 cvChipBundle(EFFECT_TYPE_GROUPS, 'navy');
 Object.assign(CV_CHIP_COLOUR, { 'PSR':'purple', 'Net':'teal' });
 function shotTypeChipHtml(value, idx){

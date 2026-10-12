@@ -816,7 +816,7 @@ Each entry covers:
 
 ---
 
-### Text Card (Transitions)
+### Title Card (Transitions)
 
 **The shot:** Cut to a black frame with a small, quiet serif card: the chapter number in italics and a one-line title beneath.
 
@@ -826,13 +826,13 @@ Each entry covers:
 
 **What it conveys:** Structure, calm, and a literary, considered tone.
 
-**Storytelling role:** Text cards split the story into chapters, signal a new part, and frame what comes next with a single line.
+**Storytelling role:** Title cards split the story into chapters, signal a new part, and frame what comes next with a single line.
 
 ---
 
-### Text Card With A Roll (Transitions)
+### Title Card With A Roll (Transitions)
 
-**The shot:** The same quiet serif text card, laid over footage instead of black, sitting in the empty side of the frame while the scene plays.
+**The shot:** The same quiet serif title card, laid over footage instead of black, sitting in the empty side of the frame while the scene plays.
 
 **Used for:** Chapter breaks that need to keep momentum.
 
