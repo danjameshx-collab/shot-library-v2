@@ -505,6 +505,37 @@ button.ws-box:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
 .dt-sec-head h2{margin:0; font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; color:var(--ink);}
 .dt-sec-head p{margin:2px 0 0; font-size:13px; color:var(--ink-faint);}
 .dt-today{display:flex; align-items:center; gap:8px;}
+/* this month on the Power List: the won ring, then a bar per day */
+.dt-month{display:flex; align-items:center; gap:24px; border:1px solid var(--line); border-radius:16px; background:var(--paper-raised); box-shadow:var(--shadow); padding:18px 22px; margin:0 0 14px;}
+.dt-month .trp-ring{width:116px; height:116px;}
+.dt-month .trp-ring-text b{font-size:28px;}
+.dt-month .trp-ring-text > span{font-size:11.5px; margin-top:2px;}
+.dt-month-body{flex:1; min-width:0;}
+.dt-month-head{display:flex; align-items:center; justify-content:space-between; gap:8px 12px; flex-wrap:wrap;}
+.dt-month-head b{font-family:var(--font-display); font-weight:800; font-size:17px; color:var(--ink);}
+.dt-month-say{margin:4px 0 12px; font-size:13px; color:var(--ink-soft);}
+.dt-month-bars{display:grid; gap:3px;}
+.dt-mb{display:block; height:30px; min-width:0; padding:0; border-radius:4px; font:inherit; background:var(--paper); border:1.5px solid var(--line-strong); transform-origin:bottom;}
+button.dt-mb{cursor:pointer; transition:transform .15s ease, filter .15s ease;}
+button.dt-mb:hover{transform:scaleY(1.12); filter:brightness(1.06);}
+button.dt-mb:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
+.dt-mb.hit{background:linear-gradient(180deg, #37A169, var(--good)); border-color:var(--good);}
+.dt-mb.miss{background:linear-gradient(180deg, #D6513F, #C8402F); border-color:#C8402F;}
+.dt-mb.future{border-style:dashed; border-color:var(--ink-faint); opacity:.45;}
+.dt-mb.is-today{outline:2px solid var(--good); outline-offset:2px;}
+.dt-month-ends{display:flex; justify-content:space-between; margin-top:6px; font-size:11px; color:var(--ink-faint);}
+.tr-anim .dt-month-bars.is-in .dt-mb{animation:dtMbIn .45s var(--ease) calc(var(--i) * 16ms) backwards;}
+@keyframes dtMbIn{from{transform:scaleY(.15); opacity:0;}}
+@media (max-width:640px){
+  .dt-month{gap:14px; padding:14px 12px;}
+  .dt-month .trp-ring{width:84px; height:84px;}
+  .dt-month .trp-ring-text b{font-size:21px;}
+  .dt-month .trp-ring-text > span{font-size:10.5px;}
+  .dt-month-head .trend-chip{font-size:11px;}
+  .dt-month-bars{gap:2px;}
+  .dt-mb{height:24px; border-radius:3px; border-width:1px;}
+  .dt-mb.is-today{outline-offset:1px;}
+}
 /* this week on the Power List: one box per day to tick won / lost */
 .dt-week{border:1px solid var(--line); border-radius:16px; background:var(--paper-raised); box-shadow:var(--shadow); padding:16px 18px 18px; margin:0 0 18px;}
 .dt-week-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:0 0 12px;}
@@ -8065,7 +8096,7 @@ function trAnimateRings(root, instant){
     en.target.querySelectorAll('.fg').forEach(fill);
     en.target.querySelectorAll('[data-count]').forEach(trCountUp);
   }), { threshold: .2 });
-  root.querySelectorAll('.trp-ring, .tc, .ws').forEach(el=> io.observe(el));
+  root.querySelectorAll('.trp-ring, .tc, .ws, .dt-month-bars').forEach(el=> io.observe(el));
 }
 function trCountUp(el){
   const to = +el.dataset.count, wait = (+el.dataset.delay || 0) * 1000, dur = 900;
@@ -8224,6 +8255,7 @@ async function trLoad(){
         trState.rec = Object.assign({ id: ref.id }, rec);
       }
       trState.loaded = true;
+      trAutoMissSave();
     })();
   }
   try{ await trState.loading; }
@@ -8232,6 +8264,32 @@ async function trLoad(){
   if(document.getElementById('statsOverlay').classList.contains('active')) trRenderStats();
   if(document.getElementById('tasksOverlay').classList.contains('active')) dtRender();
   homeCards().forEach(homeRenderFoot);
+}
+// A day left unmarked becomes Lost 6 hours after it ends (6am the next morning). dailyAutoThrough is the last day already
+// filled, so each day is only filled once and clearing an X afterwards sticks. Starts at October: the Notion history before
+// that only kept monthly scores, so its gaps are on purpose.
+const TR_AUTO_FROM = '2026-10-01';
+function trAutoMiss(){
+  const rec = trState.rec;
+  if(!rec) return false;
+  const cut = new Date();
+  cut.setHours(cut.getHours() - 6);
+  const last = trYmd(trAddDays(cut, -1));
+  const from = rec.dailyAutoThrough ? trYmd(trAddDays(trParse(rec.dailyAutoThrough), 1)) : TR_AUTO_FROM;
+  if(from > last) return false;
+  const marks = rec.daily = Object.assign({}, rec.daily);
+  for(let d = trParse(from); trYmd(d) <= last; d = trAddDays(d, 1)){
+    const key = trYmd(d);
+    if(!marks[key]) marks[key] = 'miss';
+  }
+  rec.dailyAutoThrough = last;
+  return true;
+}
+function trAutoMissSave(){
+  if(!trState.loaded || !trAutoMiss()) return false;
+  trState.rec.updatedAt = Date.now();
+  trSaveNow();
+  return true;
 }
 function trSetMark(key, mark, id){
   id = id || trState.current;
@@ -8256,6 +8314,7 @@ async function trSaveNow(){
   try{
     const data = { updatedAt: rec.updatedAt };
     Object.keys(TRACKERS).forEach(id=> data[id] = rec[id] || {});
+    if(rec.dailyAutoThrough) data.dailyAutoThrough = rec.dailyAutoThrough;
     await updateDoc(doc(db, CV_COLLECTION, rec.id), data);
   }catch(e){
     console.error('Failed to save the tracker:', e);
@@ -8281,6 +8340,16 @@ function trInit(){
   });
   trTipInit();
   window.addEventListener('beforeunload', (e)=>{ if(trSaveTimer){ trSaveNow(); e.preventDefault(); e.returnValue = ''; } });
+  // the page can stay open past 6am: check again every few minutes and whenever the tab comes back into view
+  const autoMiss = ()=>{
+    if(!trAutoMissSave()) return;
+    trRender(true);
+    if(document.getElementById('statsOverlay').classList.contains('active')) trRenderStats(true);
+    if(document.getElementById('tasksOverlay').classList.contains('active')) dtRender(true);
+    homeCards().forEach(homeRenderFoot);
+  };
+  setInterval(autoMiss, 5 * 60e3);
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) autoMiss(); });
   trLoad();
 }
 
@@ -9968,7 +10037,7 @@ function dtListHtml(which){
   const today = power ? dtDueTodayCount() : 0;
   let html = '<section class="dt-sec"><div class="dt-sec-head"><div><h2>' + (power ? 'Power List' : 'Backlog') + '</h2><p>'
     + (power ? n + ' to get done' + (late ? ', ' + late + ' late' : '') + (today ? ', ' + today + ' due today' : '') : n + ' for later. Move one up to the Power List when it is time.') + '</p></div></div>';
-  if(power) html += dtWeekHtml();
+  if(power) html += dtMonthHtml() + dtWeekHtml();
   html += '<form class="dt-add' + (power ? '' : ' is-backlog') + '" data-dt-add="' + which + '" autocomplete="off">'
     + '<input class="os-input" name="name" placeholder="' + (power ? 'New task' : 'New backlog task') + '" aria-label="' + (power ? 'New task' : 'New backlog task') + '" required>'
     + (power ? '<input type="hidden" name="due" value="' + trYmd(new Date()) + '">' + dtDateBtn(trYmd(new Date()), 'data-dt-add-date') : '')
@@ -9995,6 +10064,41 @@ function dtListHtml(which){
       + '</span></td></tr>';
   });
   return html + '</tbody></table></div></section>';
+}
+// This month on the Power List: the share of marked days won (same score as the Stats page), against last month, and a bar per day.
+// Past bars click through won -> lost -> not marked like the week boxes.
+function dtMonthHtml(){
+  if(!trState.loaded) return '';
+  const now = new Date(), mk = trMonthKey(now), month = TR_MONTHS[now.getMonth()];
+  const st = trStats('daily'), m = st.months[mk] || { hits:0, den:0 }, marks = trMarks('daily');
+  const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1), pm = st.months[trMonthKey(prevDate)];
+  const pct = m.den ? m.hits / m.den : 0, p = Math.round(pct * 100);
+  const days = trSlots('daily').filter(s=> s.month===mk);
+  const left = days.filter(s=> !s.past).length + 1; // today is still to play
+  let vs = '';
+  if(m.den && pm && pm.den){
+    const pp = Math.round(pm.hits / pm.den * 100), prev = TR_MONTHS[prevDate.getMonth()];
+    vs = p > pp ? '<span class="trend-chip up">' + TR_UP + 'Up from ' + pp + '% in ' + prev + '</span>'
+      : p < pp ? '<span class="trend-chip down">' + TR_DOWN + 'Down from ' + pp + '% in ' + prev + '</span>'
+      : '<span class="trend-chip">' + TR_FLAT + 'Same as ' + prev + '</span>';
+  }
+  const bars = days.map((s, i)=>{
+    const v = marks[s.key] || '', say = v==='hit' ? 'Won' : v==='miss' ? 'Lost' : s.past ? 'Not marked' : 'Still to come';
+    const tip = '<b>' + s.label + ' ' + s.sub + '</b>' + say;
+    return s.past
+      ? '<button type="button" class="dt-mb ' + v + (s.now ? ' is-today' : '') + '" style="--i:' + i + '" data-tr-cycle="daily" data-tr-key="' + s.key + '" data-tip="' + escAttr(tip) + '" aria-label="' + escAttr(s.label + ' ' + s.sub + ': ' + say) + '"></button>'
+      : '<span class="dt-mb future" style="--i:' + i + '" data-tip="' + escAttr(tip) + '"></span>';
+  }).join('');
+  return '<div class="dt-month" style="--c:var(--good)">'
+    + '<div class="trp-ring">' + trRingSvg(pct, 70, 16)
+      + '<div class="trp-ring-text"><b>' + (m.den ? '<span class="tc-n" data-count="' + p + '">' + p + '</span>%' : '-') + '</b><span>won</span></div></div>'
+    + '<div class="dt-month-body">'
+      + '<div class="dt-month-head"><b>' + month + '</b>' + vs + '</div>'
+      + '<p class="dt-month-say">' + (m.den ? m.hits + ' of ' + m.den + ' ' + (m.den===1 ? 'day' : 'days') + ' won so far.' : 'No days marked yet this month.')
+        + ' ' + left + (left===1 ? ' day' : ' days') + ' left, counting today.</p>'
+      + '<div class="dt-month-bars" style="grid-template-columns:repeat(' + days.length + ', minmax(0,1fr))">' + bars + '</div>'
+      + '<div class="dt-month-ends"><span>1 ' + month.slice(0, 3) + '</span><span>' + days.length + ' ' + month.slice(0, 3) + '</span></div>'
+    + '</div></div>';
 }
 // This week, Monday to Sunday, on the Power List: click a day to cycle it won -> lost -> not marked (the shared data-tr-cycle handler).
 function dtWeekHtml(){
