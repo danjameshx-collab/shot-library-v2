@@ -3390,7 +3390,6 @@ const SHOT_TYPE_GROUPS = [
   {group:'Talking Head', items:['Classic (Talking Head)','Composition (Talking Head)','High Angled (Talking Head)','Kitching Cuts (Talking Head)','Landscape (Talking Head)','Low Angled (Talking Head)','Side Shot (Talking Head)','Subject (Talking Head)','Unique (Talking Head)','Wide (Talking Head)']},
   {group:'Unique', items:['Mirror (Unique)','Shadows (Unique)']},
   {group:'Wide', items:['AWTA (Wide)','Behind (Wide)','Classic (Wide)','Extreme (Wide)','Foreground (Wide)','Head On (Wide)','Low (Wide)']},
-  {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Props (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
 
 /* ---------- drone shots reference data (own tab; images are diagrams drawn by scripts/drone_diagrams.py) ---------- */
@@ -3505,6 +3504,7 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Drone', items:['Drone Sequence (Drone)']},
   {group:'Introductions', items:['Cinematics & Talking Head (Introductions)','Cinematics & Voiceover (Introductions)','Music Montage Into A-Roll (Introductions)','Straight Into Raw (Introductions)','Talking Head & B-Roll (Introductions)']},
   {group:'Transitions', items:['Music (Transitions)','Object Gives Context (Transitions)','Speech Adds Context (Transitions)','Text Card (Transitions)','Text Card With A Roll (Transitions)']},
+  {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Props (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
 
 /* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
@@ -4347,9 +4347,9 @@ const CV_CHIP_COLOUR = {};
 function cvChipBundle(groups, colour, sections){
   groups.forEach(g=> g.items.forEach(i=>{ CV_CHIP_COLOUR[i] = (sections && sections[g.group]) || colour; }));
 }
-cvChipBundle(SHOT_TYPE_GROUPS, 'green', { 'Stylised Shots':'leaf', 'Talking Head':'burgundy', 'Composition':'navy' });
+cvChipBundle(SHOT_TYPE_GROUPS, 'green', { 'Talking Head':'burgundy', 'Composition':'navy' });
 cvChipBundle(DRONE_TYPE_GROUPS, 'mint');
-cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'lime' });
+cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'lime', 'Stylised Shots':'leaf' });
 cvChipBundle(STYLE_TYPE_GROUPS, 'sage');
 cvChipBundle(EFFECT_TYPE_GROUPS, 'navy');
 Object.assign(CV_CHIP_COLOUR, { 'PSR':'purple', 'Net':'teal' });

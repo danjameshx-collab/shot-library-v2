@@ -622,218 +622,6 @@ Each entry covers:
 
 ---
 
-## Stylised Shots
-
-### Actions From Angles (Stylised Shots)
-
-**The shot:** A small everyday action (a hand picking up a phone off the sofa, keys being grabbed, a door opening) is filmed from an unusual, tight angle, with texture and light doing the work.
-
-**Used for:** B-roll, intros, transitions, and lifestyle content.
-
-**Why use it:** It turns throwaway moments into cinematic ones and adds visual interest to otherwise mundane parts of a story.
-
-**What it conveys:** Craft, intentionality, and the beauty of everyday life.
-
-**Storytelling role:** It shows the routine of a character in a way that feels considered. Use it to build a character's world through small actions, or to signal the start of something (picking up the phone = a decision made).
-
----
-
-### APS-C (Stylised Shots)
-
-**The shot:** A moody, tightly cropped talking-head clip shot on an APS-C sensor for extra reach, giving a punchier, more compressed look.
-
-**Used for:** Hooks, testimonials, punchy statements, and moody interview cutaways.
-
-**Why use it:** The crop and compression give a distinct, intimate look that contrasts with full-frame wides. It feels close and intense.
-
-**What it conveys:** Intensity, intimacy, urgency and mood.
-
-**Storytelling role:** Use it for the lines you want to hit hardest. Cutting to a tight, compressed angle for a hook or key testimonial line raises the emotional temperature instantly.
-
----
-
-### Before Context Sequence (Stylised Shots)
-
-**The shot:** Open on a small, intimate detail (a hand wrapping around a mug, a pen on a page) before showing where you are.
-
-**Used for:** Scene openers, intros, and building intrigue.
-
-**Why use it:** It hooks the viewer with curiosity. They lean in first and get the context after.
-
-**What it conveys:** Intimacy, curiosity, and slow-building tension.
-
-**Storytelling role:** It reverses the usual establish-first pattern, which makes the audience active: they piece the scene together. It is great for openers that need to grab attention without giving everything away.
-
----
-
-### Close Up & Context (Stylised Shots)
-
-**The shot:** A tight close up of a detail (like a birthday banner) paired with a wider shot that shows the people and the room around it.
-
-**Used for:** Events, celebrations, lifestyle scenes, and storytelling through objects.
-
-**Why use it:** The close up grabs attention, and the wide shot explains it. It is a simple, effective two-beat storytelling unit.
-
-**What it conveys:** Detail and meaning followed by understanding.
-
-**Storytelling role:** It teaches the viewer to look at details and then rewards them with context. Use it to make a scene feel layered and to let an object hint at what is happening before you show it.
-
----
-
-### Close Up Sequence (Stylised Shots)
-
-**The shot:** A run of tight close-up shots cut back to back, never pulling back to breathe.
-
-**Used for:** Intense moments, process sequences, emotional peaks, and product montages.
-
-**Why use it:** It stacks emotional or visual beats and keeps the intensity high.
-
-**What it conveys:** Intensity, focus, pressure and immersion.
-
-**Storytelling role:** Use it when you want the audience locked in: the build-up to a launch, the stress of a deadline, the craft of making something. Releasing into a wide afterward feels like a breath of relief.
-
----
-
-### Cut Sequence Zoom (Stylised Shots)
-
-**The shot:** A run of cutaway inserts that punch progressively closer on the same action, shot by shot, before the payoff.
-
-**Used for:** Build-ups, reveals, dramatic emphasis, and comedic beats.
-
-**Why use it:** It creates rising tension and anticipation with every cut.
-
-**What it conveys:** Building tension, focus and inevitability.
-
-**Storytelling role:** It is a visual drumroll. Use it right before a payoff (the reveal, the punchline, the key result) so the audience is primed for impact.
-
----
-
-### Duplication (Stylised Shots)
-
-**The shot:** The same subject appears multiple times within one frame, cloned across the scene doing different things.
-
-**Used for:** Creative content, showing multitasking, playful brand videos, and explaining many roles.
-
-**Why use it:** It is eye-catching and communicates the idea of "doing everything at once" visually.
-
-**What it conveys:** Busyness, multitasking, overwhelm, playfulness or capability.
-
-**Storytelling role:** Perfect for the "wearing too many hats" problem: the founder who is the salesperson, the accountant and the support desk at once. It visualises the pain point that automation or delegation solves.
-
----
-
-### Ending Context Wide (Stylised Shots)
-
-**The shot:** The scene closes on a wide of the location (like a lit-up diner at night) so the viewer finally sees the whole place.
-
-**Used for:** Scene closers, video endings, and emotional resolutions.
-
-**Why use it:** It gives a calm, full-stop ending that ties every earlier detail together.
-
-**What it conveys:** Resolution, completeness and reflection.
-
-**Storytelling role:** It is the period at the end of the sentence. After a sequence of details, the wide brings everything into one picture and lets the story settle.
-
----
-
-### Environment (Stylised Shots)
-
-**The shot:** A medium-distance frame that keeps enough of the location visible to set the scene, balancing subject and place evenly.
-
-**Used for:** Scene-setting, lifestyle content, and showing a subject in their element.
-
-**Why use it:** It shows both who and where without favouring either.
-
-**What it conveys:** Belonging, context and balance.
-
-**Storytelling role:** It establishes the subject as part of their world. Use it to show the subject at home in their environment, which supports any story about identity, craft or place.
-
----
-
-### Match Cuts (Stylised Shots)
-
-**The shot:** Shots linked by matching action, shape or motion across the cut, so one scene flows straight into the next without a visible seam.
-
-**Used for:** Transitions, montages, time jumps, and showing parallels.
-
-**Why use it:** It makes an edit feel seamless and clever, and connects different moments visually.
-
-**What it conveys:** Continuity, connection, transformation and the passage of time.
-
-**Storytelling role:** Match cuts link ideas. A hand closing a laptop in one place matched to a hand opening a door somewhere else connects two moments into one story. Use them to show time passing or to draw parallels between before and after.
-
----
-
-### POV (Stylised Shots)
-
-**The shot:** A first-person, often fisheye action-cam angle that puts the viewer directly in the subject's hands or eyeline.
-
-**Used for:** Action, sports, hands-on work, adventure, and social content.
-
-**Why use it:** It puts the viewer in the driver's seat for a raw, in-the-moment experience.
-
-**What it conveys:** Immersion, energy, immediacy and adrenaline.
-
-**Storytelling role:** It turns the viewer into the protagonist. Use it to make the audience feel what the subject feels: the rush, the work, the experience.
-
----
-
-### Props (Stylised Shots)
-
-**The shot:** A shot built around a prop, letting the object anchor the frame and carry the story.
-
-**Used for:** Symbolic storytelling, product shots, physical goods (lumpy mail, gifts), and character-building.
-
-**Why use it:** Props carry meaning efficiently. A single object can communicate a theme, a backstory or a message.
-
-**What it conveys:** Symbolism, meaning and personality.
-
-**Storytelling role:** Props act as visual metaphors and story anchors. In outreach and Super Loom work, a carefully chosen object can carry the entire concept: it is the thing the viewer remembers.
-
----
-
-### Reveal (Stylised Shots)
-
-**The shot:** The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance.
-
-**Used for:** Intros, product reveals, character introductions, and payoffs.
-
-**Why use it:** It builds a payoff inside a single shot, rewarding curiosity.
-
-**What it conveys:** Surprise, anticipation and discovery.
-
-**Storytelling role:** Reveals turn an introduction into an event. Use them for the first look at a key person, product or place so it lands with impact.
-
----
-
-### Slow Motion Sequence (Stylised Shots)
-
-**The shot:** A run of shots all captured at a high frame rate and played back slow.
-
-**Used for:** Emotional montages, celebrations, brand films, and climaxes.
-
-**Why use it:** It stretches a string of small moments into something significant and gives the edit a dreamy, heightened feel.
-
-**What it conveys:** Emotion, nostalgia, significance and beauty.
-
-**Storytelling role:** Use it for the emotional climax or the "what it all means" montage. It slows the audience down so they feel the weight of the moment.
-
----
-
-### Top-Down (Stylised Shots)
-
-**The shot:** A sequence built entirely from overhead angles, flattening every beat into a graphic, process-driven feel.
-
-**Used for:** Process explanations, cooking, crafting, desk work, planning, and product assembly.
-
-**Why use it:** It makes processes clear, organised and visually satisfying.
-
-**What it conveys:** Order, method, craftsmanship and clarity.
-
-**Storytelling role:** It explains how something is done step by step. Use it to show the system or method behind a result, which builds credibility.
-
----
-
 # Part 2: Sequences
 
 ## Full Coverage
@@ -1053,6 +841,218 @@ Each entry covers:
 **What it conveys:** Structure combined with continuity.
 
 **Storytelling role:** It labels the new section while the visuals keep moving, so the viewer gets their bearings without a pause.
+
+---
+
+## Stylised Shots
+
+### Actions From Angles (Stylised Shots)
+
+**The shot:** A small everyday action (a hand picking up a phone off the sofa, keys being grabbed, a door opening) is filmed from an unusual, tight angle, with texture and light doing the work.
+
+**Used for:** B-roll, intros, transitions, and lifestyle content.
+
+**Why use it:** It turns throwaway moments into cinematic ones and adds visual interest to otherwise mundane parts of a story.
+
+**What it conveys:** Craft, intentionality, and the beauty of everyday life.
+
+**Storytelling role:** It shows the routine of a character in a way that feels considered. Use it to build a character's world through small actions, or to signal the start of something (picking up the phone = a decision made).
+
+---
+
+### APS-C (Stylised Shots)
+
+**The shot:** A moody, tightly cropped talking-head clip shot on an APS-C sensor for extra reach, giving a punchier, more compressed look.
+
+**Used for:** Hooks, testimonials, punchy statements, and moody interview cutaways.
+
+**Why use it:** The crop and compression give a distinct, intimate look that contrasts with full-frame wides. It feels close and intense.
+
+**What it conveys:** Intensity, intimacy, urgency and mood.
+
+**Storytelling role:** Use it for the lines you want to hit hardest. Cutting to a tight, compressed angle for a hook or key testimonial line raises the emotional temperature instantly.
+
+---
+
+### Before Context Sequence (Stylised Shots)
+
+**The shot:** Open on a small, intimate detail (a hand wrapping around a mug, a pen on a page) before showing where you are.
+
+**Used for:** Scene openers, intros, and building intrigue.
+
+**Why use it:** It hooks the viewer with curiosity. They lean in first and get the context after.
+
+**What it conveys:** Intimacy, curiosity, and slow-building tension.
+
+**Storytelling role:** It reverses the usual establish-first pattern, which makes the audience active: they piece the scene together. It is great for openers that need to grab attention without giving everything away.
+
+---
+
+### Close Up & Context (Stylised Shots)
+
+**The shot:** A tight close up of a detail (like a birthday banner) paired with a wider shot that shows the people and the room around it.
+
+**Used for:** Events, celebrations, lifestyle scenes, and storytelling through objects.
+
+**Why use it:** The close up grabs attention, and the wide shot explains it. It is a simple, effective two-beat storytelling unit.
+
+**What it conveys:** Detail and meaning followed by understanding.
+
+**Storytelling role:** It teaches the viewer to look at details and then rewards them with context. Use it to make a scene feel layered and to let an object hint at what is happening before you show it.
+
+---
+
+### Close Up Sequence (Stylised Shots)
+
+**The shot:** A run of tight close-up shots cut back to back, never pulling back to breathe.
+
+**Used for:** Intense moments, process sequences, emotional peaks, and product montages.
+
+**Why use it:** It stacks emotional or visual beats and keeps the intensity high.
+
+**What it conveys:** Intensity, focus, pressure and immersion.
+
+**Storytelling role:** Use it when you want the audience locked in: the build-up to a launch, the stress of a deadline, the craft of making something. Releasing into a wide afterward feels like a breath of relief.
+
+---
+
+### Cut Sequence Zoom (Stylised Shots)
+
+**The shot:** A run of cutaway inserts that punch progressively closer on the same action, shot by shot, before the payoff.
+
+**Used for:** Build-ups, reveals, dramatic emphasis, and comedic beats.
+
+**Why use it:** It creates rising tension and anticipation with every cut.
+
+**What it conveys:** Building tension, focus and inevitability.
+
+**Storytelling role:** It is a visual drumroll. Use it right before a payoff (the reveal, the punchline, the key result) so the audience is primed for impact.
+
+---
+
+### Duplication (Stylised Shots)
+
+**The shot:** The same subject appears multiple times within one frame, cloned across the scene doing different things.
+
+**Used for:** Creative content, showing multitasking, playful brand videos, and explaining many roles.
+
+**Why use it:** It is eye-catching and communicates the idea of "doing everything at once" visually.
+
+**What it conveys:** Busyness, multitasking, overwhelm, playfulness or capability.
+
+**Storytelling role:** Perfect for the "wearing too many hats" problem: the founder who is the salesperson, the accountant and the support desk at once. It visualises the pain point that automation or delegation solves.
+
+---
+
+### Ending Context Wide (Stylised Shots)
+
+**The shot:** The scene closes on a wide of the location (like a lit-up diner at night) so the viewer finally sees the whole place.
+
+**Used for:** Scene closers, video endings, and emotional resolutions.
+
+**Why use it:** It gives a calm, full-stop ending that ties every earlier detail together.
+
+**What it conveys:** Resolution, completeness and reflection.
+
+**Storytelling role:** It is the period at the end of the sentence. After a sequence of details, the wide brings everything into one picture and lets the story settle.
+
+---
+
+### Environment (Stylised Shots)
+
+**The shot:** A medium-distance frame that keeps enough of the location visible to set the scene, balancing subject and place evenly.
+
+**Used for:** Scene-setting, lifestyle content, and showing a subject in their element.
+
+**Why use it:** It shows both who and where without favouring either.
+
+**What it conveys:** Belonging, context and balance.
+
+**Storytelling role:** It establishes the subject as part of their world. Use it to show the subject at home in their environment, which supports any story about identity, craft or place.
+
+---
+
+### Match Cuts (Stylised Shots)
+
+**The shot:** Shots linked by matching action, shape or motion across the cut, so one scene flows straight into the next without a visible seam.
+
+**Used for:** Transitions, montages, time jumps, and showing parallels.
+
+**Why use it:** It makes an edit feel seamless and clever, and connects different moments visually.
+
+**What it conveys:** Continuity, connection, transformation and the passage of time.
+
+**Storytelling role:** Match cuts link ideas. A hand closing a laptop in one place matched to a hand opening a door somewhere else connects two moments into one story. Use them to show time passing or to draw parallels between before and after.
+
+---
+
+### POV (Stylised Shots)
+
+**The shot:** A first-person, often fisheye action-cam angle that puts the viewer directly in the subject's hands or eyeline.
+
+**Used for:** Action, sports, hands-on work, adventure, and social content.
+
+**Why use it:** It puts the viewer in the driver's seat for a raw, in-the-moment experience.
+
+**What it conveys:** Immersion, energy, immediacy and adrenaline.
+
+**Storytelling role:** It turns the viewer into the protagonist. Use it to make the audience feel what the subject feels: the rush, the work, the experience.
+
+---
+
+### Props (Stylised Shots)
+
+**The shot:** A shot built around a prop, letting the object anchor the frame and carry the story.
+
+**Used for:** Symbolic storytelling, product shots, physical goods (lumpy mail, gifts), and character-building.
+
+**Why use it:** Props carry meaning efficiently. A single object can communicate a theme, a backstory or a message.
+
+**What it conveys:** Symbolism, meaning and personality.
+
+**Storytelling role:** Props act as visual metaphors and story anchors. In outreach and Super Loom work, a carefully chosen object can carry the entire concept: it is the thing the viewer remembers.
+
+---
+
+### Reveal (Stylised Shots)
+
+**The shot:** The frame starts hidden or obscured, then moves or opens to reveal the subject at medium distance.
+
+**Used for:** Intros, product reveals, character introductions, and payoffs.
+
+**Why use it:** It builds a payoff inside a single shot, rewarding curiosity.
+
+**What it conveys:** Surprise, anticipation and discovery.
+
+**Storytelling role:** Reveals turn an introduction into an event. Use them for the first look at a key person, product or place so it lands with impact.
+
+---
+
+### Slow Motion Sequence (Stylised Shots)
+
+**The shot:** A run of shots all captured at a high frame rate and played back slow.
+
+**Used for:** Emotional montages, celebrations, brand films, and climaxes.
+
+**Why use it:** It stretches a string of small moments into something significant and gives the edit a dreamy, heightened feel.
+
+**What it conveys:** Emotion, nostalgia, significance and beauty.
+
+**Storytelling role:** Use it for the emotional climax or the "what it all means" montage. It slows the audience down so they feel the weight of the moment.
+
+---
+
+### Top-Down (Stylised Shots)
+
+**The shot:** A sequence built entirely from overhead angles, flattening every beat into a graphic, process-driven feel.
+
+**Used for:** Process explanations, cooking, crafting, desk work, planning, and product assembly.
+
+**Why use it:** It makes processes clear, organised and visually satisfying.
+
+**What it conveys:** Order, method, craftsmanship and clarity.
+
+**Storytelling role:** It explains how something is done step by step. Use it to show the system or method behind a result, which builds credibility.
 
 ---
 
