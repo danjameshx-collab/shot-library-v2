@@ -2,7 +2,7 @@
 
 A detailed breakdown of every shot in the Lincko shot library: what the shot is, what it is used for, why you would choose it, what it conveys, and how it moves the story, emotion or message forward.
 
-Sections follow the library order. Shots tab first (Composition, then alphabetical), then the Sequences tab, then Styles.
+Sections follow the library order. Shots tab first (Composition, then alphabetical), then the Sequences tab, then Post from the Animation tab.
 
 Each entry covers:
 
@@ -1056,7 +1056,7 @@ Each entry covers:
 
 ---
 
-# Part 3: Styles
+# Part 3: Post (Animation tab)
 
 ### Black & White
 
@@ -1069,18 +1069,3 @@ Each entry covers:
 **What it conveys:** Timelessness, seriousness, nostalgia and honesty.
 
 **Storytelling role:** Black and white can separate time periods (past versus present), mark an emotional section, or give the whole piece a classic documentary weight.
-
----
-
-### Title Card
-
-**The shot:** Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them.
-
-**Used for:** Video openers, chapter openers and brand statements.
-
-**Why use it:** It opens a video like a film poster, setting the title and the tone in one striking image.
-
-**What it conveys:** Boldness, confidence and cinematic ambition.
-
-**Storytelling role:** It announces the story. The words and the subject together tell the viewer what this film is about, and who it is about, before it begins.
-

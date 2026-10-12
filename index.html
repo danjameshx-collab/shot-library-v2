@@ -2424,7 +2424,6 @@ html.lc-android-tablet table.shot-table .col-del{width:44px;}
 .shot-type-chip.is-highlight-green{--chip:var(--bespoke); --chip-dark:var(--bespoke-dark);}
 .shot-type-chip.is-highlight-leaf{--chip:#4D7C17; --chip-dark:#3A5E11;}
 .shot-type-chip.is-highlight-deep{--chip:#0E3A28; --chip-dark:#08251A;}
-.shot-type-chip.is-highlight-sage{--chip:#587766; --chip-dark:#445C4F;}
 .shot-type-chip.is-highlight-mint{--chip:#BFE6CF; --chip-line:#93CDAA; --chip-dark:#6FB58C; --chip-ink:18,61,40;}
 .shot-type-chip.is-highlight-lime{--chip:#DDEBAB; --chip-line:#C2D987; --chip-dark:#A5C25F; --chip-ink:44,74,10;}
 .shot-type-chip.is-highlight-burgundy{--chip:#6E1423; --chip-dark:#530F1A;}
@@ -2894,7 +2893,6 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
   <button type="button" class="top-tab-btn active" data-tab="cine">Cine Vlogs</button>
   <button type="button" class="top-tab-btn" data-tab="library">Shots</button>
   <button type="button" class="top-tab-btn" data-tab="sequences">Sequences</button>
-  <button type="button" class="top-tab-btn" data-tab="styles">Styles</button>
   <button type="button" class="top-tab-btn" data-tab="drone">Drone Shots</button>
   <button type="button" class="top-tab-btn" data-tab="effects">Animation</button>
   <button type="button" class="top-tab-btn" data-tab="thumbs">Thumbnails</button>
@@ -3081,28 +3079,6 @@ textarea.dt-name{display:block; resize:none; overflow:hidden; line-height:1.4; m
       </div>
     </div>
     <div class="all-shots-scroll" id="sequencesScroll"></div>
-  </div>
-</div>
-
-<div class="all-shots-overlay tab-page" id="stylesOverlay">
-  <div class="all-shots-box" id="stylesBox">
-    <div class="all-shots-head">
-      <div><div class="all-shots-eyebrow">Reference Library</div><h2 id="stylesTitle">All Styles</h2></div>
-      <div class="all-shots-head-right">
-        <button type="button" class="modal-fullscreen-btn" id="stylesFullscreenBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 3H5a2 2 0 0 0-2 2v4"></path>
-            <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
-            <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
-            <path d="M15 21h4a2 2 0 0 0 2-2v-4"></path>
-          </svg>
-        </button>
-        <button type="button" class="all-shots-close" id="stylesCloseBtn" title="Close" aria-label="Close">
-          <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="all-shots-scroll" id="stylesScroll"></div>
   </div>
 </div>
 
@@ -3507,11 +3483,6 @@ const SEQUENCE_TYPE_GROUPS = [
   {group:'Stylised Shots', items:['Actions From Angles (Stylised Shots)','APS-C (Stylised Shots)','Before Context Sequence (Stylised Shots)','Close Up & Context (Stylised Shots)','Close Up Sequence (Stylised Shots)','Cut Sequence Zoom (Stylised Shots)','Duplication (Stylised Shots)','Ending Context Wide (Stylised Shots)','Environment (Stylised Shots)','Match Cuts (Stylised Shots)','POV (Stylised Shots)','Props (Stylised Shots)','Reveal (Stylised Shots)','Slow Motion Sequence (Stylised Shots)','Top-Down (Stylised Shots)']},
 ];
 
-/* ---------- styles reference data (own tab; previews live in SHOT_TYPE_PREVIEWS below) ---------- */
-const STYLE_TYPE_GROUPS = [
-  {group:'Styles', items:['Black & White','Title Card']},
-];
-
 const SHOT_IMG_DIR = 'images for super-loom/';
 const SEQ_IMG_DIR = 'sequences/';
 const SHOT_TYPE_PREVIEWS = {
@@ -3819,15 +3790,6 @@ const SHOT_TYPE_PREVIEWS = {
     group: 'Transitions', title: 'Speech Adds Context (Transitions)', image: SHOT_IMG_DIR + 'Speech Adds Context.png',
     desc: 'The subject watches or listens to something, like a speech playing on a screen, and its audio carries us into the next scene. The words they hear set up what comes next.'
   },
-  /* ---- Styles ---- */
-  'Black & White': {
-    group: 'Styles', title: 'Black & White', image: SHOT_IMG_DIR + 'Black & White.png',
-    desc: 'The whole grade drops to high-contrast black and white, with deep shadows and hard window light. Strips the scene back to mood and texture, giving it a timeless, documentary feel.'
-  },
-  'Title Card': {
-    group: 'Styles', title: 'Title Card', image: SHOT_IMG_DIR + 'Title Card.png',
-    desc: 'Huge bold words scattered across the frame over black and white footage, with the subject framed in the gap between them. Opens a video like a film poster.'
-  },
 };
 
 /* ---------- effects reference data (its own library, mirrors the shot type data above) ---------- */
@@ -3836,6 +3798,7 @@ const EFFECT_TYPE_GROUPS = [
   {group:'Zoom', items:['Camera Shutter (Zoom)','Hyperzoom (Zoom)','Infinite Cut (Zoom)','Quick In (Zoom)']},
   {group:'Text', items:['Over A Roll (Text)','Panel (Text)','Split Screen (Text)','Timeline (Text)','Title (Text)','Transparent Back (Text)']},
   {group:'Wipp', items:['3D Camera (Wipp)']},
+  {group:'Post', items:['Black & White']},
   {group:'Misc', items:['Net','PSR']},
 ];
 
@@ -3937,6 +3900,11 @@ const EFFECT_TYPE_PREVIEWS = {
     group: 'Wipp', title: '3D Camera (Wipp)', image: EFFECT_IMG_DIR + '3D Camera (Wipp).png',
     desc: 'An on-screen text or graphic card tilts into 3D space as if the camera is whipping past it. Gives a flat overlay a sense of depth and motion.'
   },
+  /* ---- Post ---- */
+  'Black & White': {
+    group: 'Post', title: 'Black & White', image: SHOT_IMG_DIR + 'Black & White.png',
+    desc: 'The whole grade drops to high-contrast black and white, with deep shadows and hard window light. Strips the scene back to mood and texture, giving it a timeless, documentary feel.'
+  },
   /* ---- Misc ---- */
   'Net': {
     group: 'Misc', title: 'Net', noPreview: true,
@@ -3973,7 +3941,7 @@ function allShotsGridHtml(){
   return html;
 }
 
-/* ---------- sequences / styles grid render (empty sections still show, as placeholders; a single-section tab gets no heading) ---------- */
+/* ---------- sequences / drone shots grid render (empty sections still show, as placeholders; a single-section tab gets no heading) ---------- */
 function sectionedGridHtml(groups){
   let html = '';
   groups.forEach(g=>{
@@ -4211,13 +4179,6 @@ function toggleDroneFullscreen(){
   document.getElementById('droneOverlay').classList.toggle('fullscreen', droneFullscreen);
   document.body.classList.toggle('tabs-hidden', droneFullscreen);
 }
-let stylesFullscreen = false;
-function toggleStylesFullscreen(){
-  stylesFullscreen = !stylesFullscreen;
-  document.getElementById('stylesBox').classList.toggle('fullscreen', stylesFullscreen);
-  document.getElementById('stylesOverlay').classList.toggle('fullscreen', stylesFullscreen);
-  document.body.classList.toggle('tabs-hidden', stylesFullscreen);
-}
 let effectsFullscreen = false;
 function toggleEffectsFullscreen(){
   effectsFullscreen = !effectsFullscreen;
@@ -4319,7 +4280,7 @@ function cvLocationPanelHtml(current, rec){
 function shotTypePanelHtml(current){
   let list = '';
   const droneGroups = DRONE_TYPE_GROUPS.map(g=> ({ group:'Drone: ' + g.group, items:g.items }));
-  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, droneGroups, STYLE_TYPE_GROUPS, EFFECT_TYPE_GROUPS).forEach(g=>{
+  SEQUENCE_TYPE_GROUPS.concat(SHOT_TYPE_GROUPS, droneGroups, EFFECT_TYPE_GROUPS).forEach(g=>{
     const items = g.items.filter(i=> SHOT_TYPE_PREVIEWS[i]);
     if(!items.length) return;
     list += lcGroupLabel(g.group);
@@ -4350,7 +4311,6 @@ function cvChipBundle(groups, colour, sections){
 cvChipBundle(SHOT_TYPE_GROUPS, 'green', { 'Talking Head':'burgundy', 'Composition':'navy' });
 cvChipBundle(DRONE_TYPE_GROUPS, 'mint');
 cvChipBundle(SEQUENCE_TYPE_GROUPS, 'deep', { 'Transitions':'lime', 'Stylised Shots':'leaf' });
-cvChipBundle(STYLE_TYPE_GROUPS, 'sage');
 cvChipBundle(EFFECT_TYPE_GROUPS, 'navy');
 Object.assign(CV_CHIP_COLOUR, { 'PSR':'purple', 'Net':'teal' });
 function shotTypeChipHtml(value, idx){
@@ -10736,7 +10696,7 @@ function hkInit(){
 const CHANNELS = {
   outreach:   { name:'Creative Outreach',    tabs:['outreach-tracker','outreach'] },
   business:   { name:'Dan James (Business)', tabs:['os:youtube:items','os:youtube:ideas','business','business-thumbs','tracker:youtube','os:youtube:os'] },
-  builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','styles','drone','effects','thumbs','buckets','tracker:cine'] },
+  builds:     { name:'Dan James (Builds)',   tabs:['cine','library','sequences','drone','effects','thumbs','buckets','tracker:cine'] },
   linkedin:   { name:'LinkedIn',             tabs:['os:linkedin:items','os:linkedin:ideas','hooks','os:linkedin:os','tracker:linkedin'] },
   stats:      { name:'Stats',        tabs:['stats-all','stats-daily','stats'] },
   books:      { name:'Books',                tabs:['books'] },
@@ -10957,7 +10917,6 @@ function switchTab(tab){
   document.getElementById('allShotsOverlay').classList.toggle('active', tab==='library');
   document.getElementById('droneOverlay').classList.toggle('active', tab==='drone');
   document.getElementById('sequencesOverlay').classList.toggle('active', tab==='sequences');
-  document.getElementById('stylesOverlay').classList.toggle('active', tab==='styles');
   document.getElementById('effectsOverlay').classList.toggle('active', tab==='effects');
   document.getElementById('thumbsOverlay').classList.toggle('active', tab==='thumbs');
   document.getElementById('bucketsOverlay').classList.toggle('active', tab==='buckets');
@@ -11017,18 +10976,6 @@ function switchTab(tab){
   });
   document.getElementById('sequencesFullscreenBtn').addEventListener('click', toggleSequencesFullscreen);
   document.getElementById('sequencesCloseBtn').addEventListener('click', ()=>{
-    if(document.referrer){ history.back(); } else { window.close(); }
-  });
-
-  const stylesScroll = document.getElementById('stylesScroll');
-  stylesScroll.innerHTML = sectionedGridHtml(STYLE_TYPE_GROUPS);
-  stylesScroll.querySelectorAll('.all-shots-card[data-shot-preview]').forEach(card=>{
-    card.addEventListener('click', ()=>{
-      openShotPreview(card.dataset.shotPreview);
-    });
-  });
-  document.getElementById('stylesFullscreenBtn').addEventListener('click', toggleStylesFullscreen);
-  document.getElementById('stylesCloseBtn').addEventListener('click', ()=>{
     if(document.referrer){ history.back(); } else { window.close(); }
   });
 
