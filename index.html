@@ -9448,6 +9448,7 @@ let lnStorageOff = false;                // set once Storage turns out not to be
 const LN_CATEGORIES = ['LinkedIn', 'YouTube', 'Sales', 'Marketing', 'Copywriting', 'Offers', 'Outreach', 'AI'];
 const LN_SHAPES = [{ id:'portrait', name:'Portrait' }, { id:'landscape', name:'Landscape' }, { id:'square', name:'Square' }];
 const LN_TEXT_FIELDS = ['name', 'author', 'category', 'url', 'takeaways', 'cover', 'coverPos', 'coverShape'];
+const LN_LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
 const lnState = { loaded:false, loading:null, error:false, items:[], filter:'all', search:'', active:null, uploading:null };
 let lnSaveTimer = null;
 const lnDirty = new Set();
@@ -9535,16 +9536,19 @@ function lnRenderList(){
     .sort((a, b)=> (b.createdAt || 0) - (a.createdAt || 0));
   if(!lnState.items.length){ wrap.innerHTML = '<div class="os-empty">No learnings yet. Add your first one above.</div>'; return; }
   if(!list.length){ wrap.innerHTML = '<div class="os-empty">No learnings match.</div>'; return; }
-  let html = '<div class="os-table-wrap"><table class="os-table bk-table"><thead><tr><th>Learning</th><th>Category</th><th>PDF</th></tr></thead><tbody>';
+  let html = '<div class="os-table-wrap"><table class="os-table bk-table"><thead><tr><th>Learning</th><th>Category</th><th>PDF</th><th>Link</th></tr></thead><tbody>';
   list.forEach(x=>{
     const pdfs = bkPdfs(x);
+    const href = lnUrlHref(x.url);
+    const link = href ? '<a class="os-link-dot bk-pdf-dot ln-link-dot" href="' + escAttr(href) + '" target="_blank" rel="noopener noreferrer" title="' + escAttr(href) + '">' + LN_LINK_SVG + 'Link</a>' : '';
     const pdf = !pdfs.length ? '' : pdfs.length===1
       ? '<button type="button" class="os-link-dot bk-pdf-dot" data-ln-pdf-open="' + escAttr(pdfs[0].id) + '" data-ln-pdf-item="' + escAttr(x.id) + '">' + BK_PDF_SVG + esc(pdfs[0].name || 'PDF') + '</button>'
       : '<span class="os-link-dot bk-pdf-dot">' + BK_PDF_SVG + pdfs.length + ' PDFs</span>';
     html += '<tr data-ln-open="' + escAttr(x.id) + '" tabindex="0">'
       + '<td><div class="bk-title-cell">' + lnCoverHtml(x, 'bk-cover') + '<div><span class="os-t-title">' + esc(x.name || 'Untitled') + '</span>' + (x.author ? '<span class="bk-author">' + esc(x.author) + '</span>' : '') + '</div></div></td>'
       + '<td data-label="Category">' + (x.category ? '<span class="os-tag">' + esc(x.category) + '</span>' : '') + '</td>'
-      + '<td data-label="PDF">' + pdf + '</td></tr>';
+      + '<td data-label="PDF">' + pdf + '</td>'
+      + '<td data-label="Link">' + link + '</td></tr>';
   });
   wrap.innerHTML = html + '</tbody></table></div>';
 }
@@ -9854,6 +9858,7 @@ function lnInit(){
     if(open){ e.stopPropagation(); lnPdfOpen(open.dataset.lnPdfItem, open.dataset.lnPdfOpen); return; }
     const lf = t.closest('[data-ln-filter]');
     if(lf){ lnState.filter = lf.dataset.lnFilter; lnRender(); return; }
+    if(t.closest('.ln-link-dot')) return;   // the Link button opens the source in a new tab, it does not open the learning
     const row = t.closest('[data-ln-open]');
     if(row){ lnState.active = row.dataset.lnOpen; lnRender(); document.getElementById('learningsOverlay').scrollTop = 0; return; }
     if(t.closest('[data-ln-back]')){ lnBack(); return; }
