@@ -1246,6 +1246,17 @@ body.channel-books .top-tab-btn[data-tab="books"], body.channel-learnings .top-t
 .ln-fields{grid-template-columns:repeat(3, minmax(0,1fr));}
 .bk-add.ln-add{grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) auto;}
 @media (max-width:600px){ .ln-fields{grid-template-columns:1fr;} }
+/* Learnings detail: room inside each box and between them, and the URL link row */
+.ln-detail .os-panel{padding:22px 24px 24px; margin-bottom:22px;}
+.ln-detail .bk-detail-head{margin-bottom:22px;}
+.ln-detail .bk-detail-info .os-panel{margin-bottom:0;}
+.ln-detail .bk-detail-info .os-panel + .os-panel{margin-top:22px;}
+.ln-detail .os-panel-head{margin-bottom:14px;}
+.ln-url-row{display:flex; align-items:center; gap:10px;}
+.ln-url-row .os-input{flex:1; min-width:0;}
+.os-btn.ln-url-open{text-decoration:none; flex:0 0 auto;}
+.os-btn.ln-url-open[hidden]{display:none;}
+@media (max-width:600px){ .ln-detail .os-panel{padding:18px 16px 20px;} }
 select.os-input.ln-select{
   -webkit-appearance:none; appearance:none; cursor:pointer; padding-right:34px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -9436,7 +9447,7 @@ const LN_PDF_MAX = 500 * 1024 * 1024;   // 500 MB in Storage (the Firestore fall
 let lnStorageOff = false;                // set once Storage turns out not to be set up, so later uploads skip straight to Firestore
 const LN_CATEGORIES = ['LinkedIn', 'YouTube', 'Sales', 'Marketing', 'Copywriting', 'Offers', 'Outreach', 'AI'];
 const LN_SHAPES = [{ id:'portrait', name:'Portrait' }, { id:'landscape', name:'Landscape' }, { id:'square', name:'Square' }];
-const LN_TEXT_FIELDS = ['name', 'author', 'category', 'takeaways', 'cover', 'coverPos', 'coverShape'];
+const LN_TEXT_FIELDS = ['name', 'author', 'category', 'url', 'takeaways', 'cover', 'coverPos', 'coverShape'];
 const lnState = { loaded:false, loading:null, error:false, items:[], filter:'all', search:'', active:null, uploading:null };
 let lnSaveTimer = null;
 const lnDirty = new Set();
@@ -9447,6 +9458,14 @@ function lnCategories(){
   return LN_CATEGORIES.concat([...new Set(extra)].sort((a, b)=> a.localeCompare(b)));
 }
 function lnShape(x){ return LN_SHAPES.some(s=> s.id===x.coverShape) ? x.coverShape : 'portrait'; }
+// the pasted source link as something safe to open: adds https:// when it is left off, and only ever a web address
+function lnUrlHref(v){
+  v = (v || '').trim();
+  if(!v) return '';
+  if(!/^[a-z][a-z0-9+.-]*:/i.test(v)) v = 'https://' + v;
+  try{ const u = new URL(v); return (u.protocol==='http:' || u.protocol==='https:') && u.hostname.includes('.') ? u.href : ''; }
+  catch(e){ return ''; }
+}
 // where the cover sits in its frame, as background-position percentages (dragged on the detail page)
 function lnPos(x){
   const m = /^(\d+(?:\.\d+)?)% (\d+(?:\.\d+)?)%$/.exec(x.coverPos || '');
@@ -9512,7 +9531,7 @@ function lnRenderList(){
   const q = lnState.search.trim().toLowerCase();
   const list = lnState.items
     .filter(x=> lnState.filter==='all' || x.category===lnState.filter)
-    .filter(x=> !q || [x.name, x.author, x.category, x.takeaways].concat(bkPdfs(x).map(f=> f.name)).some(v=> (v || '').toLowerCase().includes(q)))
+    .filter(x=> !q || [x.name, x.author, x.category, x.url, x.takeaways].concat(bkPdfs(x).map(f=> f.name)).some(v=> (v || '').toLowerCase().includes(q)))
     .sort((a, b)=> (b.createdAt || 0) - (a.createdAt || 0));
   if(!lnState.items.length){ wrap.innerHTML = '<div class="os-empty">No learnings yet. Add your first one above.</div>'; return; }
   if(!list.length){ wrap.innerHTML = '<div class="os-empty">No learnings match.</div>'; return; }
@@ -9551,8 +9570,13 @@ function lnDetailHtml(x){
   const catSelect = '<select class="os-input ln-select" data-ln-field="category"><option value=""' + (x.category ? '' : ' selected') + '>No category</option>'
     + lnCategories().map(c=> '<option value="' + escAttr(c) + '"' + (c===x.category ? ' selected' : '') + '>' + esc(c) + '</option>').join('')
     + '<option value="' + BK_NEW_CATEGORY + '">+ New category...</option></select>';
+  const href = lnUrlHref(x.url);
+  const urlBox = '<section class="os-panel"><div class="os-panel-head"><h3>URL link</h3></div><div class="ln-url-row">'
+    + '<input class="os-input" type="url" inputmode="url" data-ln-field="url" placeholder="Paste a link to the original source" aria-label="URL link" autocomplete="off" spellcheck="false" value="' + escAttr(x.url || '') + '">'
+    + '<a class="os-btn small primary ln-url-open" target="_blank" rel="noopener noreferrer" href="' + escAttr(href || '#') + '"' + (href ? '' : ' hidden') + '>Open</a>'
+    + '</div></section>';
   return '<button type="button" class="os-back" data-ln-back><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>All learnings</button>'
-    + '<div class="bk-detail"><div class="bk-detail-head' + (shape==='portrait' ? '' : ' is-' + shape) + '">'
+    + '<div class="bk-detail ln-detail"><div class="bk-detail-head' + (shape==='portrait' ? '' : ' is-' + shape) + '">'
     + '<div class="bk-detail-cover">' + cover + '</div>'
     + '<div class="bk-detail-info">'
     + '<h1 class="bk-detail-title">' + esc(x.name || 'Untitled') + '</h1>'
@@ -9562,6 +9586,7 @@ function lnDetailHtml(x){
     + '<label class="os-field"><span class="os-label">Author</span><input class="os-input" type="text" data-ln-field="author" value="' + escAttr(x.author || '') + '"></label>'
     + '<label class="os-field"><span class="os-label">Category</span>' + catSelect + '</label>'
     + '</div></section>'
+    + urlBox
     + '<section class="os-panel"><div class="os-panel-head"><h3>PDFs' + (pdfs.length ? ' <span class="bk-n">' + pdfs.length + '</span>' : '') + '</h3></div><div class="bk-pdf-list">' + pdf + '</div></section>'
     + '</div></div>'
     + '<section class="os-panel"><div class="os-panel-head"><h3>Key takeaways</h3></div>'
@@ -9575,7 +9600,7 @@ async function lnAdd(name, author){
   name = name.trim();
   if(!name) return;
   const now = Date.now();
-  const rec = { kind: LN_KIND, name, author: (author || '').trim(), category: lnState.filter==='all' ? '' : lnState.filter, cover: '', coverPos: '', coverShape: 'portrait', pdfs: [], createdAt: now, updatedAt: now };
+  const rec = { kind: LN_KIND, name, author: (author || '').trim(), category: lnState.filter==='all' ? '' : lnState.filter, url: '', cover: '', coverPos: '', coverShape: 'portrait', pdfs: [], createdAt: now, updatedAt: now };
   try{
     const ref = await addDoc(collection(db, CV_COLLECTION), rec);
     lnState.items.push(Object.assign({ id: ref.id }, rec));
@@ -9856,6 +9881,12 @@ function lnInit(){
       const h = box.querySelector('.bk-detail-title'); if(h) h.textContent = t.value || 'Untitled';
     }
     if(t.dataset.lnField==='takeaways' && lnState.active){ lnSet(lnState.active, 'takeaways', t.value); return; }
+    if(t.dataset.lnField==='url' && lnState.active){
+      lnSet(lnState.active, 'url', t.value.trim());
+      const a = box.querySelector('.ln-url-open'), href = lnUrlHref(t.value);
+      if(a){ a.href = href || '#'; a.hidden = !href; }
+      return;
+    }
     if(t.dataset.lnField==='author' && lnState.active){
       lnSet(lnState.active, 'author', t.value);
       const a = box.querySelector('.ln-detail-author'); if(a){ a.textContent = t.value; a.hidden = !t.value.trim(); }
