@@ -4,7 +4,9 @@
 //      shows up on its due day, and ticking it Done or deleting it in the app keeps it gone.
 //   2. marks Close tasks complete once you tick them Done (or delete them from the Backlog) in the app: the app lists
 //      them in closeDone, and closeCompleted records the ones already completed here.
-//   3. adds the RECURRING tasks below on their days (recurringAdded records each one added). This part runs even
+//   3. takes a task off the Power List or Backlog once you complete (or delete) it in Close, the same as ticking it Done
+//      in the app: it goes into closeDone and closeCompleted, so it is not pulled in or completed again.
+//   4. adds the RECURRING tasks below on their days (recurringAdded records each one added). This part runs even
 //      without a Close key.
 // Run by hand with `node sync.mjs` (add --dry-run to only print what it would do), or every 5 minutes by Windows Task
 // Scheduler (see install-schedule.ps1).
@@ -78,6 +80,11 @@ async function closeDueTasks(){
   }
   return out.filter(t=> !t.date || closeDay(t.date) <= last);   // a task with no date shows straight away
 }
+// Whether a Close task is finished: complete, or deleted (404). Any other error throws.
+async function doneInClose(id){
+  try{ return (await close('task/' + id + '/?_fields=is_complete')).is_complete === true; }
+  catch(e){ if(e.status === 404) return true; throw e; }
+}
 // Already complete or deleted in Close counts as done too.
 async function completeInClose(id){
   try{ await close('task/' + id + '/', 'PUT', { is_complete: true }); return 'completed'; }
@@ -147,10 +154,24 @@ async function main(){
   const hasClose = CLOSE_KEY && !CLOSE_KEY.startsWith('paste');
   if(!hasClose) log('No CLOSE_KEY in the .env yet: skipping Close, adding recurring tasks only.');
   const due = hasClose ? await closeDueTasks() : [];
+  const finishedInClose = new Map();   // closeId -> true/false, kept across retries
   // The app can save the doc at any moment, so write only if it has not changed since we read it; retry if it has.
   for(let attempt = 1; ; attempt++){
     const docu = await loadTasksDoc();
     const msgs = [];
+
+    // Completed or deleted in Close: take it off the list, as if ticked Done in the app (step 3 in the notes up top).
+    // A task still open and due is skipped; any other one on the list is looked up in Close.
+    const listed = [...docu.power, ...docu.backlog].filter(x=> x.closeId);
+    const openNow = new Set(due.map(t=> t.id));
+    await Promise.all(hasClose ? listed.filter(x=> !openNow.has(x.closeId) && !finishedInClose.has(x.closeId)).map(async x=>{
+      try{ finishedInClose.set(x.closeId, await doneInClose(x.closeId)); }
+      catch(e){ log('Could not check ' + x.closeId + ' in Close, will retry next run: ' + e.message); }
+    }) : []);
+    const gone = listed.filter(x=> finishedInClose.get(x.closeId) === true);
+    const goneIds = new Set(gone.map(x=> x.closeId));
+    gone.forEach(x=> msgs.push('Done in Close, taken off the list: ' + x.name));
+    const keep = (x)=> !goneIds.has(x.closeId);
 
     // 1. Close tasks now due
     const seen = new Set(docu.closeSynced);
@@ -167,7 +188,7 @@ async function main(){
     // 2. ticked Done in the app: complete in Close
     const completed = new Set(docu.closeCompleted);
     const finished = [];
-    for(const id of hasClose ? docu.closeDone.filter(id=> !completed.has(id)) : []){
+    for(const id of hasClose ? docu.closeDone.filter(id=> !completed.has(id) && !goneIds.has(id)) : []){
       if(DRY){ msgs.push('Would complete ' + id + ' in Close (done in the app)'); continue; }
       try{ msgs.push((await completeInClose(id)) === 'completed' ? 'Completed ' + id + ' in Close (done in the app)' : 'Skipped ' + id + ': already gone in Close'); finished.push(id); }
       catch(e){ log('Could not complete ' + id + ' in Close, will retry next run: ' + e.message); }
@@ -175,33 +196,36 @@ async function main(){
 
     // 3. recurring tasks. The first run (no recurringAdded yet) counts an occurrence already on the list by name as
     // added, so the one the Notion script made does not appear twice.
-    const listed = new Set([...docu.power, ...docu.backlog].map(x=> x.name.toLowerCase()));
+    const names = new Set([...docu.power, ...docu.backlog].map(x=> x.name.toLowerCase()));
     let recAdded = docu.recurringAdded;
     const recNew = [];
     for(const r of recurringDue()){
-      if(recAdded ? recAdded.includes(r.key) : listed.has(r.name.toLowerCase())){ if(!recAdded) recNew.push(r.key); continue; }
+      if(recAdded ? recAdded.includes(r.key) : names.has(r.name.toLowerCase())){ if(!recAdded) recNew.push(r.key); continue; }
       recNew.push(r.key);
       add.push({ id: newId(), name: r.name, due: r.due });
       msgs.push('Added recurring: ' + r.name + ' (due ' + r.due + ')');
     }
     recAdded = [...(recAdded || []), ...recNew];
 
-    const dirty = add.length || finished.length || !docu.recurringAdded || recNew.length;
+    const dirty = gone.length || add.length || finished.length || !docu.recurringAdded || recNew.length;
     if(!dirty || DRY){
       msgs.forEach(log);
       if(!msgs.length) log('Up to date: ' + due.length + ' due Close task(s), none new; nothing to complete.');
       return;
     }
+    const newIds = (have, ids)=> [...have, ...ids.filter(id=> !have.includes(id))];
     try{
       await fs(':commit', { writes: [{
         update: { name: docu.name, fields: {
-          power: toFs([...docu.power, ...add]),
+          power: toFs([...docu.power.filter(keep), ...add]),
+          backlog: toFs(docu.backlog.filter(keep)),
           closeSynced: toFs([...docu.closeSynced, ...fresh.map(t=> t.id)]),
-          closeCompleted: toFs([...docu.closeCompleted, ...finished]),
+          closeDone: toFs(newIds(docu.closeDone, [...goneIds])),
+          closeCompleted: toFs(newIds(docu.closeCompleted, [...finished, ...goneIds])),
           recurringAdded: toFs(recAdded),
           updatedAt: toFs(Date.now()),
         } },
-        updateMask: { fieldPaths: ['power', 'closeSynced', 'closeCompleted', 'recurringAdded', 'updatedAt'] },
+        updateMask: { fieldPaths: ['power', 'backlog', 'closeSynced', 'closeDone', 'closeCompleted', 'recurringAdded', 'updatedAt'] },
         currentDocument: { updateTime: docu.updateTime },
       }] });
       msgs.forEach(log);
